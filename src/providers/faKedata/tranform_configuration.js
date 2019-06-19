@@ -27,6 +27,11 @@ export const getDataTranform = () => {
           }
         ],
         content: {
+          linhcute: {
+            dataKey: "linhcute",
+            default: "123",
+            value: "linh xinh xan"
+          }
           H4: {
             dataKey: "p3",
             default: "p3",
@@ -148,7 +153,8 @@ export const getDataTranform = () => {
             default:
               "function(input, parent, params){ if(['Rechnung','Gutschrift'].indexOf(parent['rechnungtype']) != -1){ return '';} else if (parent['rechnungtype'] === 'Mahnung'){ return 'Mahnstufe';} else {return '1';}; }"
           }
-        }
+        },
+
       },
       dictionary: [
         {

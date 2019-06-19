@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, Button } from "@material-ui/core";
 // import InputComponent from "./input_component";
+import ArrayFieldComponent from "./array_fields_component";
 import "font-awesome/css/font-awesome.min.css";
 import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
 
@@ -54,16 +55,13 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   const [selectedProject, setSelectedProject] = useState(null)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
 
-  console.log("projects :", projects);
-
   const handleGetData = () => {
     console.log("projectId: ", projectId);
     console.log("data: ", data);
     getDataTranform(data, projectId);
   };
-
-  console.log(selectedProject);
-
+  console.log(projects);
+  
   return (
     <React.Fragment>
       <div className={classes.container}>
@@ -108,11 +106,13 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                 <TableCell align="right">{project.cron_trigger}</TableCell>
                 <TableCell align="right">{project.version}</TableCell>
                 <TableCell align="right">
-                  <span className="edit_transform" onClick={(e) => { alert(project.project_id); }}>
-                    <i className="fa fa-pencil-square-o items" aria-hidden="true" />
-                  </span>
-
-                  <span className="edit_transform">
+                  <span 
+                  className="edit_transform" 
+                  onClick={(e)=>{
+                    alert("dsdsds")
+                    setIsOpenEditModal(false)
+                  }}
+                  >
                     <i className="fa fa-trash items" aria-hidden="true" />
                   </span>
                 </TableCell>
@@ -120,6 +120,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
             ))}
           </TableBody>
         </Table>
+        <ArrayFieldComponent/>
       </div>
     </React.Fragment>
   );
