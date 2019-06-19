@@ -10,6 +10,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
 
@@ -31,51 +32,56 @@ const styles: any = (theme: any) => {
     },
     selectRow: {
       cursor: "pointer",
-      transition: 'background 0.1s ease-in',
-      '&:hover': {
-        background: 'lightgray'
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "lightgray"
       }
     }
   };
 };
+
 export interface IDefautProps {
   classes?: any;
   theme?: any;
   projectId?: any;
 }
+
 const WapperComponent: React.FC<IDefautProps> = props => {
   const { classes, data, projectId } = props;
 
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [projects, setProjects] = useState(() => {
     return getDataTranform();
   });
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
-  const [selectedProject, setSelectedProject] = useState(null)
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
-
   console.log("projects :", projects);
-
+  console.log("filter:",projects.filter);
   const handleGetData = () => {
     console.log("projectId: ", projectId);
     console.log("data: ", data);
     getDataTranform(data, projectId);
   };
 
-  console.log(selectedProject);
-
   return (
     <React.Fragment>
       <div className={classes.container}>
-        <Button variant="outlined" color="primary" onClick={() => setIsOpenAddModal(true)}
-        >Add Project</Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => setIsOpenAddModal(true)}
+        >
+          Add Project
+        </Button>
+
         <AddDialog
           isOpen={isOpenAddModal}
           setIsOpen={setIsOpenAddModal}
           projects={projects}
           setProjects={setProjects}
         />
-        
+
         <EditDialog
           isOpen={isOpenEditModal}
           setIsOpen={setIsOpenEditModal}
@@ -96,10 +102,12 @@ const WapperComponent: React.FC<IDefautProps> = props => {
           </TableHead>
           <TableBody>
             {projects.map(project => (
-              <TableRow key={project.name} className={classes.selectRow}
+              <TableRow
+                key={project.name}
+                className={classes.selectRow}
                 onClick={() => {
-                  setSelectedProject(project)
-                  setIsOpenEditModal(true)
+                  setSelectedProject(project);
+                  setIsOpenEditModal(true);
                 }}
               >
                 <TableCell component="th" scope="row">
@@ -108,10 +116,6 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                 <TableCell align="right">{project.cron_trigger}</TableCell>
                 <TableCell align="right">{project.version}</TableCell>
                 <TableCell align="right">
-                  <span className="edit_transform" onClick={(e) => { alert(project.project_id); }}>
-                    <i className="fa fa-pencil-square-o items" aria-hidden="true" />
-                  </span>
-
                   <span className="edit_transform">
                     <i className="fa fa-trash items" aria-hidden="true" />
                   </span>
