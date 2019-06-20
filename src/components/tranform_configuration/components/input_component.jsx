@@ -76,6 +76,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
       },
     });
   };
+  
   const _collectorValue = () => {
     let value = ''
     const collector = get(project, 'filter.collector', {})

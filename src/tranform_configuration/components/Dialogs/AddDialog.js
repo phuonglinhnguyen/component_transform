@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "@material-ui/core";
 
+import { Translate } from "react-redux-i18n";
+import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
+
+import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -8,9 +11,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import InputComponent from "../input_component";
 import Project from "../Models/Project";
-import { Translate } from "react-redux-i18n";
-import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
-import "./main.css";
+
+import "./dialog.css";
+
 const AddDialog = props => {
   const { isOpen, setIsOpen, projects, setProjects, classes } = props;
 
@@ -32,7 +35,7 @@ const AddDialog = props => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
+      <DialogTitle className="tilte-dialog">
         {"Add Transform Config"}
       </DialogTitle>
       <DialogContent>

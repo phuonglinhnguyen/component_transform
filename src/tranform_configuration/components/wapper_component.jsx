@@ -13,6 +13,7 @@ import TableRow from "@material-ui/core/TableRow";
 
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
+// import ArrayFieldComponent from "./array_fields_component";
 
 const styles: any = (theme: any) => {
   return {
@@ -28,7 +29,7 @@ const styles: any = (theme: any) => {
       padding: theme.spacing.unit
     },
     table: {
-      minWidth: 650
+      fontSize: "15px",
     },
     selectRow: {
       cursor: "pointer",
@@ -57,12 +58,12 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   });
 
   console.log("projects :", projects);
-  console.log("filter:",projects.filter);
-  const handleGetData = () => {
-    console.log("projectId: ", projectId);
-    console.log("data: ", data);
-    getDataTranform(data, projectId);
-  };
+  console.log("filter:", projects.filter);
+  // const handleGetData = () => {
+  //   console.log("projectId: ", projectId);
+  //   console.log("data: ", data);
+  //   getDataTranform(data, projectId);
+  // };
 
   return (
     <React.Fragment>
@@ -93,11 +94,11 @@ const WapperComponent: React.FC<IDefautProps> = props => {
 
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Project Name</TableCell>
-              <TableCell align="right">Cron Trigger</TableCell>
-              <TableCell align="right">Version</TableCell>
-              <TableCell align="right">Actions</TableCell>
+            <TableRow >
+              <TableCell className={classes.table} >Project Name</TableCell>
+              <TableCell className={classes.table} align="right">Cron Trigger</TableCell>
+              <TableCell className={classes.table} align="right">Version</TableCell>
+              <TableCell className={classes.table} align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
