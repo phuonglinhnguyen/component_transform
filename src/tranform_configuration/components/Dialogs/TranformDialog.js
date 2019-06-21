@@ -46,13 +46,13 @@ const TransformDialog = props => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle className="tilte-dialog">{"Test Transform"}</DialogTitle>
+      <DialogTitle className="tilte-dialog">{"Pattern"}</DialogTitle>
       <DialogContent>
         <JSONInput
           id="a_unique_id"
           placeholder={pattern}
           locale={locale}
-          height="550px"
+          height="300px"
           onChange={e => {
             setTransform(e.jsObject);
           }}

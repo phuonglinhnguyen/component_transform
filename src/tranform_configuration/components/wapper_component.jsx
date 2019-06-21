@@ -81,6 +81,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
           setIsOpen={setIsOpenAddModal}
           projects={projects}
           setProjects={setProjects}
+          selectedList={selectedProject}
+          setSelectedList={setSelectedProject}
         />
 
         <EditDialog
@@ -90,6 +92,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
           setProjects={setProjects}
           project={selectedProject}
           setProject={setSelectedProject}
+          selectedList={selectedProject}
+          setSelectedList={setSelectedProject}
         />
 
         <Table>

@@ -15,8 +15,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import ContentComponent from "./content_component";
 
-import JSONInput from "react-json-editor-ajrm";
-import locale from "react-json-editor-ajrm/locale/en";
+import AceEditor from "react-ace";
 
 const styles: any = (theme: any) => {
   return {
@@ -67,6 +66,7 @@ export interface IDefautProps {
   classes?: any;
   theme?: any;
 }
+
 const ArrayFieldComponent: React.FC<IDefautProps> = props => {
   const { classes } = props;
   return (
@@ -83,15 +83,23 @@ const ArrayFieldComponent: React.FC<IDefautProps> = props => {
             label="Convert Number"
             margin="normal"
           />
-          <JSONInput
-            id="a_unique_id"
-            // placeholder={pattern}
-            locale={locale}
-            height="200px"
-            // onChange={e => {
-            //   setTransform(e.jsObject);
-            // }}
-          />
+         <AceEditor
+          editorProps={{ $blockScrolling: 'Infinity' }}
+          enableBasicAutocompletion={true}
+          enableLiveAutocompletion={true}
+          enableSnippets={true}
+          fontSize={16}
+          height="250px"
+          highlightActiveLine={true}
+          mode="javascript"
+          name={'expression'}
+          // onChange={newValue => this.handleModify('expression', newValue)}
+          showGutter={true}
+          showPrintMargin={false}
+          theme="solarized_dark"
+          // value={data.expression || ''}
+          width="100%"
+        />
         </ExpansionPanelDetails>
         <ExpansionPanelDetails className={classes.formControl}>
           <ContentComponent />

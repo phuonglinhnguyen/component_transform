@@ -44,7 +44,11 @@ const EditDialog = props => {
         {"Edit Transform Config"}
       </DialogTitle>
       <DialogContent>
-        <InputComponent project={project} setProject={setProject} />
+        <InputComponent
+          project={project}
+          setProject={setProject}
+          editable={true}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsOpen(false)} color="primary">

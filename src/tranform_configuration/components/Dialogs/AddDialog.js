@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Translate } from "react-redux-i18n";
 import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
+import { withStyles } from "@material-ui/core/styles";
 
 import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,8 +14,19 @@ import InputComponent from "../input_component";
 import Project from "../Models/Project";
 
 import "./dialog.css";
-
-const AddDialog = props => {
+const styles: any = (theme: any) => {
+  return {
+    
+  };
+};
+export interface IDefautProps {
+  classes?: any;
+  styles?: any;
+  theme?: any;
+  project?: any;
+  setProject?: any;
+}
+const AddDialog: React.FC<IDefautProps> = props => {
   const { isOpen, setIsOpen, projects, setProjects, classes } = props;
 
   const [project, setProject] = useState(() => {
@@ -32,8 +44,6 @@ const AddDialog = props => {
     <Dialog
       open={isOpen}
       onClose={() => setIsOpen(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
     >
       <DialogTitle className="tilte-dialog">
         {"Add Transform Config"}
@@ -54,4 +64,4 @@ const AddDialog = props => {
   );
 };
 
-export default AddDialog;
+export default withStyles(styles, { withTheme: true })(AddDialog);

@@ -60,6 +60,7 @@ export interface IDefautProps {
 }
 const ContentComponent: React.FC<IDefautProps> = props => {
   const { classes } = props;
+  
   return (
     <React.Fragment>
       <ExpansionPanel defaultExpanded>
