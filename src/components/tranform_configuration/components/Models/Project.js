@@ -25,6 +25,7 @@ class Project {
 				}
 			],
 		}
+		this.dictionary = []
 	}
 }
 

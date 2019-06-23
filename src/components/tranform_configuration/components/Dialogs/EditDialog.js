@@ -11,8 +11,9 @@ import InputComponent from "../input_component";
 import Project from '../Models/Project';
 
 const EditDialog = props => {
-  const { isOpen, setIsOpen, projects, setProjects, project, setProject } = props
-
+  const { isOpen, setIsOpen, projects, setProjects, project, setProject ,editable} = props
+  console.log(projects);
+  
   const _onAgree = () => {
     const newProjects = projects.map(_project => {
         if (_project.project_id === project.project_id) {
@@ -38,6 +39,7 @@ const EditDialog = props => {
         <InputComponent
           project={project}
           setProject={setProject}
+          editable={true}
         />
       </DialogContent>
       <DialogActions>

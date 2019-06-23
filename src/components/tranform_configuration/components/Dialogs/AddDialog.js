@@ -16,6 +16,9 @@ const AddDialog = props => {
     return new Project()
   })
 
+  console.log(project);
+  
+
   const _onAgree = () => {
     const newProjects = [...projects, project]
     setProjects(newProjects)
@@ -29,9 +32,10 @@ const AddDialog = props => {
       onClose={() => setIsOpen(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      
     >
       <DialogTitle id="alert-dialog-title">{"Transform Config"}</DialogTitle>
-      <DialogContent>
+      <DialogContent style={{maxWidth: '800px !important'}}>
         <InputComponent
           project={project}
           setProject={setProject}

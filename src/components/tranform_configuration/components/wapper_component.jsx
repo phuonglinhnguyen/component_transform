@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, Button } from "@material-ui/core";
-// import InputComponent from "./input_component";
-import ArrayFieldComponent from "./array_fields_component";
 import "font-awesome/css/font-awesome.min.css";
 import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
 
@@ -11,8 +9,10 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
+// import ArrayFieldComponent from "./array_fields_component";
 
 const styles: any = (theme: any) => {
   return {
@@ -28,52 +28,52 @@ const styles: any = (theme: any) => {
       padding: theme.spacing.unit
     },
     table: {
-      minWidth: 650
+      fontSize: "15px",
     },
     selectRow: {
       cursor: "pointer",
-      transition: 'background 0.1s ease-in',
-      '&:hover': {
-        background: 'lightgray'
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "lightgray"
       }
     }
   };
 };
+
 export interface IDefautProps {
   classes?: any;
   theme?: any;
   projectId?: any;
 }
+
 const WapperComponent: React.FC<IDefautProps> = props => {
   const { classes, data, projectId } = props;
 
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [projects, setProjects] = useState(() => {
     return getDataTranform();
   });
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false)
-  const [selectedProject, setSelectedProject] = useState(null)
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
-
-  const handleGetData = () => {
-    console.log("projectId: ", projectId);
-    console.log("data: ", data);
-    getDataTranform(data, projectId);
-  };
-  console.log(projects);
-  
   return (
     <React.Fragment>
       <div className={classes.container}>
-        <Button variant="outlined" color="primary" onClick={() => setIsOpenAddModal(true)}
-        >Add Project</Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => setIsOpenAddModal(true)}s
+        >
+          Add Project
+        </Button>
+
         <AddDialog
           isOpen={isOpenAddModal}
           setIsOpen={setIsOpenAddModal}
           projects={projects}
           setProjects={setProjects}
         />
-        
+
         <EditDialog
           isOpen={isOpenEditModal}
           setIsOpen={setIsOpenEditModal}
@@ -85,19 +85,21 @@ const WapperComponent: React.FC<IDefautProps> = props => {
 
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Project Name</TableCell>
-              <TableCell align="right">Cron Trigger</TableCell>
-              <TableCell align="right">Version</TableCell>
-              <TableCell align="right">Actions</TableCell>
+            <TableRow >
+              <TableCell className={classes.table} >Project Name</TableCell>
+              <TableCell className={classes.table} align="right">Cron Trigger</TableCell>
+              <TableCell className={classes.table} align="right">Version</TableCell>
+              <TableCell className={classes.table} align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {projects.map(project => (
-              <TableRow key={project.name} className={classes.selectRow}
+              <TableRow
+                key={project.name}
+                className={classes.selectRow}
                 onClick={() => {
-                  setSelectedProject(project)
-                  setIsOpenEditModal(true)
+                  setSelectedProject(project);
+                  setIsOpenEditModal(true);
                 }}
               >
                 <TableCell component="th" scope="row">
@@ -106,13 +108,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                 <TableCell align="right">{project.cron_trigger}</TableCell>
                 <TableCell align="right">{project.version}</TableCell>
                 <TableCell align="right">
-                  <span 
-                  className="edit_transform" 
-                  onClick={(e)=>{
-                    alert("dsdsds")
-                    setIsOpenEditModal(false)
-                  }}
-                  >
+                  <span className="edit_transform">
                     <i className="fa fa-trash items" aria-hidden="true" />
                   </span>
                 </TableCell>
@@ -120,7 +116,6 @@ const WapperComponent: React.FC<IDefautProps> = props => {
             ))}
           </TableBody>
         </Table>
-        <ArrayFieldComponent/>
       </div>
     </React.Fragment>
   );
