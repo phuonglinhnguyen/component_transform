@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,7 +13,21 @@ import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration"
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
 
-const TransformDialog = props => {
+const styles: any = (theme: any) => {
+  return {};
+};
+export interface IDefautProps {
+  classes?: any;
+  styles?: any;
+  theme?: any;
+  project?: any;
+  setProject?: any;
+  projects?: any;
+  setProjects?: any;
+  isOpen?: any;
+  setIsOpen?: any;
+}
+const TransformDialog: React.FC<IDefautProps> = props => {
   const {
     isOpen,
     setIsOpen,
@@ -65,11 +80,7 @@ const TransformDialog = props => {
           <Translate value={`${KEY_TRANSLATE}.disagree_tranform`} />
         </Button>
 
-        <Button
-          onClick={_onAgree}
-          color="primary"
-          autoFocus
-        >
+        <Button onClick={_onAgree} color="primary" autoFocus>
           {" "}
           <Translate value={`${KEY_TRANSLATE}.agree_tranform`} />
         </Button>
@@ -78,4 +89,4 @@ const TransformDialog = props => {
   );
 };
 
-export default TransformDialog;
+export default withStyles(styles, { withTheme: true })(TransformDialog);

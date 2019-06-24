@@ -1,17 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Translate } from "react-redux-i18n";
 import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
 
 import { Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import InputComponent from "../input_component";
-
-const EditDialog = props => {
+const styles: any = (theme: any) => {
+  return {};
+};
+export interface IDefautProps {
+  classes?: any;
+  styles?: any;
+  theme?: any;
+  project?: any;
+  setProject?: any;
+  projects?: any;
+  setProjects?: any;
+  isOpen?:any;
+  setIsOpen?: any;
+}
+const EditDialog: React.FC<IDefautProps> = props => {
   const {
     isOpen,
     setIsOpen,
@@ -21,7 +35,7 @@ const EditDialog = props => {
     setProject
   } = props;
 
-  const _onAgree = () => {
+  const onAgree = () => {
     const newProjects = projects.map(_project => {
       if (_project.project_id === project.project_id) {
         return { ...project };
@@ -54,7 +68,7 @@ const EditDialog = props => {
         <Button onClick={() => setIsOpen(false)} color="primary">
           <Translate value={`${KEY_TRANSLATE}.disagree`} />
         </Button>
-        <Button onClick={_onAgree} color="primary" autoFocus>
+        <Button onClick={onAgree} color="primary" autoFocus>
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
       </DialogActions>
@@ -62,4 +76,4 @@ const EditDialog = props => {
   );
 };
 
-export default EditDialog;
+export default withStyles(styles, { withTheme: true }) (EditDialog);

@@ -1,37 +1,20 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { TextField, Switch } from "@material-ui/core";
-import { CronTriggerQuartz } from "@dgtx/core-component-ui";
-import PropTypes from "prop-types";
+import { TextField } from "@material-ui/core";
 
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { Button } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-
+import DoneIcon from "@material-ui/icons/Done";
 const styles: any = (theme: any) => {
   return {
-    container: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-around",
-      margin: "0px 5px"
-    },
     titleField: {
       fontWeight: "bold"
     },
     textField: {
       width: "95%",
       marginRight: theme.spacing.unit
-    },
-    test: {
-      margin: "5px",
     }
   };
 };
@@ -41,31 +24,71 @@ export interface IDefautProps {
   theme?: any;
   project?: any;
   setProject?: any;
+  dictItem?: any;
+  setDictItem?: any;
+  mode?: any;
+  dictionary?: any;
 }
 const DictionaryComponent: React.FC<IDefautProps> = props => {
-  const { classes, project, setProject } = props;
+  const {
+    classes,
+    project,
+    setProject,
+    dictItem,
+    setDictItem,
+    mode,
+    dictionary
+  } = props;
 
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
 
-    setProject({
-      ...project,
+    setDictItem({
+      ...dictItem,
       [name]: value
     });
+  };
+
+  const onAddDictionary = () => {
+    if (mode === "add") {
+      const newDictItem = { ...dictItem };
+      setProject({
+        ...project,
+        dictionary: [...project.dictionary, newDictItem]
+      });
+      setDictItem(null);
+    } else if (mode === "edit") {
+      const newDictionary = dictionary.map(_dictItem => {
+        if (_dictItem.fieldKey === dictItem.fieldKey) {
+          return { ...dictItem };
+        }
+        return _dictItem;
+      });
+
+      setProject({
+        ...project,
+        dictionary: newDictionary
+      });
+      setDictItem(null);
+      console.log(newDictionary);
+    }
   };
 
   return (
     <React.Fragment>
       <FormLabel className={classes.titleField}>Dictionary</FormLabel>
       <Grid container spacing={12} alignItems="flex-end">
-        <Grid test item xs={6}>
+        <Grid item xs={6}>
           <TextField
             label="Field Key"
             className={classes.textField}
             name="fieldKey"
             margin="normal"
             variant="outlined"
+            onChange={onChangeText}
+            value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
+            disabled={mode === "edit"}
           />
         </Grid>
         <Grid item xs={6}>
@@ -74,7 +97,11 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             className={classes.textField}
             name="database_type"
             margin="normal"
+            onChange={onChangeText}
             variant="outlined"
+            value={
+              dictItem && dictItem.database_type ? dictItem.database_type : ""
+            }
           />
         </Grid>
       </Grid>
@@ -85,7 +112,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             label="Host"
             className={classes.textField}
             margin="normal"
+            onChange={onChangeText}
             variant="outlined"
+            value={dictItem && dictItem.host ? dictItem.host : ""}
           />
         </Grid>
         <Grid item xs={6}>
@@ -94,7 +123,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             label="Port"
             className={classes.textField}
             margin="normal"
+            onChange={onChangeText}
             variant="outlined"
+            value={dictItem && dictItem.port ? dictItem.port : ""}
           />
         </Grid>
       </Grid>
@@ -106,8 +137,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             className={classes.textField}
             type="text"
             margin="normal"
-            value=""
+            onChange={onChangeText}
             variant="outlined"
+            value={dictItem && dictItem.username ? dictItem.username : ""}
           />
         </Grid>
         <Grid item xs={6}>
@@ -118,8 +150,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             type="password"
             className={classes.textField}
             margin="normal"
-            value=""
+            onChange={onChangeText}
             variant="outlined"
+            value={dictItem && dictItem.password ? dictItem.password : ""}
           />
         </Grid>
       </Grid>
@@ -131,7 +164,11 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             className={classes.textField}
             type="text"
             margin="normal"
+            onChange={onChangeText}
             variant="outlined"
+            value={
+              dictItem && dictItem.database_name ? dictItem.database_name : ""
+            }
           />
         </Grid>
         <Grid item xs={6}>
@@ -141,19 +178,21 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             type="text"
             className={classes.textField}
             margin="normal"
-            value=""
+            onChange={onChangeText}
             variant="outlined"
+            value={dictItem && dictItem.schema_name ? dictItem.schema_name : ""}
           />
         </Grid>
       </Grid>
       <Fab
-            size="small"
-            color="primary"
-            aria-label="Add"
-            className={classes.margin}
-          >
-            <AddIcon />
-          </Fab>
+        size="small"
+        color={mode === "add" ? "primary" : "secondary"}
+        aria-label="Add"
+        className={classes.margin}
+        onClick={onAddDictionary}
+      >
+        {mode === "add" ? <AddIcon /> : <DoneIcon />}
+      </Fab>
     </React.Fragment>
   );
 };

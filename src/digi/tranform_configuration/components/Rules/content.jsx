@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { TextField } from "@material-ui/core";
@@ -14,23 +15,12 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const styles: any = (theme: any) => {
   return {
-    root: {
-      width: "100%"
-    },
     heading: {
       fontSize: theme.typography.pxToRem(15)
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary
-    },
-    icon: {
-      verticalAlign: "bottom",
-      height: 20,
-      width: 20
     },
     column: {
       flexBasis: "33.33%"
@@ -39,18 +29,27 @@ const styles: any = (theme: any) => {
       borderLeft: `2px solid ${theme.palette.divider}`,
       padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
     },
-    link: {
-      color: theme.palette.primary.main,
-      textDecoration: "none",
-      "&:hover": {
-        textDecoration: "underline"
-      }
-    },
     formControl: {
       boxShadow: "-4px 3px 33px -10px rgba(0,0,0,0.75)",
       margin: theme.spacing.unit * 3,
       padding: theme.spacing.unit * 3
-    }
+    },
+    titleField: {
+      fontWeight: "bold"
+    },
+    content: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "20px"
+    },
+    formContent:{
+      textAlign: "center"
+    },
+    delete:{
+      background:"#c62828",
+      color:"#fafafa"
+    },
   };
 };
 
@@ -60,24 +59,32 @@ export interface IDefautProps {
 }
 const ContentComponent: React.FC<IDefautProps> = props => {
   const { classes } = props;
-  
+
   return (
     <React.Fragment>
-      <ExpansionPanel defaultExpanded>
+      <div className={classes.content}>
+        <FormLabel className={classes.titleField}>Content</FormLabel>
+        <Fab size="small" color="primary" aria-label="Add">
+          <AddIcon />
+        </Fab>
+      </div>
+
+      <ExpansionPanel defaultExpanded className={classes.formContent}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div className={classes.column}>
-            <Typography className={classes.heading}>Content </Typography>
+            <Typography className={classes.heading}>Content Item</Typography>
           </div>
         </ExpansionPanelSummary>
+        <TextField name="convertName" label="Name" className={classes.heading} />
         <ExpansionPanelDetails className={classes.formControl}>
-          <Grid container spacing={8} alignItems="flex-end">
-            <Grid item>
+          <Grid container spacing={16} alignItems="flex-end">
+            <Grid item sm={4}>
               <TextField name="dataKey" label="DataKey" margin="normal" />
             </Grid>
-            <Grid item>
+            <Grid item sm={4}>
               <TextField name="default" label="Default" margin="normal" />
             </Grid>
-            <Grid item>
+            <Grid item sm={4}>
               <TextField name="value" label="Value" margin="normal" />
             </Grid>
           </Grid>
@@ -86,10 +93,10 @@ const ContentComponent: React.FC<IDefautProps> = props => {
         </ExpansionPanelDetails>
         <Divider />
         <ExpansionPanelActions>
-          <Fab size="small" color="primary" aria-label="Add">
-            <AddIcon />
+          <Fab size="small" color="secondary" aria-label="Edit">
+            <EditIcon />
           </Fab>
-          <Fab size="small" color="secondary" aria-label="Delete">
+          <Fab size="small" className={classes.delete} aria-label="Delete">
             <DeleteIcon />
           </Fab>
         </ExpansionPanelActions>

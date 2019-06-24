@@ -16,15 +16,19 @@ import Project from "../Models/Project";
 import "./dialog.css";
 const styles: any = (theme: any) => {
   return {
-    
+    test:{
+      maxWidth: "1200px",
+    }
   };
 };
 export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  project?: any;
-  setProject?: any;
+  projects?: any;
+  setProjects?: any;
+  isOpen?: any;
+  setIsOpen?: any;
 }
 const AddDialog: React.FC<IDefautProps> = props => {
   const { isOpen, setIsOpen, projects, setProjects, classes } = props;
@@ -41,14 +45,11 @@ const AddDialog: React.FC<IDefautProps> = props => {
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={() => setIsOpen(false)}
-    >
+    <Dialog open={isOpen} onClose={() => setIsOpen(false)} className={classes.test}>
       <DialogTitle className="tilte-dialog">
         {"Add Transform Config"}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent >
         <InputComponent project={project} setProject={setProject} />
       </DialogContent>
 

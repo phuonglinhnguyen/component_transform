@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { CronTriggerQuartz } from "@dgtx/core-component-ui";
+import { getDataObject } from "@dgtx/coreui";
 
 import get from "lodash/get";
 
@@ -15,17 +16,11 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import { Button } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { getDataObject } from "@dgtx/coreui";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import FolderIcon from "@material-ui/icons/Folder";
-import ListItemText from "@material-ui/core/ListItemText";
 
 import TransformDialog from "./Dialogs/TranformDialog";
-import ArrayField from "./array_fields_component";
-import DictionaryComponent from "./dictionary_component";
-// /home/administrator/linhnp/design-ui/src/components/project/components/export_configuration/components/body_dialogs_component.js
+import Dictionary from "./Dictionary";
+import Rules from "./Rules";
+
 const styles: any = (theme: any) => {
   return {
     container: {
@@ -39,13 +34,13 @@ const styles: any = (theme: any) => {
     },
     wrapForm: {
       display: "flex",
-      justifyContent: "space-around"
+      justifyContent: "space-around",
+      marginTop: "20px"
     },
     textField: {
       marginRight: theme.spacing.unit
     },
     group: {
-      maxWidth: "600px",
       margin: "20px auto"
     },
     formControl: {
@@ -69,13 +64,10 @@ const styles: any = (theme: any) => {
     showPattern: {
       background: "black",
       color: "white",
-      padding:"10px",
+      padding: "10px",
       marginTop: "10px",
-      width:"400px",
-      overflowWrap: "break-word",
-    },
-    formCollector: {
-      // padding: theme.spacing.unit * 2
+      width: "400px",
+      overflowWrap: "break-word"
     },
     demo: {
       backgroundColor: theme.palette.background.paper
@@ -93,9 +85,8 @@ export interface IDefautProps {
   setProject?: any;
 }
 const InputComponent: React.FC<IDefautProps> = props => {
-  const { classes, project, setProject ,selectedList,setSelectedList } = props;
+  const { classes, project, setProject } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
-  const [secondary, dense] = useState(false);
 
   const onChangeText = e => {
     const name = e.target.name;
@@ -158,20 +149,14 @@ const InputComponent: React.FC<IDefautProps> = props => {
       cron_trigger: cronValue
     });
   };
-  const generate = element => {
-    return [0, 1, 2].map(value =>
-      React.cloneElement(element, {
-        key: value
-      })
-    );
-  };
+
   console.log(project);
 
   return (
     <React.Fragment>
       <div>
-        <div className={classes.wrapp1}>
-          <div>
+        <Grid className={classes.wrapForm} spacing={24}>
+          <Grid item xs={12} md={5}>
             <FormLabel className={classes.titleField}>
               Project Informations
             </FormLabel>
@@ -208,8 +193,8 @@ const InputComponent: React.FC<IDefautProps> = props => {
                 />
               </FormGroup>
             </form>
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12} md={7}>
             <FormLabel className={classes.titleField}>Filter</FormLabel>
             <div className={classes.formControl}>
               <FormControl className={classes.formCollector}>
@@ -258,8 +243,8 @@ const InputComponent: React.FC<IDefautProps> = props => {
                 {getDataObject("filter.transform.pattern", project) || ""}
               </div>
             </div>
-          </div>
-        </div>
+          </Grid>
+        </Grid>
 
         <FormLabel className={classes.titleField}>CronTriggerQuartz</FormLabel>
         <CronTriggerQuartz
@@ -270,30 +255,9 @@ const InputComponent: React.FC<IDefautProps> = props => {
           onChange={handleChangeCron}
         />
 
-        <Grid className={classes.wrapForm} spacing={24}>
-          <Grid item xs={12} sm={5} className={classes.formControl}>
-            <DictionaryComponent />
-          </Grid>
-          <Grid item xs={12} md={7} className={classes.formControl}>
-            <FormLabel className={classes.titleField}>List</FormLabel>
-            <div className={classes.demo}>
-              <List dense={dense}>
-                {generate(
-                  <ListItem setSelectedList={generate}>
-                    <ListItemIcon>
-                      <FolderIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Single-line item"
-                      secondary={secondary ? "Secondary text" : null}
-                    />
-                  </ListItem>
-                )}
-              </List>
-            </div>
-          </Grid>
-        </Grid>
-        <ArrayField />
+        <Dictionary project={project} setProject={setProject} />
+        <FormLabel className={classes.titleField}>Rules</FormLabel>
+        <Rules />
       </div>
     </React.Fragment>
   );
