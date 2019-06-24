@@ -16,8 +16,7 @@ import { Button } from "@material-ui/core";
 
 import "./Dialogs/main.css";
 import TransformDialog from "./Dialogs/TranformDialog";
-import ArrayField from "./array_fields_component";
-
+import Rules from "./Rules";
 import Dictionary from "./Dictionary";
 
 const styles: any = (theme: any) => {
@@ -33,13 +32,13 @@ const styles: any = (theme: any) => {
     },
     wrapForm: {
       display: "flex",
-      justifyContent: "space-around"
+      justifyContent: "space-around",
+      marginTop: "20px"
     },
     textField: {
       marginRight: theme.spacing.unit
     },
     group: {
-      maxWidth: "600px",
       margin: "20px auto"
     },
     formControl: {
@@ -66,10 +65,7 @@ const styles: any = (theme: any) => {
       padding: "10px",
       marginTop: "10px",
       width: "400px",
-      overflowWrap: "break-word",
-    },
-    formCollector: {
-      // padding: theme.spacing.unit * 2
+      overflowWrap: "break-word"
     },
     demo: {
       backgroundColor: theme.palette.background.paper
@@ -88,10 +84,9 @@ export interface IDefautProps {
 }
 const InputComponent: React.FC<IDefautProps> = props => {
   const { classes, project, setProject } = props;
-  console.log(project);
-  
+  // console.log(project);
+
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
-  const [dense] = useState(false);
 
 
   const onChangeText = e => {
@@ -274,7 +269,8 @@ const InputComponent: React.FC<IDefautProps> = props => {
           setProject={setProject}
         />
 
-        <ArrayField />
+        <FormLabel className={classes.titleField}>Rules</FormLabel>
+        <Rules />
       </div>
     </React.Fragment>
   );

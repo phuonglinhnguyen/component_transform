@@ -27,7 +27,7 @@ export interface IDefautProps {
   setProject?: any;
 }
 const Dictionary: React.FC<IDefautProps> = (props) => {
-  const { classes, project, setProject } = props
+  const { classes, project, setProject ,projects, setProjects} = props
   const dictionary = project && project.dictionary ? project.dictionary : []
   const [selectedDictItem, setSelectedDictItem] = useState(null);
   const [dictItem, setDictItem] = useState(null)
@@ -43,13 +43,17 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
           setDictItem={selectedDictItem ? setSelectedDictItem : setDictItem}
           setSelectedDictItem={setSelectedDictItem}
           mode={mode}
+          setMode={setMode}
         />
       </Grid>
       <Grid item xs={12} md={7} className={classes.formControl}>
         <DictionaryList
           dictionary={dictionary}
           setSelectedDictItem={setSelectedDictItem}
+          dictItem={dictItem}
           setMode={setMode}
+          projects={projects}
+          setProjects={setProjects}
         />
       </Grid>
     </Grid>

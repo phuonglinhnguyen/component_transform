@@ -12,7 +12,7 @@ import Project from '../Models/Project';
 
 const EditDialog = props => {
   const { isOpen, setIsOpen, projects, setProjects, project, setProject ,editable} = props
-  console.log(projects);
+  //console.log(projects);
   
   const _onAgree = () => {
     const newProjects = projects.map(_project => {

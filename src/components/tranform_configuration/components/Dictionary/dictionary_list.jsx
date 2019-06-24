@@ -35,8 +35,17 @@ export interface IDefautProps {
   theme?: any;
 }
 const DictionaryList: React.FC<IDefautProps> = props => {
-  const { classes, dictionary, setSelectedDictItem , setMode} = props;
+  const { classes, dictionary, setSelectedDictItem, setMode, dictItem, setProjects,projects } = props;
   const [dense] = useState(false);
+
+  const deleteDictItem = (e, fieldKey) => {
+    e.stopPropagation()
+    const newDict = dictionary.filter(dictItem => dictItem.fieldKey !== fieldKey) 
+    setProjects({
+      ...projects,
+      dictionary: newDict
+    });
+  }
 
   return (
     <React.Fragment>
@@ -62,7 +71,12 @@ const DictionaryList: React.FC<IDefautProps> = props => {
                     secondary={dict_item.database_name}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton aria-label="Delete">
+                    <IconButton
+                      aria-label="Delete"
+                      onClick={(e) => {
+                        deleteDictItem(e, dict_item.fieldKey)
+                      }}>
+                      
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>

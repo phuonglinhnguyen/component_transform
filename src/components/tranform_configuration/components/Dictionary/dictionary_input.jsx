@@ -1,31 +1,21 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { TextField, Switch } from "@material-ui/core";
-// import { CronTriggerQuartz } from "@dgtx/core-component-ui";
+import { TextField } from "@material-ui/core";
 
 import FormLabel from "@material-ui/core/FormLabel";
-import { Button } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import DoneIcon from "@material-ui/icons/Done";
 
 const styles: any = (theme: any) => {
   return {
-    container: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-around",
-      margin: "0px 5px"
-    },
     titleField: {
       fontWeight: "bold"
     },
     textField: {
       width: "95%",
       marginRight: theme.spacing.unit
-    },
-    test: {
-      margin: "5px",
     }
   };
 };
@@ -37,8 +27,16 @@ export interface IDefautProps {
   setProject?: any;
 }
 const DictionaryComponent: React.FC<IDefautProps> = props => {
-  const { classes, project, setProject,
-     dictItem, setDictItem, mode} = props;
+  const {
+    classes,
+    project,
+    setProject,
+    dictItem,
+    setDictItem,
+    mode,
+    dictionary,
+    setMode
+  } = props;
 
   const onChangeText = e => {
     const name = e.target.name;
@@ -51,25 +49,31 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   };
 
   const onAddDictionary = () => {
-    if (mode === 'add') {
-      const newDictItem = {...dictItem}    
+    if (mode === "add") {
+      const newDictItem = { ...dictItem };
       setProject({
         ...project,
-        dictionary: [
-          ...project.dictionary,
-          newDictItem
-        ]
-      })
-  
-      setDictItem(null)
-    } else if (mode === 'edit') {
-      // viet ham update project - goi y dung map
+        dictionary: [...project.dictionary, newDictItem]
+      });
+      setDictItem(null);
+    } else if (mode === "edit") {
+      const newDictionary = dictionary.map(_dictItem => {
+        if (_dictItem.fieldKey === dictItem.fieldKey) {
+          return { ...dictItem };
+        }
+        return _dictItem;
+      });
+
+      setProject({
+        ...project,
+        dictionary: newDictionary
+      });
+      setDictItem(null);
+      // setMode("add");
+      console.log(newDictionary);
     }
-    
-  }
-
-console.log(dictItem);
-
+  };
+ 
   return (
     <React.Fragment>
       <FormLabel className={classes.titleField}>Dictionary</FormLabel>
@@ -177,13 +181,12 @@ console.log(dictItem);
       </Grid>
       <Fab
         size="small"
-        color="primary"
+        color={mode === "add" ? "primary" : "secondary"}
         aria-label="Add"
-        className={classes.margin}
+        className={classes.margin}s
         onClick={onAddDictionary}
       >
-        <div>thay goi icon dua theo mode</div>
-        <AddIcon /> 
+        {mode === "add" ? <AddIcon /> : <DoneIcon />}
       </Fab>
     </React.Fragment>
   );
