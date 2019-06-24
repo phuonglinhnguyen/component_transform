@@ -13,6 +13,8 @@ import TableRow from "@material-ui/core/TableRow";
 import FormLabel from "@material-ui/core/FormLabel";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
@@ -20,12 +22,11 @@ import EditDialog from "./Dialogs/EditDialog";
 const styles: any = (theme: any) => {
   return {
     container: {
-      width: "80%",
+      width: "100%",
       maxWidth: "100%",
       height: "100%",
       maxHeight: `calc(100vh - ${theme.spacing.unit * 8}px)`,
       margin: `${theme.spacing.unit * 8}px 0px 0px 0px`,
-      align: "center"
     },
     top: {
       display: "flex",
@@ -37,13 +38,14 @@ const styles: any = (theme: any) => {
       padding: theme.spacing.unit
     },
     table: {
-      fontSize: "15px",
+      fontSize: "17px",
       color: "white",
       fontWeight: "700",
       textAlign: "center"
     },
     tableItem: {
-      textAlign: "center"
+      textAlign: "center",
+      fontSize: "15px"
     },
     titleField: {
       fontWeight: "bold",
@@ -218,9 +220,9 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                   {project.version}
                 </TableCell>
                 <TableCell align="right" className={classes.tableItem}>
-                  <span className="edit_transform">
-                    <i className="fa fa-trash items" aria-hidden="true" />
-                  </span>
+                  <IconButton aria-label="Delete">
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
