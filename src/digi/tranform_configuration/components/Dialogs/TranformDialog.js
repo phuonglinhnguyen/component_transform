@@ -39,7 +39,7 @@ const TransformDialog: React.FC<IDefautProps> = props => {
 
   const [pattern, setTransform] = useState({});
 
-  const _onAgree = () => {
+  const onAgree = () => {
     console.log(pattern);
     console.log();
     setIsOpen(false);
@@ -80,7 +80,7 @@ const TransformDialog: React.FC<IDefautProps> = props => {
           <Translate value={`${KEY_TRANSLATE}.disagree_tranform`} />
         </Button>
 
-        <Button onClick={_onAgree} color="primary" autoFocus>
+        <Button onClick={onAgree} color="primary" autoFocus>
           {" "}
           <Translate value={`${KEY_TRANSLATE}.agree_tranform`} />
         </Button>

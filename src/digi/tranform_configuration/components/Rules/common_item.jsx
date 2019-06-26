@@ -34,8 +34,23 @@ const styles: any = (theme: any) => {
       marginBottom: "20px"
     },
     delete: {
-      background: "#c62828",
-      color: "#fafafa"
+      background: "#e57373",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#b71c1c"
+      }
+    },
+    edit: {
+      background: "#ec407a",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#ad1457"
+      }
+    },
+    contentItem: {
+      background: "#843d8b45"
     }
   };
 };
@@ -48,13 +63,17 @@ export interface IDefautProps {
 }
 
 const Common: React.FC<IDefautProps> = props => {
-  const { classes, editCommon, setEditCommon } = props;
+  const { classes, mode, setMode } = props;
   const [expanded, setExpanded] = useState(false);
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+// const changeEditToSave=()=>{
+//   if(mode==="edit"){
 
+//   }
+// }
   return (
     <React.Fragment>
       <ExpansionPanel
@@ -64,26 +83,20 @@ const Common: React.FC<IDefautProps> = props => {
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
-          id="panel1bh-header"
+          className={classes.contentItem}
         >
-          <Typography className={classes.heading}>General settings</Typography>
-          <Typography className={classes.secondaryHeading}>
-            I am an expansion panel
-          </Typography>
+          <Typography className={classes.heading}>Common1</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Typography>
-            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-            Aliquam eget maximus est, id dignissim quam.
-          </Typography>
+          <Typography>chuoi</Typography>
         </ExpansionPanelDetails>
         <ExpansionPanelActions>
           <Fab
             size="small"
-            color="secondary"
+            className={classes.edit}
             aria-label="Edit"
             onclick={() => {
-              // setEditCommon()
+              setMode("edit");
             }}
           >
             <EditIcon />
@@ -98,11 +111,11 @@ const Common: React.FC<IDefautProps> = props => {
         onChange={handleChange("panel4")}
       >
         <ExpansionPanelSummary
+          className={classes.contentItem}
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel4bh-content"
-          id="panel4bh-header"
         >
-          <Typography className={classes.heading}>Personal data</Typography>
+          <Typography className={classes.heading}>Common2</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>
@@ -111,7 +124,7 @@ const Common: React.FC<IDefautProps> = props => {
           </Typography>
         </ExpansionPanelDetails>
         <ExpansionPanelActions>
-          <Fab size="small" color="secondary" aria-label="Edit">
+          <Fab size="small" className={classes.edit} aria-label="Edit">
             <EditIcon />
           </Fab>
           <Fab size="small" aria-label="Delete" className={classes.delete}>

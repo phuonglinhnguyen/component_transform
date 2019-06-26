@@ -39,10 +39,11 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
         <DictionaryInput
           project={project}
           setProject={setProject}
-          dictItem={selectedDictItem ? selectedDictItem : dictItem} // nếu selectedDictItem !== null ? selectedDictItem : dictItem
+          dictItem={selectedDictItem ? selectedDictItem : dictItem} 
           setDictItem={selectedDictItem ? setSelectedDictItem : setDictItem}
           setSelectedDictItem={setSelectedDictItem}
           mode={mode}
+          setMode={setMode}
           dictionary={dictionary}
         />
       </Grid>
@@ -51,6 +52,8 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
           dictionary={dictionary}
           setSelectedDictItem={setSelectedDictItem}
           setMode={setMode}
+          project={project}
+          setProject={setProject}
         />
       </Grid>
     </Grid>

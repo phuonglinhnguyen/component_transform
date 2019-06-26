@@ -37,7 +37,7 @@ const AddDialog: React.FC<IDefautProps> = props => {
     return new Project();
   });
 
-  const _onAgree = () => {
+  const onAgree = () => {
     const newProjects = [...projects, project];
     setProjects(newProjects);
     setIsOpen(false);
@@ -57,7 +57,7 @@ const AddDialog: React.FC<IDefautProps> = props => {
         <Button onClick={() => setIsOpen(false)} color="primary">
           <Translate value={`${KEY_TRANSLATE}.disagree`} />
         </Button>
-        <Button onClick={_onAgree} color="primary" autoFocus>
+        <Button onClick={onAgree} color="primary" autoFocus>
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
       </DialogActions>

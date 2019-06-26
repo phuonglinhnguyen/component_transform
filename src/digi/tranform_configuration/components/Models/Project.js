@@ -37,7 +37,7 @@ class Project {
         }
       }
     };
-
+    this.dictionary = []
   }
 }
 

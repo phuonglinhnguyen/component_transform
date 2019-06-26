@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { Translate } from "react-redux-i18n";
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
-import { TextField, Button } from "@material-ui/core";
-import "font-awesome/css/font-awesome.min.css";
-import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
 
+import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
+import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
+
+import { TextField, Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -13,26 +15,26 @@ import TableRow from "@material-ui/core/TableRow";
 import FormLabel from "@material-ui/core/FormLabel";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
+import TablePagination from "@material-ui/core/TablePagination";
 
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
+// import Test from "./test"
 
 const styles: any = (theme: any) => {
   return {
     container: {
-      width: "100%",
-      maxWidth: "100%",
-      height: "100%",
       maxHeight: `calc(100vh - ${theme.spacing.unit * 8}px)`,
-      margin: `${theme.spacing.unit * 8}px 0px 0px 0px`,
+      margin: `${theme.spacing.unit * 8}px 0px 0px 0px`
     },
     top: {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "baseline",
-      marginBottom: "10px"
+      marginBottom: "10px",
+      marginRight: "10px"
     },
     paddingItem: {
       padding: theme.spacing.unit
@@ -103,6 +105,9 @@ const styles: any = (theme: any) => {
       [theme.breakpoints.up("md")]: {
         width: 200
       }
+    },
+    rowPerPage: {
+      background: "gray"
     }
   };
 };
@@ -114,29 +119,51 @@ export interface IDefautProps {
 }
 
 const WapperComponent: React.FC<IDefautProps> = props => {
-  const { classes, data, projectId } = props;
+  const { classes } = props;
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [strSearch, setStrSearch] = useState(null);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   const [projects, setProjects] = useState(() => {
     return getDataTranform();
   });
 
-  console.log("projects :", projects);
-  console.log("filter:", projects.filter);
+
   // const handleGetData = () => {
   //   console.log("projectId: ", projectId);
   //   console.log("data: ", data);
   //   getDataTranform(data, projectId);
   // };
 
+  // const handlerOnChange = e => {
+  //   const value = e.target.value;
+  //   setStrSearch()
+  // };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(event.target.value);
+  };
+
+  const deleteProject = (e, project_id) => {
+    e.stopPropagation();
+    const newProjects = projects.filter(
+      project => project.project_id !== project_id
+    ); // use ===, !==. Need to read different == and === in js
+    console.log(newProjects);
+    setProjects(newProjects);
+  };
   return (
     <React.Fragment>
       <div className={classes.container}>
         <div className={classes.top}>
           <FormLabel className={classes.titleField}>
-            Tranform Configuration
+            <Translate value={`${KEY_TRANSLATE}.title_wrapper`} />
           </FormLabel>
           <div className={classes.top}>
             <div className={classes.search}>
@@ -197,38 +224,62 @@ const WapperComponent: React.FC<IDefautProps> = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map(project => (
-              <TableRow
-                key={project.name}
-                className={classes.selectRow}
-                onClick={() => {
-                  setSelectedProject(project);
-                  setIsOpenEditModal(true);
-                }}
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  className={classes.tableItem}
+            {projects
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map(project => (
+                <TableRow
+                  key={project.name}
+                  className={classes.selectRow}
+                  onClick={() => {
+                    setSelectedProject(project);
+                    setIsOpenEditModal(true);
+                  }}
                 >
-                  {project.name}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  {project.cron_trigger}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  {project.version}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  <IconButton aria-label="Delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className={classes.tableItem}
+                  >
+                    {project.name}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    {project.cron_trigger}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    {project.version}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    <IconButton
+                      aria-label="Delete"
+                      onClick={e => {
+                        deleteProject(e, project.project_id);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
+        {/* <Test/> */}
       </div>
+      <TablePagination
+        className={classes.rowPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={projects.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          "aria-label": "Previous Page"
+        }}
+        nextIconButtonProps={{
+          "aria-label": "Next Page"
+        }}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
     </React.Fragment>
   );
 };

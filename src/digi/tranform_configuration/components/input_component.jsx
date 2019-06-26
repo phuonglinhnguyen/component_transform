@@ -100,8 +100,6 @@ const InputComponent: React.FC<IDefautProps> = props => {
   const onChangeActive = e => {
     const name = e.target.name;
     const checked = e.target.checked;
-    // console.log(checked);
-
     setProject({
       ...project,
       [name]: checked
@@ -150,7 +148,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
     });
   };
 
-  console.log(project);
+  // console.log(project);
 
   return (
     <React.Fragment>
@@ -257,7 +255,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
 
         <Dictionary project={project} setProject={setProject} />
         <FormLabel className={classes.titleField}>Rules</FormLabel>
-        <Rules />
+        <Rules project={project} setProject={setProject} />
       </div>
     </React.Fragment>
   );

@@ -15,6 +15,22 @@ const styles: any = (theme: any) => {
     textField: {
       width: "95%",
       marginRight: theme.spacing.unit
+    },
+    add: {
+      background: "#3f51b5",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1a237e"
+      }
+    },
+    save:{
+      background: "#689f38",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1b5e20"
+      }
     }
   };
 };
@@ -37,7 +53,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     dictItem,
     setDictItem,
     mode,
-    dictionary
+    dictionary,
+    setMode
   } = props;
 
   const onChangeText = e => {
@@ -70,6 +87,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         ...project,
         dictionary: newDictionary
       });
+      setMode("add");
       setDictItem(null);
       console.log(newDictionary);
     }
@@ -186,9 +204,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       </Grid>
       <Fab
         size="small"
-        color={mode === "add" ? "primary" : "secondary"}
         aria-label="Add"
-        className={classes.margin}
+        className={mode === "add" ? classes.add : classes.save}
         onClick={onAddDictionary}
       >
         {mode === "add" ? <AddIcon /> : <DoneIcon />}
