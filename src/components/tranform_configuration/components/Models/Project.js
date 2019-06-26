@@ -15,15 +15,8 @@ class Project {
 			}
 		}
 		this.rules = {
-			common: [
-				{
-					convertNumber:
-						"function(input){return input? input.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',') : '';}"
-				},
-				{
-					XX: "12345"
-				}
-			],
+			common: [],
+			content: {}
 		}
 		this.dictionary = []
 	}

@@ -21,7 +21,6 @@ import TablePagination from "@material-ui/core/TablePagination";
 
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
-// import Test from "./test"
 
 const styles: any = (theme: any) => {
   return {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Common from "./common";
-import Content from "./content";
+import Content from "./contents";
 
 const styles: any = (theme: any) => {
   return {
@@ -28,7 +28,8 @@ export interface IDefautProps {
 }
 const Rules: React.FC<IDefautProps> = props => {
   const { classes, project, setProject } = props;
-
+  const content = project && project.rules.content ? project.rules.content : [];
+  const common = project && project.rules.common ? project.rules.common : [];
   const [mode, setMode] = useState("add");
   const [editCommon, setEditCommon] = useState(null);
   const [commonItem, setCommonItem] = useState(null);
@@ -37,14 +38,21 @@ const Rules: React.FC<IDefautProps> = props => {
     <Grid className={classes.wrapForm} spacing={24}>
       <Grid item xs={12} md={7} className={classes.formControl}>
         <Common
+          common={common}
           mode={mode}
+          setMode={setMode}
+          project={project}
+          setProject={setProject}
           setEditCommon={setEditCommon}
           commonItem={editCommon ? editCommon : commonItem}
           setCommonItem={editCommon ? editCommon : setCommonItem}
         />
       </Grid>
       <Grid item xs={12} md={5} className={classes.formControl}>
-        <Content />
+        <Content
+          project={project}
+          setProject={setProject}
+        />
       </Grid>
     </Grid>
   );

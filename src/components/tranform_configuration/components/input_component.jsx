@@ -270,7 +270,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
         />
 
         <FormLabel className={classes.titleField}>Rules</FormLabel>
-        <Rules />
+        <Rules project={project} setProject={setProject} />
       </div>
     </React.Fragment>
   );

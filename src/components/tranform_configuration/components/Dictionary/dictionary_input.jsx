@@ -7,7 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DoneIcon from "@material-ui/icons/Done";
-
 const styles: any = (theme: any) => {
   return {
     titleField: {
@@ -16,6 +15,22 @@ const styles: any = (theme: any) => {
     textField: {
       width: "95%",
       marginRight: theme.spacing.unit
+    },
+    add: {
+      background: "#3f51b5",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1a237e"
+      }
+    },
+    save:{
+      background: "#689f38",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1b5e20"
+      }
     }
   };
 };
@@ -25,6 +40,10 @@ export interface IDefautProps {
   theme?: any;
   project?: any;
   setProject?: any;
+  dictItem?: any;
+  setDictItem?: any;
+  mode?: any;
+  dictionary?: any;
 }
 const DictionaryComponent: React.FC<IDefautProps> = props => {
   const {
@@ -68,17 +87,17 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         ...project,
         dictionary: newDictionary
       });
+      setMode("add");
       setDictItem(null);
-      // setMode("add");
       console.log(newDictionary);
     }
   };
- 
+
   return (
     <React.Fragment>
       <FormLabel className={classes.titleField}>Dictionary</FormLabel>
       <Grid container spacing={12} alignItems="flex-end">
-        <Grid test item xs={6}>
+        <Grid item xs={6}>
           <TextField
             label="Field Key"
             className={classes.textField}
@@ -86,8 +105,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             variant="outlined"
             onChange={onChangeText}
-            value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ''}
-            disabled={mode === 'edit'}
+            value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
+            disabled={mode === "edit"}
           />
         </Grid>
         <Grid item xs={6}>
@@ -98,7 +117,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.database_type ? dictItem.database_type : ''}
+            value={
+              dictItem && dictItem.database_type ? dictItem.database_type : ""
+            }
           />
         </Grid>
       </Grid>
@@ -111,7 +132,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.host ? dictItem.host : ''}
+            value={dictItem && dictItem.host ? dictItem.host : ""}
           />
         </Grid>
         <Grid item xs={6}>
@@ -122,7 +143,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.port ? dictItem.port : ''}
+            value={dictItem && dictItem.port ? dictItem.port : ""}
           />
         </Grid>
       </Grid>
@@ -136,7 +157,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.username ? dictItem.username : ''}
+            value={dictItem && dictItem.username ? dictItem.username : ""}
           />
         </Grid>
         <Grid item xs={6}>
@@ -149,7 +170,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.password ? dictItem.password : ''}
+            value={dictItem && dictItem.password ? dictItem.password : ""}
           />
         </Grid>
       </Grid>
@@ -163,7 +184,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.database_name ? dictItem.database_name : ''}
+            value={
+              dictItem && dictItem.database_name ? dictItem.database_name : ""
+            }
           />
         </Grid>
         <Grid item xs={6}>
@@ -175,15 +198,14 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             margin="normal"
             onChange={onChangeText}
             variant="outlined"
-            value={dictItem && dictItem.schema_name ? dictItem.schema_name : ''}
+            value={dictItem && dictItem.schema_name ? dictItem.schema_name : ""}
           />
         </Grid>
       </Grid>
       <Fab
         size="small"
-        color={mode === "add" ? "primary" : "secondary"}
         aria-label="Add"
-        className={classes.margin}s
+        className={mode === "add" ? classes.add : classes.save}
         onClick={onAddDictionary}
       >
         {mode === "add" ? <AddIcon /> : <DoneIcon />}

@@ -16,8 +16,7 @@ const AddDialog = props => {
     return new Project()
   })
 
-  //console.log(project);
-  
+  console.log(project);
 
   const _onAgree = () => {
     const newProjects = [...projects, project]

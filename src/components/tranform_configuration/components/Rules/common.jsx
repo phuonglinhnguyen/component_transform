@@ -21,6 +21,14 @@ const styles: any = (theme: any) => {
     titleField: {
       fontWeight: "bold"
     },
+    add: {
+      background: "#3f51b5",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1a237e"
+      }
+    },
     common: {
       display: "flex",
       justifyContent: "space-between",
@@ -41,41 +49,41 @@ export interface IDefautProps {
 }
 
 const Common: React.FC<IDefautProps> = props => {
-  const { classes, mode, commonItem, setCommonItem } = props;
-  
+  const {
+    classes,
+    common,
+    mode,
+    setMode,
+    commonItem,
+    setCommonItem,
+    project,
+    setProject
+  } = props;
+
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
-    setCommonItem([...commonItem, ([name]: value)]);
+    console.log("common name:", name);
+    console.log("common Val:", value);
+
+    setCommonItem({
+      ...commonItem,
+      [name]: value
+    });
   };
-  // handleModify(key, value) {
-  //   const { datas, index } = this.state;
-  //   let data = { ...this.state.data };
-  //   let error_text = this.state.error_text;
-  //   data[key] = value;
-  //   const field_name = data.name;
-  //   const index_field = lodash.findIndex(datas, _d => _d.name === field_name);
-  //   if (key === 'name' && !field_name) {
-  //     error_text = (
-  //       <Translate
-  //         value={'projects.export_configuration.this_field_is_required'}
-  //       />
-  //     );
-  //   } else if (key === 'name' && field_name.length > 0) {
-  //     error_text = '';
-  //   }
-  //   if (index_field !== -1 && index_field !== index) {
-  //     error_text = (
-  //       <Translate
-  //         value={'projects.export_configuration.this_field_is_conflict'}
-  //       />
-  //     );
-  //   }
-  //   this.setState({
-  //     error_text: error_text,
-  //     data: data
-  //   });
-  // }
+
+  const onAddCommon = e => {
+    if (mode === "add") {
+      const newCommonItem = { ...commonItem };
+      setProject({
+        ...project,
+        rules: {
+          common: newCommonItem
+        }
+      });
+      setCommonItem(null);
+    }
+  };
   return (
     <React.Fragment>
       <FormLabel className={classes.titleField}>Common </FormLabel>
@@ -86,8 +94,15 @@ const Common: React.FC<IDefautProps> = props => {
           margin="normal"
           onChange={onChangeText}
         />
-        <TextField name="xx" label="XX" margin="normal" />
-        <Fab size="small" color="primary" aria-label="Add">
+      
+        <Fab
+          size="small"
+          className={classes.add}
+          aria-label="Add"
+          onClick={
+            onAddCommon
+          }
+        >
           {mode === "add" ? <AddIcon /> : <DoneIcon />}
         </Fab>
       </div>
@@ -102,7 +117,7 @@ const Common: React.FC<IDefautProps> = props => {
         highlightActiveLine={true}
         mode="javascript"
         name={"expression"}
-        // onChange={newValue => this.handleModify('expression', newValue)}
+        // onChange={newValue => handleModify('expression', newValue)}
         showGutter={true}
         showPrintMargin={false}
         theme="solarized_dark"
@@ -112,7 +127,10 @@ const Common: React.FC<IDefautProps> = props => {
 
       <div className={classes.titleCommon}>
         <FormLabel className={classes.titleField}>List Common</FormLabel>
-        <CommonItems />
+        <CommonItems 
+          mode={mode}
+          setMode={setMode}
+        />
       </div>
     </React.Fragment>
   );
