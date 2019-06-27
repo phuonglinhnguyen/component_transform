@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { withStyles } from "@material-ui/core/styles";
 
 import FormLabel from "@material-ui/core/FormLabel";
@@ -10,9 +11,11 @@ import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Project from "../../Models/Project";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+
 const styles: any = (theme: any) => {
   return {
     titleField: {
@@ -20,16 +23,9 @@ const styles: any = (theme: any) => {
       margin: `${theme.spacing.unit * 3}px 0px 0px 0px`
     },
     demo: {
+      height: "500px",
       backgroundColor: theme.palette.background.paper,
-      overflowY: "auto",
-      height: "300px"
-    },
-    customSearch: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "baseline",
-      paddingBottom: "20px",
-      borderBottom: "2px solid lavender"
+      overflowY: "auto"
     },
     selectList: {
       cursor: "pointer",
@@ -37,6 +33,13 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "lightgray"
       }
+    },
+    customSearch: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "baseline",
+      paddingBottom: "20px",
+      borderBottom: "2px solid lavender"
     },
     search: {
       position: "relative",
@@ -89,31 +92,68 @@ export interface IDefautProps {
   setSelectedDictItem?: any;
   setMode?: any;
 }
-const DictionaryList: React.FC<IDefautProps> = props => {
+const ContentList: React.FC<IDefautProps> = props => {
   const {
     classes,
-    dictionary,
-    setSelectedDictItem,
-    setMode,
+    setSelectedContentItem,
     setProject,
-    project
+    project,
+    contentName,
+    contentItem,
+    contentArray,
+    setContentArray,
+    content,
+    //selectedContentItem
   } = props;
+
   const [dense] = useState(false);
 
-  const deleteDict = (e, fieldKey) => {
-    e.stopPropagation();
-    const newDict = dictionary.filter(
-      dict_item => dict_item.fieldKey !== fieldKey
-    );
+  const onAddContent = (contentName, contentItem) => {
+    setProject({
+      ...project,
+      rules: {
+        ...project.rules,
+        content: {
+          ...project.rules.content,
+          [contentName]: contentItem
+        }
+      }
+    });
 
-    const updateProject = { ...project, dictionary: newDict };
+    let newContentArray = contentArray.map(content => {
+      return { contentName, contentItem };
+    });
+
+    console.log("newContentArray", newContentArray);
+
+    setContentArray(newContentArray);
+  };
+  // console.log("yes", contentArray);
+
+  const deleteContentItem = (e, dataKey) => {
+    e.stopPropagation();
+    const newContentArray = contentArray.filter(
+      content_item => content_item.contentItem.dataKey !== dataKey
+    );
+    console.log("del:", newContentArray);
+
+    const updateProject = {
+      ...project,
+      rules: {
+        ...project.rules.content,
+        [contentName]: newContentArray
+      }
+    };
+    console.log("update:", updateProject);
+
     setProject(updateProject);
+    setContentArray(newContentArray);
   };
 
   return (
     <React.Fragment>
       <div className={classes.customSearch}>
-        <FormLabel className={classes.titleField}>List Dictionary</FormLabel>
+        <FormLabel className={classes.titleField}>Content List</FormLabel>
         <div className={classes.search}>
           <div className={classes.searchIcon}>
             <SearchIcon />
@@ -127,31 +167,31 @@ const DictionaryList: React.FC<IDefautProps> = props => {
           />
         </div>
       </div>
-
       <div className={classes.demo}>
         <List dense={dense}>
-          {dictionary.map(dict_item => {
+          {contentArray.map(contentItem => {
             return (
               <ListItem
-                key={dict_item.id}
+                key={contentItem.id}
                 className={classes.selectList}
+                onAddContent
                 onClick={() => {
-                  setSelectedDictItem(dict_item);
-                  setMode("edit");
+                  setSelectedContentItem(contentItem);
+                  //   setMode("edit");
                 }}
               >
                 <ListItemIcon>
                   <FolderIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={dict_item.username}
-                  secondary={dict_item.database_name}
+                  primary={contentItem.contentName}
+                  secondary={contentItem.contentItem.dataKey}
                 />
                 <ListItemSecondaryAction>
                   <IconButton
                     aria-label="Delete"
                     onClick={e => {
-                      deleteDict(e, dict_item.fieldKey);
+                      deleteContentItem(e, contentItem.contentItem.dataKey);
                     }}
                   >
                     <DeleteIcon />
@@ -165,4 +205,4 @@ const DictionaryList: React.FC<IDefautProps> = props => {
     </React.Fragment>
   );
 };
-export default withStyles(styles, { withTheme: true })(DictionaryList);
+export default withStyles(styles, { withTheme: true })(ContentList);

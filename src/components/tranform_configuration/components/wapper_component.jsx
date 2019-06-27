@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 // import { Translate } from "react-redux-i18n";
+import filter from 'lodash/filter'
+import isEmpty from 'lodash/isEmpty'
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
@@ -123,7 +125,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-  const [strSearch, setStrSearch] = useState(null);
+  const [strSearch, setStrSearch] = useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -131,17 +133,18 @@ const WapperComponent: React.FC<IDefautProps> = props => {
     return getDataTranform();
   });
 
+  let searchTimeout = null
 
-  // const handleGetData = () => {
-  //   console.log("projectId: ", projectId);
-  //   console.log("data: ", data);
-  //   getDataTranform(data, projectId);
-  // };
+  const onChangeSearch = (e) => {
+    const value = e.target.value
+    if (searchTimeout) {
+      clearTimeout(searchTimeout)
+    }
+    searchTimeout = setTimeout(() => {
+      setStrSearch(value)
+    }, 1000)
+  }
 
-  // const handlerOnChange = e => {
-  //   const value = e.target.value;
-  //   setStrSearch()
-  // };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -157,6 +160,19 @@ const WapperComponent: React.FC<IDefautProps> = props => {
     console.log(newProjects);
     setProjects(newProjects);
   };
+
+  const configData = filter(projects, (project) => {
+    if (isEmpty(strSearch)) {
+      return true
+    }
+    const strToSearch = project.name.toLowerCase()
+    console.log(strToSearch, strSearch);
+    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    return strToSearch.indexOf(strSearch.toLowerCase()) + 1
+  });
+
+  console.log(configData);
+
   return (
     <React.Fragment>
       <div className={classes.container}>
@@ -175,6 +191,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                   root: classes.inputRoot,
                   input: classes.inputInput
                 }}
+                onChange={onChangeSearch}
               />
             </div>
             <Button
@@ -186,26 +203,6 @@ const WapperComponent: React.FC<IDefautProps> = props => {
             </Button>
           </div>
         </div>
-
-        <AddDialog
-          isOpen={isOpenAddModal}
-          setIsOpen={setIsOpenAddModal}
-          projects={projects}
-          setProjects={setProjects}
-          selectedList={selectedProject}
-          setSelectedList={setSelectedProject}
-        />
-
-        <EditDialog
-          isOpen={isOpenEditModal}
-          setIsOpen={setIsOpenEditModal}
-          projects={projects}
-          setProjects={setProjects}
-          project={selectedProject}
-          setProject={setSelectedProject}
-          selectedList={selectedProject}
-          setSelectedList={setSelectedProject}
-        />
 
         <Table>
           <TableHead className={classes.headTab}>
@@ -222,8 +219,11 @@ const WapperComponent: React.FC<IDefautProps> = props => {
               </TableCell>
             </TableRow>
           </TableHead>
+          {/* 
+            10px, 30%, 10em, 10rem - (10vh, 10vm)
+          */}
           <TableBody>
-            {projects
+            {configData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(project => (
                 <TableRow
@@ -267,7 +267,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         className={classes.rowPerPage}
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={projects.length}
+        count={configData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{
@@ -278,6 +278,26 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         }}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+
+      <AddDialog
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        projects={projects}
+        setProjects={setProjects}
+        selectedList={selectedProject}
+        setSelectedList={setSelectedProject}
+      />
+
+      <EditDialog
+        isOpen={isOpenEditModal}
+        setIsOpen={setIsOpenEditModal}
+        projects={projects}
+        setProjects={setProjects}
+        project={selectedProject}
+        setProject={setSelectedProject}
+        selectedList={selectedProject}
+        setSelectedList={setSelectedProject}
       />
     </React.Fragment>
   );
