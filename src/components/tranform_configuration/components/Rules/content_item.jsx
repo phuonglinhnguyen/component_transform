@@ -132,7 +132,8 @@ const ContentItem: React.FC<IDefautProps> = props => {
         name="contentName"
         label="Name"
         className={classes.heading}
-        onChange={(e) => setContentName(e.target.value)}
+        // onChange={(e) => setContentName(e.target.value)}
+        onChange={onChangeText}
         value={contentName ? contentName : ''}
 
       />

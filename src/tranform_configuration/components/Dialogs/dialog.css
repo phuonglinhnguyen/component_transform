@@ -1,0 +1,13 @@
+.MuiDialog-paperWidthSm-197{
+  max-width: 1200px !important;
+}
+.tilte-dialog {
+  background: #3f51b5;
+  
+  
+  text-transform: uppercase;
+}
+.tilte-dialog h2 {
+  color: white;
+  font-weight: bolder;
+}
