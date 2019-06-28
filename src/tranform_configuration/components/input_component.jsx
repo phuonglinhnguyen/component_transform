@@ -75,24 +75,23 @@ const styles: any = (theme: any) => {
   };
 };
 
-const PROJECT_NAME = "Project Name";
 
 export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  project?: any;
-  setProject?: any;
+  config?: any;
+  setConfig?: any;
 }
 const InputComponent: React.FC<IDefautProps> = props => {
-  const { classes, project, setProject } = props;
+  const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
 
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
-    setProject({
-      ...project,
+    setConfig({
+      ...config,
       [name]: value
     });
   };
@@ -100,8 +99,8 @@ const InputComponent: React.FC<IDefautProps> = props => {
   const onChangeActive = e => {
     const name = e.target.name;
     const checked = e.target.checked;
-    setProject({
-      ...project,
+    setConfig({
+      ...config,
       [name]: checked
     });
   };
@@ -109,7 +108,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
   const onChangeRadio = e => {
     const name = e.target.name;
     const value = e.target.value;
-    const collector = get(project, "filter.collector", {});
+    const collector = get(config, "filter.collector", {});
     let newCollector = {};
 
     for (const key in collector) {
@@ -120,10 +119,10 @@ const InputComponent: React.FC<IDefautProps> = props => {
       }
     }
 
-    setProject({
-      ...project,
+    setConfig({
+      ...config,
       filter: {
-        ...project.filter,
+        ...config.filter,
         collector: newCollector
       }
     });
@@ -131,7 +130,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
 
   const collectorValue = () => {
     let value = "";
-    const collector = get(project, "filter.collector", {});
+    const collector = get(config, "filter.collector", {});
     for (const key in collector) {
       const final = collector[key]; // final = 'final'
       if (final === "final") {
@@ -142,27 +141,25 @@ const InputComponent: React.FC<IDefautProps> = props => {
   };
 
   const handleChangeCron = cronValue => {
-    setProject({
-      ...project,
+    setConfig({
+      ...config,
       cron_trigger: cronValue
     });
   };
 
-  // console.log(project);
+  // console.log(config);
 
   return (
     <React.Fragment>
       <div>
         <Grid className={classes.wrapForm} spacing={24}>
-          <Grid item xs={12} md={5}>
-            <FormLabel className={classes.titleField}>
-              Config
-            </FormLabel>
+          <Grid item xs={12} md={6}>
+            <FormLabel className={classes.titleField}>Config</FormLabel>
 
             <form className={classes.formControl}>
               <TextField
                 required
-                value={project ? project.name : ""}
+                value={config ? config.name : ""}
                 name="name"
                 label="Name"
                 className={classes.textField}
@@ -170,7 +167,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
               />
               <TextField
                 name="version"
-                value={project ? project.version : "test version"}
+                value={config ? config.version : "test version"}
                 label="Version"
                 className={classes.textField}
                 onChange={onChangeText}
@@ -183,7 +180,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
                     <Switch
                       aria-label="Active"
                       name="active"
-                      checked={project ? project.active : true}
+                      checked={config ? config.active : true}
                       onChange={onChangeActive}
                       color="primary"
                     />
@@ -192,7 +189,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
               </FormGroup>
             </form>
           </Grid>
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={6}>
             <FormLabel className={classes.titleField}>Filter</FormLabel>
             <div className={classes.formControl}>
               <FormControl className={classes.formCollector}>
@@ -234,11 +231,11 @@ const InputComponent: React.FC<IDefautProps> = props => {
               <TransformDialog
                 isOpen={isOpenTransformModal}
                 setIsOpen={setIsOpenTransformModal}
-                project={project}
-                setProject={setProject}
+                config={config}
+                setConfig={setConfig}
               />
               <div className={classes.showPattern}>
-                {getDataObject("filter.transform.pattern", project) || ""}
+                {getDataObject("filter.transform.pattern", config) || ""}
               </div>
             </div>
           </Grid>
@@ -247,15 +244,16 @@ const InputComponent: React.FC<IDefautProps> = props => {
         <FormLabel className={classes.titleField}>Cron Trigger</FormLabel>
         <CronTriggerQuartz
           className={classes.group}
+          input={true}
           cronValue={"0/10 * * * * ? *"}
           viewCronValue={true}
           tabs={["minutes", "hourly", "daily", "weekly"]}
           onChange={handleChangeCron}
         />
 
-        <Dictionary project={project} setProject={setProject} />
+        <Dictionary config={config} setConfig={setConfig} />
         <FormLabel className={classes.titleField}>Rules</FormLabel>
-        <Rules project={project} setProject={setProject} />
+        <Rules config={config} setConfig={setConfig} />
       </div>
     </React.Fragment>
   );

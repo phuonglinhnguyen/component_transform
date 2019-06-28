@@ -23,35 +23,30 @@ export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  project?: any;
+  config?: any;
   setProject?: any;
 }
-const Rules: React.FC<IDefautProps> = props => {
-  const { classes, project, setProject } = props;
 
-  const common = project && project.rules.common ? project.rules.common : [];
+const Rules: React.FC<IDefautProps> = props => {
+  const { classes, config, setProject } = props;
   const [mode, setMode] = useState("add");
 
   return (
     <React.Fragment>
       <Grid className={classes.wrapForm} spacing={24}>
-        <Grid item xs={12} md={5} className={classes.formControl}>
+        <Grid item xs={12} md={6} className={classes.formControl}>
           <Common
-            // common={common}
             mode={mode}
             setMode={setMode}
-            project={project}
+            config={config}
             setProject={setProject}
-            // setEditCommon={setEditCommon}
-            // commonItem={editCommon ? editCommon : commonItem}
-            // setCommonItem={editCommon ? editCommon : setCommonItem}
           />
         </Grid>
-        <Grid item xs={12} md={7} className={classes.formControl}>
+        <Grid item xs={12} md={6} className={classes.formControl}>
           <Content
             mode={mode}
             setMode={setMode}
-            project={project}
+            config={config}
             setProject={setProject}
           />
         </Grid>

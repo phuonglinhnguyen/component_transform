@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import filter from "lodash/filter";
+import isEmpty from "lodash/isEmpty";
 import { withStyles } from "@material-ui/core/styles";
 
 import FormLabel from "@material-ui/core/FormLabel";
@@ -95,20 +97,40 @@ const DictionaryList: React.FC<IDefautProps> = props => {
     dictionary,
     setSelectedDictItem,
     setMode,
-    setProject,
-    project
+    setConfig,
+    config
   } = props;
   const [dense] = useState(false);
-
+  const [strSearch, setStrSearch] = useState(null);
   const deleteDict = (e, fieldKey) => {
     e.stopPropagation();
     const newDict = dictionary.filter(
       dict_item => dict_item.fieldKey !== fieldKey
     );
 
-    const updateProject = { ...project, dictionary: newDict };
-    setProject(updateProject);
+    const updateConfig = { ...config, dictionary: newDict };
+    setConfig(updateConfig);
   };
+  let searchTimeout = null;
+
+  const onChangeSearch = e => {
+    const value = e.target.value;
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    searchTimeout = setTimeout(() => {
+      setStrSearch(value);
+    }, 500);
+  };
+  const dictData = filter(dictionary, dictItem => {
+    if (isEmpty(strSearch)) {
+      return true;
+    }
+    const strToSearch = dictItem.fieldKey.toLowerCase();
+    console.log("dictsearch", strToSearch, strSearch);
+    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
+  });
 
   return (
     <React.Fragment>
@@ -124,13 +146,14 @@ const DictionaryList: React.FC<IDefautProps> = props => {
               root: classes.inputRoot,
               input: classes.inputInput
             }}
+            onChange={onChangeSearch}
           />
         </div>
       </div>
 
       <div className={classes.demo}>
         <List dense={dense}>
-          {dictionary.map(dict_item => {
+          {dictData.map(dict_item => {
             return (
               <ListItem
                 key={dict_item.id}
@@ -144,8 +167,8 @@ const DictionaryList: React.FC<IDefautProps> = props => {
                   <FolderIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={dict_item.username}
-                  secondary={dict_item.database_name}
+                  primary={dict_item.fieldKey}
+                  secondary={dict_item.username}
                 />
                 <ListItemSecondaryAction>
                   <IconButton

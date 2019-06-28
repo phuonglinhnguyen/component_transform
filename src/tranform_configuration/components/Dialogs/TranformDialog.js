@@ -20,10 +20,10 @@ export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  project?: any;
-  setProject?: any;
-  projects?: any;
-  setProjects?: any;
+  config?: any;
+  setConfig?: any;
+  configs?: any;
+  setConfigs?: any;
   isOpen?: any;
   setIsOpen?: any;
 }
@@ -31,10 +31,10 @@ const TransformDialog: React.FC<IDefautProps> = props => {
   const {
     isOpen,
     setIsOpen,
-    projects,
-    setProjects,
-    project,
-    setProject
+    configs,
+    setConfigs,
+    config,
+    setConfig
   } = props;
 
   const [pattern, setTransform] = useState({});
@@ -43,10 +43,10 @@ const TransformDialog: React.FC<IDefautProps> = props => {
     console.log(pattern);
     console.log();
     setIsOpen(false);
-    setProject({
-      ...project,
+    setConfig({
+      ...config,
       filter: {
-        ...project.filter,
+        ...config.filter,
         transform: {
           pattern: JSON.stringify(pattern)
         }

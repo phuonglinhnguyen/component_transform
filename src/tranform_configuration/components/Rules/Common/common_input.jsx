@@ -60,8 +60,9 @@ const Common: React.FC<IDefautProps> = props => {
     setMode,
     commonItem,
     setCommonItem,
-    project,
-    setProject,
+    config,
+    setConfig,
+    commonName,
     setCommonName
   } = props;
 
@@ -76,40 +77,47 @@ const Common: React.FC<IDefautProps> = props => {
       [name]: value
     });
   };
+  console.log("commonData:", common);
 
   const onAddCommon = e => {
-    if (mode === "add") {
-      const newCommonItem = { ...commonItem };
-      setProject({
-        ...project,
-        rules: {
-          common: [newCommonItem]
-        }
-      });
-      setCommonItem(null);
-    }
-    // }else if(mode==="edit"){
-    //   const newCommon=common.map(_commonItem=>{
-    //     if(_commonItem.convertNumber===commonItem.convertNumber){
-    //       return {...commonItem}
-    //     }
-    //     return _commonItem;
-    //   })
+    // if (mode === "add") {
+    const newCommonItem = [...commonItem];
+    newCommonItem.unshift({
+      commonName
+    });
+    console.log("newds", newCommonItem);
 
-    //   setProject({
-    //     ...project,
-    //     rules: {
-    //       ...project.rules,
-    //       content: {
-    //         ...project.rules.common,
-    //         [convertNumber]: commonItem
-    //       }
-    //     }
-    //   });
-    //   setMode("add");
-    //   setCommonItem(null);
-    // }
+    // setConfig({
+    //   ...config,
+    //   rules: {
+    //     ...config.rules,
+    //     common: [...config.rules.common, newCommonItem]
+    //   }
+    // });
+    setCommonItem(newCommonItem);
   };
+  // }else if(mode==="edit"){
+  //   const newCommon=common.map(_commonItem=>{
+  //     if(_commonItem.convertNumber===commonItem.convertNumber){
+  //       return {...commonItem}
+  //     }
+  //     return _commonItem;
+  //   })
+
+  //   setConfig({
+  //     ...config,
+  //     rules: {
+  //       ...config.rules,
+  //       content: {
+  //         ...config.rules.common,
+  //         [convertNumber]: commonItem
+  //       }
+  //     }
+  //   });
+  //   setMode("add");
+  //   setCommonItem(null);
+  // }
+  // };
   return (
     <React.Fragment>
       <div className={classes.common}>
@@ -125,10 +133,14 @@ const Common: React.FC<IDefautProps> = props => {
         </Fab>
       </div>
       <TextField
-        name="convertNumber"
+        name="commonName"
         label="Name"
         margin="normal"
-        onChange={e => {setCommonName(e.target.value)}}
+        value={commonName ? commonName : ""}
+        onChange={e => {
+          setCommonName(e.target.value);
+        }}
+        // onChange={onChangeText}
       />
       <AceEditor
         className={classes.ace}
@@ -140,7 +152,7 @@ const Common: React.FC<IDefautProps> = props => {
         height="250px"
         mode="javascript"
         name={"expression"}
-        // onChange={newValue => handleModify('expression', newValue)}
+        onChange={onChangeText}
         showGutter={true}
         showPrintMargin={false}
         theme="solarized_dark"

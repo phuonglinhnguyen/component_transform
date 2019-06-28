@@ -9,42 +9,47 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import "./dialog.css"
 
 import InputComponent from "../input_component";
 const styles: any = (theme: any) => {
-  return {};
+  return {
+    paper: {
+      maxWidth: "800px !important"
+    }
+  };
 };
 export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  project?: any;
-  setProject?: any;
-  projects?: any;
-  setProjects?: any;
-  isOpen?:any;
+  config?: any;
+  setConfig?: any;
+  configs?: any;
+  setConfigs?: any;
+  isOpen?: any;
   setIsOpen?: any;
 }
 const EditDialog: React.FC<IDefautProps> = props => {
   const {
     isOpen,
     setIsOpen,
-    projects,
-    setProjects,
-    project,
-    setProject
+    configs,
+    setConfigs,
+    config,
+    setConfig
   } = props;
 
   const onAgree = () => {
-    const newProjects = projects.map(_project => {
-      if (_project.project_id === project.project_id) {
-        return { ...project };
+    const newConfigs = configs.map(_config => {
+      if (_config.project_id === config.project_id) {
+        return { ...config };
       }
-      return _project;
+      return _config;
     });
-    setProjects(newProjects);
+    setConfigs(newConfigs);
     setIsOpen(false);
-    setProject(null);
+    setConfig(null);
   };
 
   return (
@@ -57,10 +62,10 @@ const EditDialog: React.FC<IDefautProps> = props => {
       <DialogTitle className="tilte-dialog">
         {"Edit Transform Config"}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent >
         <InputComponent
-          project={project}
-          setProject={setProject}
+          config={config}
+          setConfig={setConfig}
           editable={true}
         />
       </DialogContent>
@@ -76,4 +81,4 @@ const EditDialog: React.FC<IDefautProps> = props => {
   );
 };
 
-export default withStyles(styles, { withTheme: true }) (EditDialog);
+export default withStyles(styles, { withTheme: true })(EditDialog);

@@ -11,44 +11,57 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import InputComponent from "../input_component";
-import Project from "../Models/Project";
+import Config from "../Models/Config";
 
 import "./dialog.css";
+
 const styles: any = (theme: any) => {
   return {
-    
+    showDialog: {
+      maxWidth: "1200px"
+    }
   };
 };
 export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  projects?: any;
-  setProjects?: any;
+  configs?: any;
+  setConfigs?: any;
   isOpen?: any;
   setIsOpen?: any;
 }
 const AddDialog: React.FC<IDefautProps> = props => {
-  const { isOpen, setIsOpen, projects, setProjects, classes } = props;
+  const { isOpen, setIsOpen, configs, setConfigs, classes } = props;
 
-  const [project, setProject] = useState(() => {
-    return new Project();
+  const [config, setConfig] = useState(() => {
+    return new Config();
   });
+  const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = () => {
-    const newProjects = [...projects, project];
-    setProjects(newProjects);
+    const newConfigs = [...configs, config];
+    setConfigs(newConfigs);
     setIsOpen(false);
-    setProject(new Project());
+    setConfig(new Config());
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => setIsOpen(false)} className={classes.test}>
+    <Dialog
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+      className={classes.test}
+    >
       <DialogTitle className="tilte-dialog">
         {"Add Transform Config"}
       </DialogTitle>
-      <DialogContent >
-        <InputComponent project={project} setProject={setProject} />
+      <DialogContent>
+        <InputComponent
+          config={config}
+          setConfig={setConfig}
+          cronValue={cronValue}
+          setCronValue={setCronValue}
+        />
       </DialogContent>
 
       <DialogActions>
