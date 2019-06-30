@@ -4,12 +4,9 @@ import get from "lodash/get";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Done";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 import { TextField } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
 import FormLabel from "@material-ui/core/FormLabel";
 
 const styles: any = (theme: any) => {
@@ -18,7 +15,9 @@ const styles: any = (theme: any) => {
       boxShadow: "-4px 3px 33px -10px rgba(0,0,0,0.75)",
       margin: "20px 0",
       padding: theme.spacing.unit * 3,
-      textAlign: "center"
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column"
     },
     titleField: {
       fontWeight: "bold"
@@ -40,14 +39,6 @@ const styles: any = (theme: any) => {
         background: "#1a237e"
       }
     },
-    delete: {
-      background: "#e57373",
-      color: "#fafafa",
-      transition: "background 0.1s ease-in",
-      "&:hover": {
-        background: "#b71c1c"
-      }
-    },
     save: {
       background: "#689f38",
       color: "#fafafa",
@@ -55,9 +46,6 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "#1b5e20"
       }
-    },
-    contentItem: {
-      background: "#843d8b45"
     }
   };
 };
@@ -69,8 +57,8 @@ export interface IDefautProps {
 const ContentItem: React.FC<IDefautProps> = props => {
   const {
     classes,
-    project,
-    setProject,
+    config,
+    setConfig,
     setContentItem,
     content,
     contentItem,
@@ -85,12 +73,20 @@ const ContentItem: React.FC<IDefautProps> = props => {
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log("aaaa", name, value);
-
-    setContentItem({
-      ...contentItem,
-      [name]: value
-    });
+    if (mode === 'add') {
+      setContentItem({
+        ...contentItem,
+        [name]: value
+      });
+    } else if (mode === 'edit') {
+      setContentItem({
+        contentName,
+        contentItem: {
+          ...contentItem,
+          [name]: value
+        }
+      })
+    }
   };
 
   const onAddContentItem = () => {
@@ -100,33 +96,42 @@ const ContentItem: React.FC<IDefautProps> = props => {
         contentName,
         contentItem
       });
-      console.log(newContentArray);
+      setConfig({
+        ...config,
+        rules: {
+          ...config.rules,
+          content: {
+            ...config.rules.content,
+            [contentName]: contentItem
+          }
+        }
+      });
       setContentArray(newContentArray);
+      setContentItem(null)
+      setContentName(null)
     } else if (mode === "edit") {
-      const newContent = contentArray.map(_contentItem => {
-        if (_contentItem.dataKey === contentItem.dataKey) {
-          return { ...contentItem };
+      const newContentArray = contentArray.map(_contentItem => {
+        if (_contentItem.contentItem.dataKey === contentItem.dataKey) {
+          return { contentItem: {...contentItem}, contentName };
         }
         return _contentItem;
       });
 
-      setProject({
-        ...project,
+      setConfig({
+        ...config,
         rules: {
-          ...project.rules,
+          ...config.rules,
           content: {
-            ...project.rules.content,
+            ...config.rules.content,
             [contentName]: contentItem
           }
         }
       });
       setMode("add");
-      setContentArray(null);
+      setContentArray(newContentArray);
+      setContentItem(null)
     }
   };
-
-  console.log(contentItem);
-  console.log(contentItem ? contentItem.dataKey : '');
 
   return (
     <React.Fragment>
@@ -135,47 +140,51 @@ const ContentItem: React.FC<IDefautProps> = props => {
 
         <Fab
           size="small"
-          className={classes.add}
+          className={mode === "add" ? classes.add : classes.save}
           aria-label="Add"
           onClick={onAddContentItem}
         >
-          <AddIcon />
+          {mode === "add" ? <AddIcon /> : <SaveIcon />}
         </Fab>
       </div>
       <TextField
         name="contentName"
         label="Name"
         className={classes.heading}
-        onChange={(e) => setContentName(e.target.value)}
+        onChange={e => setContentName(e.target.value)}
         value={contentName ? contentName : ""}
       />
       <div className={classes.formControl}>
-        <Grid container spacing={16} alignItems="flex-end">
-          <Grid item sm={4}>
-            <TextField
-              name="dataKey"
-              label="DataKey"
-              onChange={onChangeText}
-              value={contentItem ? contentItem.dataKey : ""}
-            />
-          </Grid>
-          <Grid item sm={4}>
-            <TextField
-              name="default"
-              label="Default"
-              onChange={onChangeText}
-              value={contentItem ? contentItem.default : ""}
-            />
-          </Grid>
-          <Grid item sm={4}>
-            <TextField
-              name="value"
-              label="Value"
-              onChange={onChangeText}
-              value={contentItem ? contentItem.value : ""}
-            />
-          </Grid>
-        </Grid>
+        <TextField
+          name="dataKey"
+          label="DataKey"
+          margin="dense"
+          onChange={onChangeText}
+          value={contentItem && contentItem.dataKey ? contentItem.dataKey : ""}
+          disabled={mode === "edit"}
+        />
+
+        <TextField
+          name="default"
+          label="Default"
+          margin="dense"
+          multiline={true}
+          rows={1}
+          rowsMax={3}
+          onChange={onChangeText}
+          value={contentItem && contentItem.default ? contentItem.default : ""}
+        />
+
+        <TextField
+          name="value"
+          label="Value"
+          margin="dense"
+          multiline={true}
+          rows={1}
+          rowsMax={3}
+          onChange={onChangeText}
+          value={contentItem ? contentItem.value : ""}
+        />
       </div>
     </React.Fragment>
   );

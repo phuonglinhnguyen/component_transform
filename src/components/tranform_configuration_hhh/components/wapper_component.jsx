@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Translate } from "react-redux-i18n";
-import filter from "lodash/filter";
-import isEmpty from "lodash/isEmpty";
+// import { Translate } from "react-redux-i18n";
+import filter from 'lodash/filter'
+import isEmpty from 'lodash/isEmpty'
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
 import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
-import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
+// import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
 
-import { Button } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -23,13 +23,12 @@ import TablePagination from "@material-ui/core/TablePagination";
 
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
-
+import "./Dialogs/main.css";
 const styles: any = (theme: any) => {
   return {
     container: {
       maxHeight: `calc(100vh - ${theme.spacing.unit * 8}px)`,
-      margin: `${theme.spacing.unit * 8}px 0px 0px 0px`,
-      height: "880px"
+      margin: `${theme.spacing.unit * 8}px 0px 0px 0px`
     },
     top: {
       display: "flex",
@@ -126,65 +125,60 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-  const [strSearch, setStrSearch] = useState(null);
+  const [strSearch, setStrSearch] = useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [configs, setConfigs] = useState(() => {
+
+  const [projects, setProjects] = useState(() => {
     return getDataTranform();
   });
 
-  // const handleGetData = () => {
-  //   console.log("projectId: ", projectId);
-  //   console.log("data: ", data);
-  //   getDataTranform(data, projectId);
-  // };
+  let searchTimeout = null
 
-  // =====Search
-  let searchTimeout = null;
-
-  const onChangeSearch = e => {
-    const value = e.target.value;
+  const onChangeSearch = (e) => {
+    const value = e.target.value
     if (searchTimeout) {
-      clearTimeout(searchTimeout);
+      clearTimeout(searchTimeout)
     }
     searchTimeout = setTimeout(() => {
-      setStrSearch(value);
-    }, 500);
-  };
-  //==Rows Per Page
+      setStrSearch(value)
+    }, 1000)
+  }
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(event.target.value);
   };
-  //===Filter Data
-  const configData = filter(configs, config => {
+
+  const deleteProject = (e, project_id) => {
+    e.stopPropagation();
+    const newProjects = projects.filter(
+      project => project.project_id !== project_id
+    ); // use ===, !==. Need to read different == and === in js
+    console.log(newProjects);
+    setProjects(newProjects);
+  };
+
+  const configData = filter(projects, (project) => {
     if (isEmpty(strSearch)) {
-      return true;
+      return true
     }
-    const strToSearch = config.name.toLowerCase();
+    const strToSearch = project.name.toLowerCase()
     console.log(strToSearch, strSearch);
     console.log(strToSearch.indexOf(strSearch.toLowerCase()));
-    return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
+    return strToSearch.indexOf(strSearch.toLowerCase()) + 1
   });
 
-  //===Delete config
-  const deleteConfig = (e, project_id) => {
-    e.stopPropagation();
-    const newConfigs = configs.filter(
-      config => config.project_id !== project_id
-    ); // use ===, !==. Need to read different == and === in js
-    console.log(newConfigs);
-    setConfigs(newConfigs);
-  };
+  console.log(configData);
 
   return (
     <React.Fragment>
       <div className={classes.container}>
         <div className={classes.top}>
-          <FormLabel className={classes.titleField}>
-            <Translate value={`${KEY_TRANSLATE}.title_wrapper`} />
+          <FormLabel className={classes.titleField}>Tranform Configuration
+            {/* <Translate value={`${KEY_TRANSLATE}.title_wrapper`} /> */}
           </FormLabel>
           <div className={classes.top}>
             <div className={classes.search}>
@@ -205,7 +199,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
               color="primary"
               onClick={() => setIsOpenAddModal(true)}
             >
-              Add Config
+              Add Project
             </Button>
           </div>
         </div>
@@ -213,7 +207,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         <Table>
           <TableHead className={classes.headTab}>
             <TableRow>
-              <TableCell className={classes.table}>Name</TableCell>
+              <TableCell className={classes.table}>Project Name</TableCell>
               <TableCell className={classes.table} align="right">
                 Cron Trigger
               </TableCell>
@@ -225,15 +219,18 @@ const WapperComponent: React.FC<IDefautProps> = props => {
               </TableCell>
             </TableRow>
           </TableHead>
+          {/* 
+            10px, 30%, 10em, 10rem - (10vh, 10vm)
+          */}
           <TableBody>
             {configData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(config => (
+              .map(project => (
                 <TableRow
-                  key={config.name}
+                  key={project.name}
                   className={classes.selectRow}
                   onClick={() => {
-                    setSelectedProject(config);
+                    setSelectedProject(project);
                     setIsOpenEditModal(true);
                   }}
                 >
@@ -242,19 +239,19 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                     scope="row"
                     className={classes.tableItem}
                   >
-                    {config.name}
+                    {project.name}
                   </TableCell>
                   <TableCell align="right" className={classes.tableItem}>
-                    {config.cron_trigger}
+                    {project.cron_trigger}
                   </TableCell>
                   <TableCell align="right" className={classes.tableItem}>
-                    {config.version}
+                    {project.version}
                   </TableCell>
                   <TableCell align="right" className={classes.tableItem}>
                     <IconButton
                       aria-label="Delete"
                       onClick={e => {
-                        deleteConfig(e, config.project_id);
+                        deleteProject(e, project.project_id);
                       }}
                     >
                       <DeleteIcon />
@@ -282,11 +279,12 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+
       <AddDialog
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
-        configs={configs}
-        setConfigs={setConfigs}
+        projects={projects}
+        setProjects={setProjects}
         selectedList={selectedProject}
         setSelectedList={setSelectedProject}
       />
@@ -294,10 +292,10 @@ const WapperComponent: React.FC<IDefautProps> = props => {
       <EditDialog
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}
-        configs={configs}
-        setConfigs={setConfigs}
-        config={selectedProject}
-        setConfig={setSelectedProject}
+        projects={projects}
+        setProjects={setProjects}
+        project={selectedProject}
+        setProject={setSelectedProject}
         selectedList={selectedProject}
         setSelectedList={setSelectedProject}
       />

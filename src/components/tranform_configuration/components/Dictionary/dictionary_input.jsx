@@ -13,8 +13,10 @@ const styles: any = (theme: any) => {
       fontWeight: "bold"
     },
     textField: {
-      width: "95%",
-      marginRight: theme.spacing.unit
+      width: "95%"
+    },
+    textField1: {
+      width: "90%"
     },
     add: {
       background: "#3f51b5",
@@ -24,13 +26,16 @@ const styles: any = (theme: any) => {
         background: "#1a237e"
       }
     },
-    save:{
+    save: {
       background: "#689f38",
       color: "#fafafa",
       transition: "background 0.1s ease-in",
       "&:hover": {
         background: "#1b5e20"
       }
+    },
+    formInput: {
+      margin: "20px 0"
     }
   };
 };
@@ -38,8 +43,8 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
-  project?: any;
-  setProject?: any;
+  config?: any;
+  setConfig?: any;
   dictItem?: any;
   setDictItem?: any;
   mode?: any;
@@ -48,8 +53,8 @@ export interface IDefautProps {
 const DictionaryComponent: React.FC<IDefautProps> = props => {
   const {
     classes,
-    project,
-    setProject,
+    config,
+    setConfig,
     dictItem,
     setDictItem,
     mode,
@@ -70,9 +75,11 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   const onAddDictionary = () => {
     if (mode === "add") {
       const newDictItem = { ...dictItem };
-      setProject({
-        ...project,
-        dictionary: [...project.dictionary, newDictItem]
+      console.log("dsdsff", newDictItem);
+
+      setConfig({
+        ...config,
+        dictionary: [...config.dictionary, newDictItem]
       });
       setDictItem(null);
     } else if (mode === "edit") {
@@ -83,8 +90,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         return _dictItem;
       });
 
-      setProject({
-        ...project,
+      setConfig({
+        ...config,
         dictionary: newDictionary
       });
       setMode("add");
@@ -96,112 +103,128 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   return (
     <React.Fragment>
       <FormLabel className={classes.titleField}>Dictionary</FormLabel>
-      <Grid container spacing={12} alignItems="flex-end">
-        <Grid item xs={6}>
-          <TextField
-            label="Field Key"
-            className={classes.textField}
-            name="fieldKey"
-            margin="normal"
-            variant="outlined"
-            onChange={onChangeText}
-            value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
-            disabled={mode === "edit"}
-          />
+      <div className={classes.formInput}>
+        <Grid container spacing={12} alignItems="flex-end">
+          <Grid item xs={6}>
+            <TextField
+              label="Field Key"
+              className={classes.textField}
+              name="fieldKey"
+              margin="dense"
+              variant="outlined"
+              onChange={onChangeText}
+              value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
+              disabled={mode === "edit"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Database Type"
+              className={classes.textField}
+              name="database_type"
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={
+                dictItem && dictItem.database_type ? dictItem.database_type : ""
+              }
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Database Type"
-            className={classes.textField}
-            name="database_type"
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={
-              dictItem && dictItem.database_type ? dictItem.database_type : ""
-            }
-          />
+        <Grid container spacing={12} alignItems="flex-end">
+          <Grid item xs={6}>
+            <TextField
+              name="host"
+              label="Host"
+              className={classes.textField}
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={dictItem && dictItem.host ? dictItem.host : ""}
+            />
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            <TextField
+              name="port"
+              label="Port"
+              className={classes.textField1}
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={dictItem && dictItem.port ? dictItem.port : ""}
+            />
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            <TextField
+              name="query"
+              label="Query"
+              className={classes.textField1}
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              // value={dictItem && dictItem.port ? dictItem.port : ""}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={12} alignItems="flex-end">
-        <Grid item xs={6}>
-          <TextField
-            name="host"
-            label="Host"
-            className={classes.textField}
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={dictItem && dictItem.host ? dictItem.host : ""}
-          />
+        <Grid container spacing={12} alignItems="flex-end">
+          <Grid item xs={6}>
+            <TextField
+              name="username"
+              label="Username"
+              className={classes.textField}
+              type="text"
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={dictItem && dictItem.username ? dictItem.username : ""}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="password"
+              placeHolder="Password"
+              label="Password"
+              type="password"
+              className={classes.textField}
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={dictItem && dictItem.password ? dictItem.password : ""}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <TextField
-            name="port"
-            label="Port"
-            className={classes.textField}
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={dictItem && dictItem.port ? dictItem.port : ""}
-          />
+        <Grid container spacing={12} alignItems="flex-end">
+          <Grid item xs={6}>
+            <TextField
+              name="database_name"
+              label="Database Name"
+              className={classes.textField}
+              type="text"
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={
+                dictItem && dictItem.database_name ? dictItem.database_name : ""
+              }
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              name="schema_name"
+              label="Schema Name"
+              type="text"
+              className={classes.textField}
+              margin="dense"
+              onChange={onChangeText}
+              variant="outlined"
+              value={
+                dictItem && dictItem.schema_name ? dictItem.schema_name : ""
+              }
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={12} alignItems="flex-end">
-        <Grid item xs={6}>
-          <TextField
-            name="username"
-            label="Username"
-            className={classes.textField}
-            type="text"
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={dictItem && dictItem.username ? dictItem.username : ""}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            name="password"
-            placeHolder="Password"
-            label="Password"
-            type="password"
-            className={classes.textField}
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={dictItem && dictItem.password ? dictItem.password : ""}
-          />
-        </Grid>
-      </Grid>
-      <Grid container spacing={12} alignItems="flex-end">
-        <Grid item xs={6}>
-          <TextField
-            name="database_name"
-            label="Database Name"
-            className={classes.textField}
-            type="text"
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={
-              dictItem && dictItem.database_name ? dictItem.database_name : ""
-            }
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            name="schema_name"
-            label="Schema Name"
-            type="text"
-            className={classes.textField}
-            margin="normal"
-            onChange={onChangeText}
-            variant="outlined"
-            value={dictItem && dictItem.schema_name ? dictItem.schema_name : ""}
-          />
-        </Grid>
-      </Grid>
+      </div>
+
       <Fab
         size="small"
         aria-label="Add"

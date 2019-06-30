@@ -1,55 +1,81 @@
-import React, { useState } from 'react'
-import { TextField, Button } from "@material-ui/core";
+import React, { useState } from "react";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+// import { Translate } from "react-redux-i18n";
+// import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
+import { withStyles } from "@material-ui/core/styles";
+
+import { Button } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import InputComponent from "../input_component";
-import Project from '../Models/Project';
+import Config from "../Models/Config";
 
-const AddDialog = props => {
-  const { isOpen, setIsOpen, projects, setProjects } = props
-  const [project, setProject] = useState(() => {
-    return new Project()
-  })
+import "./dialog.css";
 
-  console.log(project);
+const styles: any = (theme: any) => {
+  return {
+    showDialog: {
+      maxWidth: "1200px"
+    }
+  };
+};
+export interface IDefautProps {
+  classes?: any;
+  styles?: any;
+  theme?: any;
+  configs?: any;
+  setConfigs?: any;
+  isOpen?: any;
+  setIsOpen?: any;
+}
+const AddDialog: React.FC<IDefautProps> = props => {
+  const { isOpen, setIsOpen, configs, setConfigs, classes } = props;
 
-  const _onAgree = () => {
-    const newProjects = [...projects, project]
-    setProjects(newProjects)
-    setIsOpen(false)
-    setProject(new Project())
-  }
+  const [config, setConfig] = useState(() => {
+    return new Config();
+  });
+  const [cronValue, setCronValue] = useState(" ");
+
+  const onAgree = () => {
+    const newConfigs = [...configs, config];
+    setConfigs(newConfigs);
+    setIsOpen(false);
+    setConfig(new Config());
+  };
 
   return (
     <Dialog
       open={isOpen}
       onClose={() => setIsOpen(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      
+      className={classes.test}
     >
-      <DialogTitle id="alert-dialog-title">{"Transform Config"}</DialogTitle>
-      <DialogContent style={{maxWidth: '800px !important'}}>
+      <DialogTitle className="tilte-dialog">
+        {"Add Transform Config"}
+      </DialogTitle>
+      <DialogContent>
         <InputComponent
-          project={project}
-          setProject={setProject}
+          config={config}
+          setConfig={setConfig}
+          cronValue={cronValue}
+          setCronValue={setCronValue}
         />
       </DialogContent>
+
       <DialogActions>
         <Button onClick={() => setIsOpen(false)} color="primary">
-          Disagree
-            </Button>
-        <Button onClick={_onAgree} color="primary" autoFocus>
-          Agree
-            </Button>
+          {/* <Translate value={`${KEY_TRANSLATE}.disagree`} /> */}
+          Cancel
+        </Button>
+        <Button onClick={onAgree} color="primary" autoFocus>
+          Save
+          {/* <Translate value={`${KEY_TRANSLATE}.agree`} /> */}
+        </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddDialog
+export default withStyles(styles, { withTheme: true })(AddDialog);

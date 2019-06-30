@@ -1,31 +1,56 @@
-import React, { useState } from 'react'
-import { TextField, Button } from "@material-ui/core";
+import React from "react";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+// import { Translate } from "react-redux-i18n";
+// import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
+
+import { Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import "./dialog.css"
 
 import InputComponent from "../input_component";
-import Project from '../Models/Project';
+const styles: any = (theme: any) => {
+  return {
+    paper: {
+      maxWidth: "800px !important"
+    }
+  };
+};
+export interface IDefautProps {
+  classes?: any;
+  styles?: any;
+  theme?: any;
+  config?: any;
+  setConfig?: any;
+  configs?: any;
+  setConfigs?: any;
+  isOpen?: any;
+  setIsOpen?: any;
+}
+const EditDialog: React.FC<IDefautProps> = props => {
+  const {
+    isOpen,
+    setIsOpen,
+    configs,
+    setConfigs,
+    config,
+    setConfig
+  } = props;
 
-const EditDialog = props => {
-  const { isOpen, setIsOpen, projects, setProjects, project, setProject ,editable} = props
-  //console.log(projects);
-  
-  const _onAgree = () => {
-    const newProjects = projects.map(_project => {
-        if (_project.project_id === project.project_id) {
-            return {...project}
-        }
-        return _project
-    })
-    setProjects(newProjects)
-    setIsOpen(false)
-    setProject(null)
-  }
-  
+  const onAgree = () => {
+    const newConfigs = configs.map(_config => {
+      if (_config.project_id === config.project_id) {
+        return { ...config };
+      }
+      return _config;
+    });
+    setConfigs(newConfigs);
+    setIsOpen(false);
+    setConfig(null);
+  };
 
   return (
     <Dialog
@@ -34,24 +59,28 @@ const EditDialog = props => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{"Transform Config"}</DialogTitle>
-      <DialogContent>
+      <DialogTitle className="tilte-dialog">
+        {"Edit Transform Config"}
+      </DialogTitle>
+      <DialogContent >
         <InputComponent
-          project={project}
-          setProject={setProject}
+          config={config}
+          setConfig={setConfig}
           editable={true}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsOpen(false)} color="primary">
-          Disagree
-            </Button>
-        <Button onClick={_onAgree} color="primary" autoFocus>
-          Agree
-            </Button>
+          Cancel
+          {/* <Translate value={`${KEY_TRANSLATE}.disagree`} /> */}
+        </Button>
+        <Button onClick={onAgree} color="primary" autoFocus>
+          Save
+          {/* <Translate value={`${KEY_TRANSLATE}.agree`} /> */}
+        </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
-export default EditDialog
+export default withStyles(styles, { withTheme: true })(EditDialog);

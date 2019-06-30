@@ -162,7 +162,8 @@ export const getDataTranform = () => {
           database_name: "phoenix",
           schema_name: "5c80e18f743a8b0020b0b6f1_doc_set",
           query: {
-            _id: "?"
+            _id: null,
+            a:null
           }
         }
       ]

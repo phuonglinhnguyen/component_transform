@@ -14,26 +14,34 @@ export interface IDefautProps {
   commonName?: any;
 }
 const Common: React.FC<IDefautProps> = props => {
-  const { classes, mode, setMode, project, setProject } = props;
-  const common = get(project, "rules.common", []);
+  const { classes, mode, setMode, config, setConfig } = props;
+  const common = get(config, "rules.common", []);
 
-  const [commonItem, setCommonItem] = useState(null);
+  const [commonValue, setCommonValue] = useState(null);
   const [commonName, setCommonName] = useState(null);
-  
+  const [selectedCommonItem, setSelectedCommonItem] = useState(null);
 
   return (
     <React.Fragment>
       <CommonInput
-        project={project}
-        setProject={setProject}
-        commonItem={commonItem}
-        setCommonItem={setCommonItem}
+        config={config}
+        setConfig={setConfig}
+        commonValue={commonValue}
+        setCommonValue={setCommonValue}
         mode={mode}
         setMode={setMode}
         common={common}
+        commonName={commonName}
         setCommonName={setCommonName}
+        selectedCommonItem={selectedCommonItem}
       />
-      <CommonList />
+      <CommonList
+        setMode={setMode}
+        common={common}
+        config={config}
+        setConfig={setConfig}
+        setSelectedCommonItem={setSelectedCommonItem}
+      />
     </React.Fragment>
   );
 };

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import filter from "lodash/filter";
-import isEmpty from "lodash/isEmpty";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -13,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Config from "../../Models/Config";
+import Project from "../../Models/Project";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -98,26 +96,25 @@ const ContentList: React.FC<IDefautProps> = props => {
   const {
     classes,
     setSelectedContentItem,
-    setConfig,
-    config,
+    setProject,
+    project,
     contentName,
     contentItem,
     contentArray,
     setContentArray,
     content,
-    setMode
+    //selectedContentItem
   } = props;
 
   const [dense] = useState(false);
-  const [strSearch, setStrSearch] = useState(null);
 
   const onAddContent = (contentName, contentItem) => {
-    setConfig({
-      ...config,
+    setProject({
+      ...project,
       rules: {
-        ...config.rules,
+        ...project.rules,
         content: {
-          ...config.rules.content,
+          ...project.rules.content,
           [contentName]: contentItem
         }
       }
@@ -131,7 +128,8 @@ const ContentList: React.FC<IDefautProps> = props => {
 
     setContentArray(newContentArray);
   };
-  //Delete Content Item
+  // console.log("yes", contentArray);
+
   const deleteContentItem = (e, dataKey) => {
     e.stopPropagation();
     const newContentArray = contentArray.filter(
@@ -140,39 +138,18 @@ const ContentList: React.FC<IDefautProps> = props => {
     console.log("del:", newContentArray);
 
     const updateProject = {
-      ...config,
+      ...project,
       rules: {
-        ...config.rules.content,
+        ...project.rules.content,
         [contentName]: newContentArray
       }
     };
+    console.log("update:", updateProject);
 
-    setConfig(updateProject);
+    setProject(updateProject);
     setContentArray(newContentArray);
   };
 
-  //Search Content Data
-  let searchTimeout = null;
-
-  const onChangeSearch = e => {
-    const value = e.target.value;
-    if (searchTimeout) {
-      clearTimeout(searchTimeout);
-    }
-    searchTimeout = setTimeout(() => {
-      setStrSearch(value);
-    }, 500);
-  };
-  const contentData = filter(contentArray, contentItem => {
-    if (isEmpty(strSearch)) {
-      return true;
-    }
-    const strToSearch = contentItem.contentName.toLowerCase();
-    console.log("contentserach", strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
-    return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
-  });
-  //-------
   return (
     <React.Fragment>
       <div className={classes.customSearch}>
@@ -187,13 +164,12 @@ const ContentList: React.FC<IDefautProps> = props => {
               root: classes.inputRoot,
               input: classes.inputInput
             }}
-            onChange={onChangeSearch}
           />
         </div>
       </div>
       <div className={classes.demo}>
         <List dense={dense}>
-          {contentData.map(contentItem => {
+          {contentArray.map(contentItem => {
             return (
               <ListItem
                 key={contentItem.id}
@@ -201,7 +177,7 @@ const ContentList: React.FC<IDefautProps> = props => {
                 onAddContent
                 onClick={() => {
                   setSelectedContentItem(contentItem);
-                  setMode("edit");
+                  //   setMode("edit");
                 }}
               >
                 <ListItemIcon>

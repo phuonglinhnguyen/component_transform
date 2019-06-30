@@ -23,22 +23,22 @@ export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  project?: any;
-  setProject?: any;
+  config?: any;
+  setConfig?: any;
 }
 const Dictionary: React.FC<IDefautProps> = (props) => {
-  const { classes, project, setProject } = props
-  const dictionary = project && project.dictionary ? project.dictionary : []
+  const { classes, config, setConfig } = props
+  const dictionary = config && config.dictionary ? config.dictionary : []
   const [selectedDictItem, setSelectedDictItem] = useState(null);
   const [dictItem, setDictItem] = useState(null)
   const [mode, setMode] = useState('add')
 
   return (
     <Grid className={classes.wrapForm} spacing={24}>
-      <Grid item xs={12} md={5} className={classes.formControl}>
+      <Grid item xs={12} md={6} className={classes.formControl}>
         <DictionaryInput
-          project={project}
-          setProject={setProject}
+          config={config}
+          setConfig={setConfig}
           dictItem={selectedDictItem ? selectedDictItem : dictItem} 
           setDictItem={selectedDictItem ? setSelectedDictItem : setDictItem}
           setSelectedDictItem={setSelectedDictItem}
@@ -47,13 +47,13 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
           dictionary={dictionary}
         />
       </Grid>
-      <Grid item xs={12} md={7} className={classes.formControl}>
+      <Grid item xs={12} md={6} className={classes.formControl}>
         <DictionaryList
           dictionary={dictionary}
           setSelectedDictItem={setSelectedDictItem}
           setMode={setMode}
-          project={project}
-          setProject={setProject}
+          config={config}
+          setConfig={setConfig}
         />
       </Grid>
     </Grid>
