@@ -137,15 +137,16 @@ const CommonList: React.FC<IDefautProps> = props => {
   };
 
   const commonData = filter(common, commonItem => {
+    const key = Object.keys(commonItem)[0];
     if (isEmpty(strSearch)) {
       return true;
     }
-    // console.log("bbb", commonItem.commonName);
+    console.log("bbb", key);
 
-    const strToSearch = commonItem.commonName.toLowerCase();
+    const strToSearch = key.toLowerCase();
 
-    // console.log("commonsearch", strToSearch, strSearch);
-    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    console.log("commonsearch", strToSearch, strSearch);
+    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 
@@ -163,13 +164,13 @@ const CommonList: React.FC<IDefautProps> = props => {
               root: classes.inputRoot,
               input: classes.inputInput
             }}
-          // onChange={onChangeSearch}
+          onChange={onChangeSearch}
           />
         </div>
       </div>
       <div className={classes.demo}>
         <List dense={dense}>
-          {common.map(commonItem => {
+          {commonData.map(commonItem => {
             const key = Object.keys(commonItem)[0];
             return (
               <ListItem
