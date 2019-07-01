@@ -20,27 +20,38 @@ const Common: React.FC<IDefautProps> = props => {
   const [commonValue, setCommonValue] = useState(null);
   const [commonName, setCommonName] = useState(null);
   const [selectedCommonItem, setSelectedCommonItem] = useState(null);
-
+  const [selectedCommonName, setSelectedCommonName] = useState(null);
+  const [selectedCommonValue, setSelectedCommonValue] = useState(null);
   return (
     <React.Fragment>
       <CommonInput
         config={config}
         setConfig={setConfig}
-        commonValue={commonValue}
-        setCommonValue={setCommonValue}
+        commonValue={
+          selectedCommonValue ? selectedCommonValue : commonValue
+        }
+        setCommonValue={
+          selectedCommonValue ? setSelectedCommonValue : setCommonValue
+        }
         mode={mode}
         setMode={setMode}
         common={common}
-        commonName={commonName}
-        setCommonName={setCommonName}
-        selectedCommonItem={selectedCommonItem}
+        commonName={
+          selectedCommonName ? selectedCommonName : commonName
+        }
+        setCommonName={selectedCommonName ? setSelectedCommonName : setCommonName}
+        selectedCommonValue={selectedCommonValue}
+        selectedCommonName={selectedCommonName}
       />
       <CommonList
         setMode={setMode}
         common={common}
         config={config}
         setConfig={setConfig}
-        setSelectedCommonItem={setSelectedCommonItem}
+        commonName={commonName}
+        commonValue={commonValue}
+        setSelectedCommonValue={setSelectedCommonValue}
+        setSelectedCommonName={setSelectedCommonName}
       />
     </React.Fragment>
   );

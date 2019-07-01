@@ -1,16 +1,16 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { TextField, FormLabel } from '@material-ui/core';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import DoneIcon from '@material-ui/icons/Done';
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
+import { TextField, FormLabel } from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import DoneIcon from "@material-ui/icons/Done";
 
-import AceEditor from 'react-ace';
+import AceEditor from "react-ace";
 
 const styles: any = (theme: any) => {
   return {
     formControl: {
-      display: 'inherit',
+      display: "inherit",
       margin: theme.spacing.unit * 3,
       padding: theme.spacing.unit * 3
     },
@@ -18,28 +18,36 @@ const styles: any = (theme: any) => {
       margin: `0px ${theme.spacing.unit * 3}px 0px ${theme.spacing.unit * 3}px`
     },
     titleField: {
-      fontWeight: 'bold'
+      fontWeight: "bold"
     },
     add: {
-      background: '#3f51b5',
-      color: '#fafafa',
-      transition: 'background 0.1s ease-in',
-      '&:hover': {
-        background: '#1a237e'
+      background: "#3f51b5",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1a237e"
+      }
+    },
+    save: {
+      background: "#689f38",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#1b5e20"
       }
     },
     common: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
     },
     titleCommon: {
-      margin: '20px 0 40px 0'
+      margin: "20px 0 40px 0"
     },
     ace: {
-      fontSize: '16px',
-      height: '250px',
-      margin: '20px 0'
+      fontSize: "16px",
+      height: "250px",
+      margin: "20px 0"
     }
   };
 };
@@ -48,6 +56,8 @@ export interface IDefautProps {
   classes?: any;
   theme?: any;
   mode?: any;
+  commonItem?: any;
+  setCommonItem?: any;
 }
 
 const Common: React.FC<IDefautProps> = props => {
@@ -56,71 +66,93 @@ const Common: React.FC<IDefautProps> = props => {
     common,
     mode,
     setMode,
-    commonValue,
-    setCommonValue,
     config,
     setConfig,
     commonName,
-    setCommonName
+    setCommonName,
+    commonValue,
+    setCommonValue
   } = props;
 
+  // console.log("commonData:", common);
+
   const onAddCommon = () => {
-    const newConmonItem = {[commonName]: commonValue}
-    const newCommon = [...common]
-    newCommon.unshift(newConmonItem)
+    if (mode === "add") {
+      const newConmonItem = { [commonName]: commonValue };
+      const newCommon = [...common];
+      newCommon.unshift(newConmonItem);
 
-    setConfig({
-      ...config,
-      rules: {
-        ...config.rules,
-        common: newCommon
-      }
-    })
+      setConfig({
+        ...config,
+        rules: {
+          ...config.rules,
+          common: newCommon
+        }
+      });
+      setCommonName(null);
+      setCommonValue(null);
+    } else if (mode === "edit") {
+      const newCommons = common.map(newItem => {
+        const key = Object.keys(newItem)[0];
+        if (key === commonName) {
+          return { ...{ [commonName]: commonValue } }
+        }
+        return newItem;
+      })
+
+      console.log({ newCommons });
+
+      setConfig({
+        ...config,
+        rules: {
+          ...config.rules,
+          common: newCommons
+        }
+      })
+      setMode("add");
+      setCommonName(null);
+      setCommonValue(null);
+    }
   };
-
-  console.log({commonName});
-  console.log({commonValue});
-  
+  console.log("name:", commonName);
+  // console.log({ commonValue });
   return (
     <React.Fragment>
       <div className={classes.common}>
         <FormLabel className={classes.titleField}>Common </FormLabel>
         <Fab
-          size='small'
-          className={classes.add}
-          aria-label='Add'
+          size="small"
+          className={mode === "add" ? classes.add : classes.save}
+          aria-label="Add"
           onClick={onAddCommon}
         >
-          <AddIcon />
-          {/* {mode === 'add' ? <AddIcon /> : <DoneIcon />} */}
+          {mode === "add" ? <AddIcon /> : <DoneIcon />}
         </Fab>
       </div>
       <TextField
-        name='commonName'
-        label='Name'
-        margin='normal'
-        value={commonName ? commonName : ''}
+        name="commonName"
+        label="Name"
+        margin="normal"
+        value={commonName ? commonName : ""}
         onChange={e => setCommonName(e.target.value)}
+        disabled={mode === "edit"}
       />
       <AceEditor
+        name="commonValue"
         className={classes.ace}
-        editorProps={{ $blockScrolling: 'Infinity' }}
+        editorProps={{ $blockScrolling: "Infinity" }}
         enableBasicAutocompletion={true}
         enableLiveAutocompletion={true}
         enableSnippets={true}
         highlightActiveLine={true}
-        height='250px'
-        mode='javascript'
-        name='commonValue'
-        onChange={(commonValue) => {
-          console.log({commonValue});
-          setCommonValue(commonValue)
-        }}
+        height="250px"
+        mode="javascript"
+        onChange={commonValue => setCommonValue(commonValue)}
         showGutter={true}
         showPrintMargin={false}
-        theme='solarized_dark'
-        value={commonValue || ''}
-        width='100%'
+        theme="solarized_dark"
+        value={commonValue || ""}
+        width="100%"
       />
     </React.Fragment>
   );

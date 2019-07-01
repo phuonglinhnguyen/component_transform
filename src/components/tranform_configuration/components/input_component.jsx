@@ -86,7 +86,7 @@ export interface IDefautProps {
 const InputComponent: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
-
+  const cronTrigger = config ? config.cron_trigger : ""
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -243,12 +243,15 @@ const InputComponent: React.FC<IDefautProps> = props => {
         {/* <CronTriggerQuartz
           className={classes.group}
           input={true}
-          cronValue={"0/10 * * * * ? *"}
+          cronValue={cronTrigger}
           viewCronValue={true}
           tabs={["minutes", "hourly", "daily", "weekly"]}
           onChange={handleChangeCron}
         /> */}
-
+        {/* input: cronTrigger from config.cron_trigger
+            output: get from handleChangeCron
+            ------: dung setConfig de update
+        */}
         <Dictionary config={config} setConfig={setConfig} />
         <FormLabel className={classes.titleField}>Rules</FormLabel>
         <Rules config={config} setConfig={setConfig} />

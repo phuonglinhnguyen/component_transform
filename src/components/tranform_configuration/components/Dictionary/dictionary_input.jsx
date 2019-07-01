@@ -7,8 +7,15 @@ import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DoneIcon from "@material-ui/icons/Done";
+
 const styles: any = (theme: any) => {
   return {
+    dictionary: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "20px"
+    },
     titleField: {
       fontWeight: "bold"
     },
@@ -16,7 +23,7 @@ const styles: any = (theme: any) => {
       width: "95%"
     },
     textField1: {
-      width: "90%"
+      width: "70%"
     },
     add: {
       background: "#3f51b5",
@@ -36,6 +43,11 @@ const styles: any = (theme: any) => {
     },
     formInput: {
       margin: "20px 0"
+    },
+    query: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
     }
   };
 };
@@ -61,6 +73,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     dictionary,
     setMode
   } = props;
+  const [chips, setChips] = useState([]);
 
   const onChangeText = e => {
     const name = e.target.name;
@@ -75,7 +88,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   const onAddDictionary = () => {
     if (mode === "add") {
       const newDictItem = { ...dictItem };
-      console.log("dsdsff", newDictItem);
 
       setConfig({
         ...config,
@@ -99,10 +111,30 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       console.log(newDictionary);
     }
   };
-
+  const handlerAddChip=value=>{
+    const chipsa=chips.slice();
+    chips.push(value);
+    setChips({...chips});
+  }
+  const handleDeleteChip = index => {
+    const chipsa=chips.slice();
+    console.log(chipsa);
+    
+  };
   return (
     <React.Fragment>
-      <FormLabel className={classes.titleField}>Dictionary</FormLabel>
+      <div className={classes.dictionary}>
+        <FormLabel className={classes.titleField}>Dictionary</FormLabel>
+        <Fab
+          size="small"
+          aria-label="Add"
+          className={mode === "add" ? classes.add : classes.save}
+          onClick={onAddDictionary}
+        >
+          {mode === "add" ? <AddIcon /> : <DoneIcon />}
+        </Fab>
+      </div>
+
       <div className={classes.formInput}>
         <Grid container spacing={12} alignItems="flex-end">
           <Grid item xs={6}>
@@ -143,26 +175,15 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
               value={dictItem && dictItem.host ? dictItem.host : ""}
             />
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={6}>
             <TextField
               name="port"
               label="Port"
-              className={classes.textField1}
+              className={classes.textField}
               margin="dense"
               onChange={onChangeText}
               variant="outlined"
               value={dictItem && dictItem.port ? dictItem.port : ""}
-            />
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <TextField
-              name="query"
-              label="Query"
-              className={classes.textField1}
-              margin="dense"
-              onChange={onChangeText}
-              variant="outlined"
-              // value={dictItem && dictItem.port ? dictItem.port : ""}
             />
           </Grid>
         </Grid>
@@ -223,16 +244,25 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             />
           </Grid>
         </Grid>
+        <Grid container spacing={12} alignItems="flex-end">
+          {/* <Grid item xs={6} sm={4}> */}
+          {/* <div className={classes.query}> */}
+          <TextField
+            name="query"
+            label="Query"
+            className={classes.textField1}
+            margin="dense"
+            onChange={onChangeText}
+            variant="outlined"
+            // value={dictItem && dictItem.port ? dictItem.port : ""}
+          />
+         
+       
+          {/* </div> */}
+          {/* </Grid> */}
+          {/* <Grid item xs={6} /> */}
+        </Grid>
       </div>
-
-      <Fab
-        size="small"
-        aria-label="Add"
-        className={mode === "add" ? classes.add : classes.save}
-        onClick={onAddDictionary}
-      >
-        {mode === "add" ? <AddIcon /> : <DoneIcon />}
-      </Fab>
     </React.Fragment>
   );
 };
