@@ -5,6 +5,12 @@ import { getDataObject } from "@dgtx/coreui";
 
 import get from "lodash/get";
 
+import validator from "validator";
+import { isEmail, isEmpty } from "validator";
+import Form from "react-validation/build/form";
+// import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, Switch } from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
@@ -16,6 +22,8 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import { Button } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 
 import TransformDialog from "./Dialogs/TranformDialog";
 import Dictionary from "./Dictionary";
@@ -75,7 +83,6 @@ const styles: any = (theme: any) => {
   };
 };
 
-
 export interface IDefautProps {
   classes?: any;
   styles?: any;
@@ -86,7 +93,10 @@ export interface IDefautProps {
 const InputComponent: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
-
+  const cronTrigger = config ? config.cron_trigger : "";
+  const [isInputValid, setIsInputValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [value, setValue] = useState("");
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -99,6 +109,9 @@ const InputComponent: React.FC<IDefautProps> = props => {
   const onChangeActive = e => {
     const name = e.target.name;
     const checked = e.target.checked;
+    if (name === "") {
+      alert("name must be filled out");
+    }
     setConfig({
       ...config,
       [name]: checked
@@ -146,8 +159,33 @@ const InputComponent: React.FC<IDefautProps> = props => {
       cron_trigger: cronValue
     });
   };
-
-  // console.log(config);
+  //****Check validation */
+  const check_nameConfig = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    if (value === "") {
+      alert("name must be filled out");
+      return false;
+    }
+  };
+  const required = value => {
+    if (isEmpty(value)) {
+      return {
+        isInputValid: false,
+        errorMessage: "Please enter name"
+      };
+    } else {
+      return {
+        isInputValid: true,
+        errorMessage: ""
+      };
+    }
+  };
+  const handlerInputCheck = e => {
+    const { isInputValid, errorMessage } = required(value);
+    setErrorMessage(errorMessage);
+    setIsInputValid(isInputValid);
+  };
 
   return (
     <React.Fragment>
@@ -156,7 +194,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
           <Grid item xs={12} md={6}>
             <FormLabel className={classes.titleField}>Config</FormLabel>
 
-            <form className={classes.formControl}>
+            <Form className={classes.formControl}>
               <TextField
                 required
                 value={config ? config.name : ""}
@@ -164,7 +202,9 @@ const InputComponent: React.FC<IDefautProps> = props => {
                 label="Name"
                 className={classes.textField}
                 onChange={onChangeText}
+                onBlur={handlerInputCheck}
               />
+              <FormHelperText display={isInputValid} errorMessage={errorMessage}/>
               <TextField
                 name="version"
                 value={config ? config.version : "test version"}
@@ -187,7 +227,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
                   }
                 />
               </FormGroup>
-            </form>
+            </Form>
           </Grid>
           <Grid item xs={12} md={6}>
             <FormLabel className={classes.titleField}>Filter</FormLabel>
@@ -242,10 +282,10 @@ const InputComponent: React.FC<IDefautProps> = props => {
         </Grid>
 
         <FormLabel className={classes.titleField}>Cron Trigger</FormLabel>
+
         <CronTriggerQuartz
           className={classes.group}
-          input={true}
-          cronValue={"0/10 * * * * ? *"}
+          cronValue={cronTrigger}
           viewCronValue={true}
           tabs={["minutes", "hourly", "daily", "weekly"]}
           onChange={handleChangeCron}

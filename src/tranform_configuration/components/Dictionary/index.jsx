@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
+import get from "lodash/get";
+
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import DictionaryInput from "./dictionary_input";
@@ -26,12 +28,16 @@ export interface IDefautProps {
   config?: any;
   setConfig?: any;
 }
-const Dictionary: React.FC<IDefautProps> = (props) => {
-  const { classes, config, setConfig } = props
-  const dictionary = config && config.dictionary ? config.dictionary : []
+const Dictionary: React.FC<IDefautProps> = props => {
+  const { classes, config, setConfig } = props;
+
+  // const dictionary = config && config.dictionary ? config.dictionary : []
+  const dictionary = get(config, "dictionary", []);
+  console.log({ dictionary });
+
   const [selectedDictItem, setSelectedDictItem] = useState(null);
-  const [dictItem, setDictItem] = useState(null)
-  const [mode, setMode] = useState('add')
+  const [dictItem, setDictItem] = useState(null);
+  const [mode, setMode] = useState("add");
 
   return (
     <Grid className={classes.wrapForm} spacing={24}>
@@ -39,7 +45,7 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
         <DictionaryInput
           config={config}
           setConfig={setConfig}
-          dictItem={selectedDictItem ? selectedDictItem : dictItem} 
+          dictItem={selectedDictItem ? selectedDictItem : dictItem}
           setDictItem={selectedDictItem ? setSelectedDictItem : setDictItem}
           setSelectedDictItem={setSelectedDictItem}
           mode={mode}
@@ -57,7 +63,7 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
         />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default withStyles(styles, { withTheme: true })(Dictionary)
+export default withStyles(styles, { withTheme: true })(Dictionary);

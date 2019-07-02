@@ -15,7 +15,6 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import { log } from "util";
 
 const styles: any = (theme: any) => {
   return {
@@ -89,6 +88,11 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
+  common?: any;
+  setConfig?: any;
+  config?: any;
+  setSelectedCommonValue?: any;
+  setSelectedCommonValue?: any;
   setMode?: any;
 }
 const CommonList: React.FC<IDefautProps> = props => {
@@ -98,28 +102,28 @@ const CommonList: React.FC<IDefautProps> = props => {
     setMode,
     setConfig,
     config,
-    setCommonName,
-    commonValue,
-    setSelectedCommonItem
+    setSelectedCommonValue,
+    setSelectedCommonName
   } = props;
+
   const [dense] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
+
   const deleteCommon = (e, commonName) => {
     e.stopPropagation();
-    const newCommon = common.filter(
-      commonItem => commonItem.commonName !== commonName
-    );
-    const updateConfig = {
+    const newCommon = common.filter(newItem => {
+      const key = Object.keys(newItem)[0];
+      return key !== commonName;
+    });
+    setConfig({
       ...config,
       rules: {
         ...config.rules,
-        common: [newCommon]
+        common: newCommon
       }
-    };
-    setConfig(updateConfig);
-    setCommonName(newCommon);
+    });
   };
-  console.log("common_list:", common);
+
   let searchTimeout = null;
 
   const onChangeSearch = e => {
@@ -133,17 +137,18 @@ const CommonList: React.FC<IDefautProps> = props => {
   };
 
   const commonData = filter(common, commonItem => {
+    const key = Object.keys(commonItem)[0];
     if (isEmpty(strSearch)) {
       return true;
     }
-    console.log("bbb", commonItem.commonName);
 
-    const strToSearch = commonItem.commonName.toLowerCase();
+    const strToSearch = key.toLowerCase();
 
-    console.log("commonsearch", strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    // console.log("commonsearch", strToSearch, strSearch);
+    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
+
   return (
     <React.Fragment>
       <div className={classes.customSearch}>
@@ -158,21 +163,21 @@ const CommonList: React.FC<IDefautProps> = props => {
               root: classes.inputRoot,
               input: classes.inputInput
             }}
-            // onChange={onChangeSearch}
+            onChange={onChangeSearch}
           />
         </div>
       </div>
       <div className={classes.demo}>
         <List dense={dense}>
-          {common.map(commonItem => {
-            console.log({ commonItem });
+          {commonData.map(commonItem => {
             const key = Object.keys(commonItem)[0];
             return (
               <ListItem
                 key={commonItem.id}
                 className={classes.selectList}
                 onClick={() => {
-                  setSelectedCommonItem(commonItem);
+                  setSelectedCommonName(key);
+                  setSelectedCommonValue(commonItem[key]);
                   setMode("edit");
                 }}
               >
@@ -184,7 +189,7 @@ const CommonList: React.FC<IDefautProps> = props => {
                   <IconButton
                     aria-label="Delete"
                     onClick={e => {
-                      deleteCommon(e, { key });
+                      deleteCommon(e, key);
                     }}
                   >
                     <DeleteIcon />

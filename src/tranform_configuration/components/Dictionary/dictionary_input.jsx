@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import map from "lodash/map";
+
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
-
 import FormLabel from "@material-ui/core/FormLabel";
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DoneIcon from "@material-ui/icons/Done";
-
+import CancelIcon from "@material-ui/icons/Cancel";
+import ChipInput from "@harshitpant/material-ui-chip-input";
+import MenuItem from "@material-ui/core/MenuItem";
 const styles: any = (theme: any) => {
   return {
     dictionary: {
@@ -48,6 +51,18 @@ const styles: any = (theme: any) => {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center"
+    },
+    hidden: {
+      display: "none"
+    },
+    cancel: {
+      marginRight: "10px",
+      background: "#ff9800",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#e65100"
+      }
     }
   };
 };
@@ -60,6 +75,7 @@ export interface IDefautProps {
   dictItem?: any;
   setDictItem?: any;
   mode?: any;
+  setMode?: any;
   dictionary?: any;
 }
 const DictionaryComponent: React.FC<IDefautProps> = props => {
@@ -74,7 +90,13 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     setMode
   } = props;
   const [chips, setChips] = useState([]);
+  const query = map(dictionary, "query");
 
+  console.log({ query });
+  const valDB = [
+    { label: "MongoDB", value: "MongoDB" },
+    { label: "PostgresSQL", value: "PostgresSQL" }
+  ];
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -111,28 +133,40 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       console.log(newDictionary);
     }
   };
-  const handlerAddChip=value=>{
-    const chipsa=chips.slice();
-    chips.push(value);
-    setChips({...chips});
-  }
-  const handleDeleteChip = index => {
-    const chipsa=chips.slice();
-    console.log(chipsa);
-    
+  const onAddQuery = chip => {
+    setChips([...chips, chip]);
   };
+  const onDeleteChip = (chip, index) => {
+    setChips(chips.slice(0, index).concat(chips.slice(index + 1)));
+  };
+
+  const onCancel = () => {
+    setMode("add");
+    setDictItem(null);
+  };
+  
   return (
     <React.Fragment>
       <div className={classes.dictionary}>
         <FormLabel className={classes.titleField}>Dictionary</FormLabel>
-        <Fab
-          size="small"
-          aria-label="Add"
-          className={mode === "add" ? classes.add : classes.save}
-          onClick={onAddDictionary}
-        >
-          {mode === "add" ? <AddIcon /> : <DoneIcon />}
-        </Fab>
+        <div className={classes.actions}>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.hidden : classes.cancel}
+            aria-label="Cancel"
+            onClick={onCancel}
+          >
+            {mode === "add" ? "" : <CancelIcon />}
+          </Fab>
+          <Fab
+            size="small"
+            aria-label="Add"
+            className={mode === "add" ? classes.add : classes.save}
+            onClick={onAddDictionary}
+          >
+            {mode === "add" ? <AddIcon /> : <DoneIcon />}
+          </Fab>
+        </div>
       </div>
 
       <div className={classes.formInput}>
@@ -151,16 +185,22 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Database Type"
-              className={classes.textField}
+              select
               name="database_type"
-              margin="dense"
-              onChange={onChangeText}
+              className={classes.textField}
               variant="outlined"
+              label="Database Type"
               value={
                 dictItem && dictItem.database_type ? dictItem.database_type : ""
               }
-            />
+              onChange={onChangeText}
+            >
+              {valDB.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
@@ -247,17 +287,16 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         <Grid container spacing={12} alignItems="flex-end">
           {/* <Grid item xs={6} sm={4}> */}
           {/* <div className={classes.query}> */}
-          <TextField
+          <ChipInput
             name="query"
             label="Query"
-            className={classes.textField1}
-            margin="dense"
-            onChange={onChangeText}
-            variant="outlined"
-            // value={dictItem && dictItem.port ? dictItem.port : ""}
+            fullWidth
+            // value={dictItem && dictItem.query ? dictItem.query : ""}
+            // defaultValue={["foo", "bar"]}
+            onAdd={chip => onAddQuery(chip)}
+            // onDelete={(chip, index) => onDeleteChip(chip, index)}
           />
-         
-       
+
           {/* </div> */}
           {/* </Grid> */}
           {/* <Grid item xs={6} /> */}

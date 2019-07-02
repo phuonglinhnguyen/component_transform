@@ -18,7 +18,9 @@ class Config {
       common: [],
       content: {}
     };
-    this.dictionary = [];
+    this.dictionary = [
+      
+    ];
   }
 }
 

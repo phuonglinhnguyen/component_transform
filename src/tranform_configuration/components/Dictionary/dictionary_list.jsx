@@ -15,6 +15,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+
 const styles: any = (theme: any) => {
   return {
     titleField: {
@@ -90,7 +91,10 @@ export interface IDefautProps {
   dictionary?: any;
   setSelectedDictItem?: any;
   setMode?: any;
+  config?: any;
+  setConfig?: any;
 }
+
 const DictionaryList: React.FC<IDefautProps> = props => {
   const {
     classes,
@@ -103,7 +107,7 @@ const DictionaryList: React.FC<IDefautProps> = props => {
 
   const [dense] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
-  
+
   const deleteDict = (e, fieldKey) => {
     e.stopPropagation();
     const newDict = dictionary.filter(
@@ -113,6 +117,7 @@ const DictionaryList: React.FC<IDefautProps> = props => {
     const updateConfig = { ...config, dictionary: newDict };
     setConfig(updateConfig);
   };
+
   let searchTimeout = null;
 
   const onChangeSearch = e => {
@@ -130,12 +135,11 @@ const DictionaryList: React.FC<IDefautProps> = props => {
       return true;
     }
     const strToSearch = dictItem.fieldKey.toLowerCase();
-    console.log("dictsearch", strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    // console.log("dictsearch", strToSearch, strSearch);
+    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
-  
-  console.log("dictData:", dictionary);
+
   return (
     <React.Fragment>
       <div className={classes.customSearch}>
@@ -158,7 +162,7 @@ const DictionaryList: React.FC<IDefautProps> = props => {
       <div className={classes.demo}>
         <List dense={dense}>
           {dictData.map(dict_item => {
-            console.log({dictData})
+            console.log({ dictData });
             return (
               <ListItem
                 key={dict_item.id}

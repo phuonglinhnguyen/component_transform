@@ -5,6 +5,7 @@ import get from "lodash/get";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Done";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -46,6 +47,18 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "#1b5e20"
       }
+    },
+    hidden: {
+      display: "none"
+    },
+    cancel: {
+      marginRight: "10px",
+      background: "#ff9800",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#e65100"
+      }
     }
   };
 };
@@ -53,6 +66,17 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
+  config?: any;
+  setConfig?: any;
+  setContentItem?: any;
+  content?: any;
+  contentItem?: any;
+  contentName?: any;
+  setContentName?: any;
+  contentArray?: any;
+  setContentArray?: any;
+  mode?: any;
+  setMode?: any;
 }
 const ContentItem: React.FC<IDefautProps> = props => {
   const {
@@ -62,13 +86,14 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentItem,
     content,
     contentItem,
-    contentArray,
     contentName,
+    contentArray,
     setContentName,
     setContentArray,
     mode,
     setMode
   } = props;
+
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -106,12 +131,12 @@ const ContentItem: React.FC<IDefautProps> = props => {
         }
       });
       setContentArray(newContentArray);
-      setContentItem(null)
-      setContentName(null)
+      setContentItem(null);
+      setContentName(null);
     } else if (mode === "edit") {
       const newContentArray = contentArray.map(_contentItem => {
         if (_contentItem.contentItem.dataKey === contentItem.dataKey) {
-          return { contentItem: {...contentItem}, contentName };
+          return { contentItem: { ...contentItem }, contentName };
         }
         return _contentItem;
       });
@@ -128,22 +153,36 @@ const ContentItem: React.FC<IDefautProps> = props => {
       });
       setMode("add");
       setContentArray(newContentArray);
-      setContentItem(null)
+      setContentItem(null);
     }
+  };
+  const onCancel = () => {
+    setMode("add");
+    setContentItem(null);
   };
   return (
     <React.Fragment>
       <div className={classes.content}>
         <FormLabel className={classes.titleField}>Content</FormLabel>
-
-        <Fab
-          size="small"
-          className={mode === "add" ? classes.add : classes.save}
-          aria-label="Add"
-          onClick={onAddContentItem}
-        >
-          {mode === "add" ? <AddIcon /> : <SaveIcon />}
-        </Fab>
+        <div className={classes.actions}>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.hidden : classes.cancel}
+            aria-label="Cancel"
+            onClick={onCancel}
+            hiddenCancel
+          >
+            {mode === "add" ? "" : <CancelIcon />}
+          </Fab>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.add : classes.save}
+            aria-label="Add"
+            onClick={onAddContentItem}
+          >
+            {mode === "add" ? <AddIcon /> : <SaveIcon />}
+          </Fab>
+        </div>
       </div>
       <TextField
         name="contentName"
@@ -182,7 +221,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
           rows={1}
           rowsMax={3}
           onChange={onChangeText}
-          value={contentItem ? contentItem.value : ""}
+          value={contentItem && contentItem.value ? contentItem.value : ""}
         />
       </div>
     </React.Fragment>

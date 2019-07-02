@@ -89,7 +89,15 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
+  config?: any;
+  setConfig?: any;
+  content?: any;
+  contentItem?: any;
+  contentName?: any;
+  contentArray?: any;
+  setContentArray?: any;
   setMode?: any;
+  setSelectedContentItem?: any;
 }
 const ContentList: React.FC<IDefautProps> = props => {
   const {
@@ -123,19 +131,15 @@ const ContentList: React.FC<IDefautProps> = props => {
     let newContentArray = contentArray.map(content => {
       return { contentName, contentItem };
     });
-
-    console.log("newContentArray", newContentArray);
-
     setContentArray(newContentArray);
   };
+
   //Delete Content Item
   const deleteContentItem = (e, dataKey) => {
     e.stopPropagation();
     const newContentArray = contentArray.filter(
       content_item => content_item.contentItem.dataKey !== dataKey
     );
-    console.log("del:", newContentArray);
-
     const updateConfig = {
       ...config,
       rules: {
@@ -165,8 +169,8 @@ const ContentList: React.FC<IDefautProps> = props => {
       return true;
     }
     const strToSearch = contentItem.contentName.toLowerCase();
-    console.log("contentserach", strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    // console.log("contentserach", strToSearch, strSearch);
+    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
   //-------
