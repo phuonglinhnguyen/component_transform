@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import map from "lodash/map";
-
+import { isEmail, isEmpty } from "validator";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -11,6 +11,8 @@ import DoneIcon from "@material-ui/icons/Done";
 import CancelIcon from "@material-ui/icons/Cancel";
 import ChipInput from "@harshitpant/material-ui-chip-input";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
 const styles: any = (theme: any) => {
   return {
     dictionary: {
@@ -23,7 +25,7 @@ const styles: any = (theme: any) => {
       fontWeight: "bold"
     },
     textField: {
-      width: "95%"
+      width: "95%",
     },
     textField1: {
       width: "70%"
@@ -63,6 +65,13 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "#e65100"
       }
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
+    },
+    helper:{
+      opacity: "0.5"
     }
   };
 };
@@ -91,8 +100,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   } = props;
   const [chips, setChips] = useState([]);
   const query = map(dictionary, "query");
-
-  console.log({ query });
+  const [errorMessage, setErrorMessage] = useState(null);
+  // console.log({ query });
   const valDB = [
     { label: "MongoDB", value: "MongoDB" },
     { label: "PostgresSQL", value: "PostgresSQL" }
@@ -130,7 +139,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       });
       setMode("add");
       setDictItem(null);
-      console.log(newDictionary);
+      // console.log(newDictionary);
     }
   };
   const onAddQuery = chip => {
@@ -144,7 +153,17 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     setMode("add");
     setDictItem(null);
   };
-  
+
+  const check_input = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
+
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
   return (
     <React.Fragment>
       <div className={classes.dictionary}>
@@ -175,13 +194,29 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             <TextField
               label="Field Key"
               className={classes.textField}
+              error={errorMessage}
               name="fieldKey"
               margin="dense"
               variant="outlined"
-              onChange={onChangeText}
-              value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
+              onChange={e => {
+                // console.log(e.target.value);
+                // console.log(errorMessage);
+                const message = check_input(e);
+                if (message.message !== "valid") {
+                  setErrorMessage(message.detail);
+                } else {
+                  setErrorMessage(null);
+                  onChangeText(e);
+                }
+              }}
+              defaultValue={
+                dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""
+              }
               disabled={mode === "edit"}
             />
+            <FormHelperText className={classes.error}>
+              {errorMessage}
+            </FormHelperText>
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -190,6 +225,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
               className={classes.textField}
               variant="outlined"
               label="Database Type"
+              margin="dense"
               value={
                 dictItem && dictItem.database_type ? dictItem.database_type : ""
               }
@@ -201,6 +237,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
                 </MenuItem>
               ))}
             </TextField>
+            <FormHelperText className={classes.helper}>
+              Choose MongoDB/PostgresSQL
+            </FormHelperText>
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
@@ -285,8 +324,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
-          {/* <Grid item xs={6} sm={4}> */}
-          {/* <div className={classes.query}> */}
           <ChipInput
             name="query"
             label="Query"
@@ -296,10 +333,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             onAdd={chip => onAddQuery(chip)}
             // onDelete={(chip, index) => onDeleteChip(chip, index)}
           />
-
-          {/* </div> */}
-          {/* </Grid> */}
-          {/* <Grid item xs={6} /> */}
         </Grid>
       </div>
     </React.Fragment>

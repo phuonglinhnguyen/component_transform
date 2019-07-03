@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import get from "lodash/get";
+import { isEmpty } from "lodash";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -9,14 +9,14 @@ import CancelIcon from "@material-ui/icons/Cancel";
 
 import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
-
+import AceEditor from "react-ace";
+import FormHelperText from "@material-ui/core/FormHelperText";
 const styles: any = (theme: any) => {
   return {
     formControl: {
       boxShadow: "-4px 3px 33px -10px rgba(0,0,0,0.75)",
       margin: "20px 0",
       padding: theme.spacing.unit * 3,
-      textAlign: "center",
       display: "flex",
       flexDirection: "column"
     },
@@ -59,6 +59,14 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "#e65100"
       }
+    },
+    titleContent: {
+      fontSize: "18px",
+      margin: "10px 0"
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
     }
   };
 };
@@ -92,11 +100,30 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentArray,
     mode,
     setMode
+    // contentDefault,
+    // setContentDefault
   } = props;
+  const [errorMessage, setErrorMessage] = useState(null);
+  const onChangeText = (name, value) => {
+    // const name=e.target.name;
+    // const va=e.target.name;
 
-  const onChangeText = e => {
-    const name = e.target.name;
-    const value = e.target.value;
+    if (mode === "add") {
+      setContentItem({
+        ...contentItem,
+        [name]: value
+      });
+    } else if (mode === "edit") {
+      setContentItem({
+        contentName,
+        contentItem: {
+          ...contentItem,
+          [name]: value
+        }
+      });
+    }
+  };
+  const onChangeEditor = (name, value) => {
     if (mode === "add") {
       setContentItem({
         ...contentItem,
@@ -160,6 +187,16 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setMode("add");
     setContentItem(null);
   };
+  const check_input = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
+
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
   return (
     <React.Fragment>
       <div className={classes.content}>
@@ -188,21 +225,44 @@ const ContentItem: React.FC<IDefautProps> = props => {
         name="contentName"
         label="Name"
         className={classes.heading}
-        onChange={e => setContentName(e.target.value)}
-        value={contentName ? contentName : ""}
+        error={errorMessage}
+        onChange={e => {
+          const message = check_input(e);
+          if (message.message !== "valid") {
+            setErrorMessage(message.detail);
+          } else {
+            setErrorMessage(null);
+            setContentName(e.target.value);
+          }
+        }}
+        defaultValue={contentName ? contentName : ""}
         disabled={mode === "edit"}
       />
+      <FormHelperText className={classes.error}>{errorMessage}</FormHelperText>
       <div className={classes.formControl}>
         <TextField
           name="dataKey"
           label="DataKey"
+          error={errorMessage}
           margin="dense"
-          onChange={onChangeText}
-          value={contentItem && contentItem.dataKey ? contentItem.dataKey : ""}
+          onChange={e => {
+            const message = check_input(e);
+            if (message.message !== "valid") {
+              setErrorMessage(message.detail);
+            } else {
+              setErrorMessage(null);
+              onChangeText(e.target.name, e.target.value);
+            }
+          }}
+          defaultValue={
+            contentItem && contentItem.dataKey ? contentItem.dataKey : ""
+          }
           disabled={mode === "edit"}
         />
-
-        <TextField
+        <FormHelperText className={classes.error}>
+          {errorMessage}
+        </FormHelperText>
+        {/* <TextField
           name="default"
           label="Default"
           margin="dense"
@@ -211,9 +271,54 @@ const ContentItem: React.FC<IDefautProps> = props => {
           rowsMax={3}
           onChange={onChangeText}
           value={contentItem && contentItem.default ? contentItem.default : ""}
+        /> */}
+        <label className={classes.titleContent}>Default</label>
+        <AceEditor
+          name="default"
+          // className={classes.ace}
+          editorProps={{ $blockScrolling: "Infinity" }}
+          enableBasicAutocompletion={true}
+          enableLiveAutocompletion={true}
+          enableSnippets={true}
+          highlightActiveLine={true}
+          width="100%"
+          height="250px"
+          mode="javascript"
+          onChange={e => {
+            onChangeText("default", e);
+          }}
+          showGutter={true}
+          showPrintMargin={false}
+          theme="solarized_dark"
+          defaultValue={
+            contentItem && contentItem.default ? contentItem.default : ""
+          }
+          width="100%"
         />
-
-        <TextField
+        <label className={classes.titleContent}>Value</label>
+        <AceEditor
+          name="value"
+          // className={classes.ace}
+          editorProps={{ $blockScrolling: "Infinity" }}
+          enableBasicAutocompletion={true}
+          enableLiveAutocompletion={true}
+          enableSnippets={true}
+          highlightActiveLine={true}
+          width="100%"
+          height="250px"
+          mode="javascript"
+          onChange={e => {
+            onChangeText("value", e);
+          }}
+          showGutter={true}
+          showPrintMargin={false}
+          theme="solarized_dark"
+          defaultValue={
+            contentItem && contentItem.value ? contentItem.value : ""
+          }
+          width="100%"
+        />
+        {/* <TextField
           name="value"
           label="Value"
           margin="dense"
@@ -221,8 +326,8 @@ const ContentItem: React.FC<IDefautProps> = props => {
           rows={1}
           rowsMax={3}
           onChange={onChangeText}
-          value={contentItem && contentItem.value ? contentItem.value : ""}
-        />
+          defaultValue={contentItem && contentItem.value ? contentItem.value : ""}
+        /> */}
       </div>
     </React.Fragment>
   );

@@ -5,11 +5,8 @@ import { getDataObject } from "@dgtx/coreui";
 
 import get from "lodash/get";
 
-import validator from "validator";
 import { isEmail, isEmpty } from "validator";
 import Form from "react-validation/build/form";
-// import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
 
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, Switch } from "@material-ui/core";
@@ -22,12 +19,12 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import { Button } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 
 import TransformDialog from "./Dialogs/TranformDialog";
 import Dictionary from "./Dictionary";
 import Rules from "./Rules";
+
+// import useForm from "./useForm";
 
 const styles: any = (theme: any) => {
   return {
@@ -79,6 +76,10 @@ const styles: any = (theme: any) => {
     },
     demo: {
       backgroundColor: theme.palette.background.paper
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
     }
   };
 };
@@ -91,12 +92,17 @@ export interface IDefautProps {
   setConfig?: any;
 }
 const InputComponent: React.FC<IDefautProps> = props => {
-  const { classes, config, setConfig } = props;
+  const {
+    classes,
+    config,
+    setConfig
+  } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
   const [isInputValid, setIsInputValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const [value, setValue] = useState("");
+
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -160,31 +166,15 @@ const InputComponent: React.FC<IDefautProps> = props => {
     });
   };
   //****Check validation */
-  const check_nameConfig = e => {
-    const name = e.target.name;
+  const check_name = e => {
     const value = e.target.value;
-    if (value === "") {
-      alert("name must be filled out");
-      return false;
-    }
-  };
-  const required = value => {
-    if (isEmpty(value)) {
-      return {
-        isInputValid: false,
-        errorMessage: "Please enter name"
-      };
+    let good = !isEmpty(value);
+
+    if (good) {
+      return { message: "valid" };
     } else {
-      return {
-        isInputValid: true,
-        errorMessage: ""
-      };
+      return { message: "invalid", detail: "it's empty" };
     }
-  };
-  const handlerInputCheck = e => {
-    const { isInputValid, errorMessage } = required(value);
-    setErrorMessage(errorMessage);
-    setIsInputValid(isInputValid);
   };
 
   return (
@@ -195,22 +185,38 @@ const InputComponent: React.FC<IDefautProps> = props => {
             <FormLabel className={classes.titleField}>Config</FormLabel>
 
             <Form className={classes.formControl}>
-              <TextField
-                required
-                value={config ? config.name : ""}
-                name="name"
-                label="Name"
-                className={classes.textField}
-                onChange={onChangeText}
-                onBlur={handlerInputCheck}
-              />
-              <FormHelperText display={isInputValid} errorMessage={errorMessage}/>
+              <div>
+                <TextField
+                  required
+                  defaultValue={config ? config.name : ""}
+                  name="name"
+                  label="Name"
+                  className={classes.textField}
+                  error={errorMessage}
+                  onChange={e => {
+                    console.log(e.target.value);
+                    const message = check_name(e);
+                    if (message.message !== "valid") {
+                      setErrorMessage(message.detail);
+                    } else {
+                      setErrorMessage(null);
+                      onChangeText(e);
+                    }
+                  }}
+                />
+                <FormHelperText className={classes.error}>
+                  {errorMessage}
+                </FormHelperText>
+              </div>
+
               <TextField
                 name="version"
                 value={config ? config.version : "test version"}
                 label="Version"
                 className={classes.textField}
-                onChange={onChangeText}
+                onChange={e => {
+                  onChangeText(e);
+                }}
                 disabled
               />
               <FormGroup>

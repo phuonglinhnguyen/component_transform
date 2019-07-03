@@ -14,6 +14,7 @@ import InputComponent from "../input_component";
 import Config from "../Models/Config";
 
 import "./dialog.css";
+import { isEmpty } from "lodash";
 
 const styles: any = (theme: any) => {
   return {
@@ -33,18 +34,25 @@ export interface IDefautProps {
 }
 const AddDialog: React.FC<IDefautProps> = props => {
   const { isOpen, setIsOpen, configs, setConfigs, classes } = props;
-
+  const [errorMessage, setErrorMessage] = useState("fdfdfd");
   const [config, setConfig] = useState(() => {
     return new Config();
   });
   const [cronValue, setCronValue] = useState(" ");
 
-  const onAgree = () => {
+  const onAgree = e => {
     const newConfigs = [...configs, config];
+
     setConfigs(newConfigs);
     setIsOpen(false);
     setConfig(new Config());
   };
+  // const validateInput = () => {
+  //   let errorMessage = "test";
+  //   if (isEmpty(name)) {
+  //     return setErrorMessage(errorMessage);
+  //   }
+  // };
 
   return (
     <Dialog
@@ -61,6 +69,8 @@ const AddDialog: React.FC<IDefautProps> = props => {
           setConfig={setConfig}
           cronValue={cronValue}
           setCronValue={setCronValue}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
         />
       </DialogContent>
 
