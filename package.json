@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@harshitpant/material-ui-chip-input": "^2.0.5",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^4.2.0",
     "font-awesome": "^4.7.0",

@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import map from "lodash/map";
+import { isEmpty } from "lodash";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
-
 import FormLabel from "@material-ui/core/FormLabel";
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DoneIcon from "@material-ui/icons/Done";
+import CancelIcon from "@material-ui/icons/Cancel";
+import ChipInput from "@harshitpant/material-ui-chip-input";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles: any = (theme: any) => {
   return {
@@ -20,7 +25,7 @@ const styles: any = (theme: any) => {
       fontWeight: "bold"
     },
     textField: {
-      width: "95%"
+      width: "95%",
     },
     textField1: {
       width: "70%"
@@ -48,6 +53,25 @@ const styles: any = (theme: any) => {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center"
+    },
+    hidden: {
+      display: "none"
+    },
+    cancel: {
+      marginRight: "10px",
+      background: "#ff9800",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#e65100"
+      }
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
+    },
+    helper: {
+      opacity: "0.5"
     }
   };
 };
@@ -60,6 +84,7 @@ export interface IDefautProps {
   dictItem?: any;
   setDictItem?: any;
   mode?: any;
+  setMode?: any;
   dictionary?: any;
 }
 const DictionaryComponent: React.FC<IDefautProps> = props => {
@@ -74,6 +99,24 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     setMode
   } = props;
   const [chips, setChips] = useState([]);
+  const query = map(dictionary, "query");
+  const [key, setKey] = useState(null)
+  const [keyArr, setKeyArr] = useState(() => {
+    let temp = []
+    for (const key in query) {
+      temp.push({ key })
+    }
+    return temp;
+  })
+  console.log({ keyArr });
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  console.log({ query });
+
+  const valDB = [
+    { label: "MongoDB", value: "MongoDB" },
+    { label: "PostgresSQL", value: "PostgresSQL" }
+  ];
 
   const onChangeText = e => {
     const name = e.target.name;
@@ -85,10 +128,27 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     });
   };
 
-  const onAddDictionary = () => {
-    if (mode === "add") {
-      const newDictItem = { ...dictItem };
+  const check_input = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
 
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
+  const onAddDictionary = (e) => {
+    const message = check_input(e);
+    if (message.message !== "valid") {
+      setErrorMessage(message.detail);
+    } else {
+
+      setErrorMessage(null);
+    }
+    if (mode === "add") {
+
+      const newDictItem = { ...dictItem };
       setConfig({
         ...config,
         dictionary: [...config.dictionary, newDictItem]
@@ -108,31 +168,45 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       });
       setMode("add");
       setDictItem(null);
-      console.log(newDictionary);
+      // console.log(newDictionary);
     }
+
   };
-  const handlerAddChip=value=>{
-    const chipsa=chips.slice();
-    chips.push(value);
-    setChips({...chips});
-  }
-  const handleDeleteChip = index => {
-    const chipsa=chips.slice();
-    console.log(chipsa);
-    
+  const onAddQuery = chip => {
+    setChips([...chips, chip]);
   };
+  const onDeleteChip = (chip, index) => {
+    setChips(chips.slice(0, index).concat(chips.slice(index + 1)));
+  };
+
+  const onCancel = () => {
+    setMode("add");
+    setDictItem(null);
+  };
+
+
   return (
     <React.Fragment>
       <div className={classes.dictionary}>
         <FormLabel className={classes.titleField}>Dictionary</FormLabel>
-        <Fab
-          size="small"
-          aria-label="Add"
-          className={mode === "add" ? classes.add : classes.save}
-          onClick={onAddDictionary}
-        >
-          {mode === "add" ? <AddIcon /> : <DoneIcon />}
-        </Fab>
+        <div className={classes.actions}>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.hidden : classes.cancel}
+            aria-label="Cancel"
+            onClick={onCancel}
+          >
+            {mode === "add" ? "" : <CancelIcon />}
+          </Fab>
+          <Fab
+            size="small"
+            aria-label="Add"
+            className={mode === "add" ? classes.add : classes.save}
+            onClick={onAddDictionary}
+          >
+            {mode === "add" ? <AddIcon /> : <DoneIcon />}
+          </Fab>
+        </div>
       </div>
 
       <div className={classes.formInput}>
@@ -141,26 +215,52 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             <TextField
               label="Field Key"
               className={classes.textField}
+              error={errorMessage}
               name="fieldKey"
               margin="dense"
               variant="outlined"
-              onChange={onChangeText}
-              value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
+              onChange={e => {
+                // console.log(e.target.value);
+                // console.log(errorMessage);
+                const message = check_input(e);
+                if (message.message !== "valid") {
+                  setErrorMessage(message.detail);
+                } else {
+                  setErrorMessage(null);
+                }
+                onChangeText(e);
+              }}
+              value={
+                dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""
+              }
               disabled={mode === "edit"}
             />
+            <FormHelperText className={classes.error}>
+              {errorMessage}
+            </FormHelperText>
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Database Type"
-              className={classes.textField}
+              select
               name="database_type"
-              margin="dense"
-              onChange={onChangeText}
+              className={classes.textField}
               variant="outlined"
+              label="Database Type"
+              margin="dense"
               value={
                 dictItem && dictItem.database_type ? dictItem.database_type : ""
               }
-            />
+              onChange={onChangeText}
+            >
+              {valDB.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <FormHelperText className={classes.helper}>
+              Choose MongoDB/PostgresSQL
+            </FormHelperText>
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
@@ -245,22 +345,26 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
-          {/* <Grid item xs={6} sm={4}> */}
-          {/* <div className={classes.query}> */}
-          <TextField
-            name="query"
+          <ChipInput
+            name="key"
             label="Query"
-            className={classes.textField1}
-            margin="dense"
-            onChange={onChangeText}
-            variant="outlined"
-            // value={dictItem && dictItem.port ? dictItem.port : ""}
+            fullWidth
+            // value={keyArr}
+            // onChange={e => {
+            //   setKey(keyArr)
+            //   console.log({ setKey });
+
+            // }}
+            // defaultValue={["foo", "bar"]}
+            // onRequestAdd={key=>{
+            //   if(key.includes("|")){
+            //     return
+            //   }
+            //   keyArr.push(key)
+            //   setKeyArr(key)
+            // }}
+          // onDelete={(chip, index) => onDeleteChip(chip, index)}
           />
-         
-       
-          {/* </div> */}
-          {/* </Grid> */}
-          {/* <Grid item xs={6} /> */}
         </Grid>
       </div>
     </React.Fragment>

@@ -139,15 +139,16 @@ const ContentList: React.FC<IDefautProps> = props => {
     );
     console.log("del:", newContentArray);
 
-    const updateProject = {
+    setConfig({
       ...config,
       rules: {
-        ...config.rules.content,
-        [contentName]: newContentArray
+        ...config.rules,
+        content: {
+          ...config.rules.content,
+          [contentName]: contentItem
+        }
       }
-    };
-
-    setConfig(updateProject);
+    });
     setContentArray(newContentArray);
   };
 

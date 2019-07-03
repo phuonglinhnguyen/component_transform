@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useRef } from "react";
 
 // import { CronTriggerQuartz } from "@dgtx/core-component-ui";
 // import { getDataObject } from "@dgtx/coreui";
 
 import get from "lodash/get";
+import { isEmpty } from "lodash";
 
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, Switch } from "@material-ui/core";
@@ -71,6 +72,10 @@ const styles: any = (theme: any) => {
     },
     demo: {
       backgroundColor: theme.palette.background.paper
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
     }
   };
 };
@@ -86,6 +91,8 @@ export interface IDefautProps {
 const InputComponent: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
+  const name = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const cronTrigger = config ? config.cron_trigger : ""
   const onChangeText = e => {
     const name = e.target.name;
@@ -139,14 +146,23 @@ const InputComponent: React.FC<IDefautProps> = props => {
     }
     return value;
   };
-
+  
   const handleChangeCron = cronValue => {
     setConfig({
       ...config,
       cron_trigger: cronValue
     });
   };
+  const check_name = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
 
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
   return (
     <React.Fragment>
       <div>
@@ -154,15 +170,31 @@ const InputComponent: React.FC<IDefautProps> = props => {
           <Grid item xs={12} md={6}>
             <FormLabel className={classes.titleField}>Config</FormLabel>
 
-            <form className={classes.formControl}>
-              <TextField
-                required
-                value={config ? config.name : ""}
-                name="name"
-                label="Name"
-                className={classes.textField}
-                onChange={onChangeText}
-              />
+            <form className={classes.formControl} >
+              <div>
+                <TextField
+                  required
+                  defaultValue={config ? config.name : ""}
+                  name="name"
+                  label="Name"
+                  className={classes.textField}
+                  error={errorMessage}
+                  onChange={e => {
+                    console.log(e.target.value);
+                    const message = check_name(e);
+                    if (message.message !== "valid") {
+                      setErrorMessage(message.detail);
+                    } else {
+                      setErrorMessage(null);
+                      onChangeText(e);
+                    }
+                  }}
+                />
+                <FormHelperText className={classes.error}>
+                  {errorMessage}
+                </FormHelperText>
+              </div>
+
               <TextField
                 name="version"
                 value={config ? config.version : "test version"}

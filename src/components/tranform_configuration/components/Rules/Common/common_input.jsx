@@ -1,10 +1,12 @@
-import React from "react";
+import React,{useState} from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, FormLabel } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DoneIcon from "@material-ui/icons/Done";
-
+import CancelIcon from "@material-ui/icons/Cancel";
+import { isEmpty } from "lodash";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import AceEditor from "react-ace";
 
 const styles: any = (theme: any) => {
@@ -48,6 +50,22 @@ const styles: any = (theme: any) => {
       fontSize: "16px",
       height: "250px",
       margin: "20px 0"
+    },
+    hidden: {
+      display: "none"
+    },
+    cancel: {
+      marginRight: "10px",
+      background: "#ff9800",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#e65100"
+      }
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
     }
   };
 };
@@ -56,8 +74,12 @@ export interface IDefautProps {
   classes?: any;
   theme?: any;
   mode?: any;
-  commonItem?: any;
-  setCommonItem?: any;
+  setMode?: any;
+  setConfig?: any;
+  commonName?: any;
+  setCommonName?: any;
+  commonValue?: any;
+  setCommonValue?: any;
 }
 
 const Common: React.FC<IDefautProps> = props => {
@@ -73,9 +95,7 @@ const Common: React.FC<IDefautProps> = props => {
     commonValue,
     setCommonValue
   } = props;
-
-  // console.log("commonData:", common);
-
+  const [errorMessage, setErrorMessage] = useState(null);
   const onAddCommon = () => {
     if (mode === "add") {
       const newConmonItem = { [commonName]: commonValue };
@@ -95,12 +115,10 @@ const Common: React.FC<IDefautProps> = props => {
       const newCommons = common.map(newItem => {
         const key = Object.keys(newItem)[0];
         if (key === commonName) {
-          return { ...{ [commonName]: commonValue } }
+          return { ...{ [commonName]: commonValue } };
         }
         return newItem;
-      })
-
-      console.log({ newCommons });
+      });
 
       setConfig({
         ...config,
@@ -108,35 +126,68 @@ const Common: React.FC<IDefautProps> = props => {
           ...config.rules,
           common: newCommons
         }
-      })
+      });
       setMode("add");
       setCommonName(null);
       setCommonValue(null);
     }
   };
-  console.log("name:", commonName);
-  // console.log({ commonValue });
+  const onCancel = () => {
+    setMode("add");
+    setCommonName(null);
+    setCommonValue(null);
+  };
+  const check_input = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
+
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
   return (
     <React.Fragment>
       <div className={classes.common}>
         <FormLabel className={classes.titleField}>Common </FormLabel>
-        <Fab
-          size="small"
-          className={mode === "add" ? classes.add : classes.save}
-          aria-label="Add"
-          onClick={onAddCommon}
-        >
-          {mode === "add" ? <AddIcon /> : <DoneIcon />}
-        </Fab>
+        <div className={classes.actions}>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.hidden : classes.cancel}
+            aria-label="Cancel"
+            onClick={onCancel}
+          >
+            {mode === "add" ? "" : <CancelIcon />}
+          </Fab>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.add : classes.save}
+            aria-label="Add"
+            onClick={onAddCommon}
+          >
+            {mode === "add" ? <AddIcon /> : <DoneIcon />}
+          </Fab>
+        </div>
       </div>
       <TextField
         name="commonName"
         label="Name"
         margin="normal"
+        error={errorMessage}
         value={commonName ? commonName : ""}
-        onChange={e => setCommonName(e.target.value)}
+        onChange={e => {
+          const message = check_input(e);
+          if (message.message !== "valid") {
+            setErrorMessage(message.detail);
+          } else {
+            setErrorMessage(null);
+          }
+          setCommonName(e.target.value)
+        }}
         disabled={mode === "edit"}
       />
+      <FormHelperText className={classes.error}>{errorMessage}</FormHelperText>
       <AceEditor
         name="commonValue"
         className={classes.ace}
@@ -145,6 +196,7 @@ const Common: React.FC<IDefautProps> = props => {
         enableLiveAutocompletion={true}
         enableSnippets={true}
         highlightActiveLine={true}
+        width="100%"
         height="250px"
         mode="javascript"
         onChange={commonValue => setCommonValue(commonValue)}

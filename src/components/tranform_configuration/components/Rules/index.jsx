@@ -29,23 +29,19 @@ export interface IDefautProps {
 
 const Rules: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
-  const [mode, setMode] = useState("add");
+  
 
   return (
     <React.Fragment>
       <Grid className={classes.wrapForm} spacing={24}>
         <Grid item xs={12} md={6} className={classes.formControl}>
           <Common
-            mode={mode}
-            setMode={setMode}
             config={config}
             setConfig={setConfig}
           />
         </Grid>
         <Grid item xs={12} md={6} className={classes.formControl}>
           <Content
-            mode={mode}
-            setMode={setMode}
             config={config}
             setConfig={setConfig}
           />

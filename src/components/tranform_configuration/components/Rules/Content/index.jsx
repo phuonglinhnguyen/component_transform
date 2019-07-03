@@ -11,12 +11,17 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   styles?: any;
   theme?: any;
+  config?: any;
+  setConfig?: any;
+  mode?: any;
+  setMode?: any;
 }
 const Content: React.FC<IDefautProps> = props => {
-  const { config, setConfig, mode, setMode } = props;
+  const { config, setConfig} = props;
+
   const content = get(config, "rules.content", {});
   const [selectedContentItem, setSelectedContentItem] = useState(null);
-
+  const [mode, setMode] = useState("add");
   const [contentName, setContentName] = useState(null);
   const [contentItem, setContentItem] = useState(null);
 
@@ -25,10 +30,10 @@ const Content: React.FC<IDefautProps> = props => {
     for (const contentName in content) {
       const contentItem = content[contentName];
       temp.push({ contentName, contentItem });
-    } 
+    }
     return temp;
   });
-  
+
   return (
     <React.Fragment>
       <ContentInput

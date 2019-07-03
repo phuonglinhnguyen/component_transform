@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import get from "lodash/get";
+import { isEmpty } from "lodash";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Done";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
-
+import AceEditor from "react-ace";
+import FormHelperText from "@material-ui/core/FormHelperText";
 const styles: any = (theme: any) => {
   return {
     formControl: {
       boxShadow: "-4px 3px 33px -10px rgba(0,0,0,0.75)",
       margin: "20px 0",
       padding: theme.spacing.unit * 3,
-      textAlign: "center",
       display: "flex",
       flexDirection: "column"
     },
@@ -46,6 +47,26 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "#1b5e20"
       }
+    },
+    hidden: {
+      display: "none"
+    },
+    cancel: {
+      marginRight: "10px",
+      background: "#ff9800",
+      color: "#fafafa",
+      transition: "background 0.1s ease-in",
+      "&:hover": {
+        background: "#e65100"
+      }
+    },
+    titleContent: {
+      fontSize: "18px",
+      margin: "10px 0"
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
     }
   };
 };
@@ -53,6 +74,17 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
+  config?: any;
+  setConfig?: any;
+  setContentItem?: any;
+  content?: any;
+  contentItem?: any;
+  contentName?: any;
+  setContentName?: any;
+  contentArray?: any;
+  setContentArray?: any;
+  mode?: any;
+  setMode?: any;
 }
 const ContentItem: React.FC<IDefautProps> = props => {
   const {
@@ -62,30 +94,49 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentItem,
     content,
     contentItem,
-    contentArray,
     contentName,
+    contentArray,
     setContentName,
     setContentArray,
     mode,
     setMode
+    // contentDefault,
+    // setContentDefault
   } = props;
+  const [errorMessage, setErrorMessage] = useState(null);
+  const onChangeText = (name, value) => {
+    // const name=e.target.name;
+    // const va=e.target.name;
 
-  const onChangeText = e => {
-    const name = e.target.name;
-    const value = e.target.value;
-    if (mode === 'add') {
+    if (mode === "add") {
       setContentItem({
         ...contentItem,
         [name]: value
       });
-    } else if (mode === 'edit') {
+    } else if (mode === "edit") {
       setContentItem({
         contentName,
         contentItem: {
           ...contentItem,
           [name]: value
         }
-      })
+      });
+    }
+  };
+  const onChangeEditor = (name, value) => {
+    if (mode === "add") {
+      setContentItem({
+        ...contentItem,
+        [name]: value
+      });
+    } else if (mode === "edit") {
+      setContentItem({
+        contentName,
+        contentItem: {
+          ...contentItem,
+          [name]: value
+        }
+      });
     }
   };
 
@@ -107,12 +158,12 @@ const ContentItem: React.FC<IDefautProps> = props => {
         }
       });
       setContentArray(newContentArray);
-      setContentItem(null)
-      setContentName(null)
+      setContentItem(null);
+      setContentName(null);
     } else if (mode === "edit") {
       const newContentArray = contentArray.map(_contentItem => {
         if (_contentItem.contentItem.dataKey === contentItem.dataKey) {
-          return { contentItem: {...contentItem}, contentName };
+          return { contentItem: { ...contentItem }, contentName };
         }
         return _contentItem;
       });
@@ -129,61 +180,134 @@ const ContentItem: React.FC<IDefautProps> = props => {
       });
       setMode("add");
       setContentArray(newContentArray);
-      setContentItem(null)
+      setContentItem(null);
     }
   };
+  const onCancel = () => {
+    setMode("add");
+    setContentItem(null);
+  };
+  const check_input = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
 
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
   return (
     <React.Fragment>
       <div className={classes.content}>
         <FormLabel className={classes.titleField}>Content</FormLabel>
-
-        <Fab
-          size="small"
-          className={mode === "add" ? classes.add : classes.save}
-          aria-label="Add"
-          onClick={onAddContentItem}
-        >
-          {mode === "add" ? <AddIcon /> : <SaveIcon />}
-        </Fab>
+        <div className={classes.actions}>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.hidden : classes.cancel}
+            aria-label="Cancel"
+            onClick={onCancel}
+            hiddenCancel
+          >
+            {mode === "add" ? "" : <CancelIcon />}
+          </Fab>
+          <Fab
+            size="small"
+            className={mode === "add" ? classes.add : classes.save}
+            aria-label="Add"
+            onClick={onAddContentItem}
+          >
+            {mode === "add" ? <AddIcon /> : <SaveIcon />}
+          </Fab>
+        </div>
       </div>
       <TextField
         name="contentName"
         label="Name"
         className={classes.heading}
-        onChange={e => setContentName(e.target.value)}
+        error={errorMessage}
+        onChange={e => {
+          const message = check_input(e);
+          if (message.message !== "valid") {
+            setErrorMessage(message.detail);
+          } else {
+            setErrorMessage(null);
+          }
+          setContentName(e.target.value);
+        }}
         value={contentName ? contentName : ""}
+        disabled={mode === "edit"}
       />
+      <FormHelperText className={classes.error}>{errorMessage}</FormHelperText>
       <div className={classes.formControl}>
         <TextField
           name="dataKey"
           label="DataKey"
+          error={errorMessage}
           margin="dense"
-          onChange={onChangeText}
-          value={contentItem && contentItem.dataKey ? contentItem.dataKey : ""}
+          onChange={e => {
+            const message = check_input(e);
+            if (message.message !== "valid") {
+              setErrorMessage(message.detail);
+            } else {
+              setErrorMessage(null);
+            } 
+            onChangeText(e.target.name, e.target.value);
+          }}
+          value={
+            contentItem && contentItem.dataKey ? contentItem.dataKey : ""
+          }
           disabled={mode === "edit"}
         />
-
-        <TextField
+        <FormHelperText className={classes.error}>
+          {errorMessage}
+        </FormHelperText>
+        
+        <label className={classes.titleContent}>Default</label>
+        <AceEditor
           name="default"
-          label="Default"
-          margin="dense"
-          multiline={true}
-          rows={1}
-          rowsMax={3}
-          onChange={onChangeText}
-          value={contentItem && contentItem.default ? contentItem.default : ""}
+          // className={classes.ace}
+          editorProps={{ $blockScrolling: "Infinity" }}
+          enableBasicAutocompletion={true}
+          enableLiveAutocompletion={true}
+          enableSnippets={true}
+          highlightActiveLine={true}
+          width="100%"
+          height="250px"
+          mode="javascript"
+          onChange={e => {
+            onChangeText("default", e);
+          }}
+          showGutter={true}
+          showPrintMargin={false}
+          theme="solarized_dark"
+          value={
+            contentItem && contentItem.default ? contentItem.default : ""
+          }
+          width="100%"
         />
-
-        <TextField
+        <label className={classes.titleContent}>Value</label>
+        <AceEditor
           name="value"
-          label="Value"
-          margin="dense"
-          multiline={true}
-          rows={1}
-          rowsMax={3}
-          onChange={onChangeText}
-          value={contentItem ? contentItem.value : ""}
+          // className={classes.ace}
+          editorProps={{ $blockScrolling: "Infinity" }}
+          enableBasicAutocompletion={true}
+          enableLiveAutocompletion={true}
+          enableSnippets={true}
+          highlightActiveLine={true}
+          width="100%"
+          height="250px"
+          mode="javascript"
+          onChange={e => {
+            onChangeText("value", e);
+          }}
+          showGutter={true}
+          showPrintMargin={false}
+          theme="solarized_dark"
+          value={
+            contentItem && contentItem.value ? contentItem.value : ""
+          }
+          width="100%"
         />
       </div>
     </React.Fragment>

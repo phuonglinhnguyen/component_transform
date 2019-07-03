@@ -1,45 +1,45 @@
 import React, { useState } from "react";
+import get from "lodash/get";
+
 import { withStyles } from "@material-ui/core/styles";
 import CommonInput from "./common_input";
 import CommonList from "./common_list";
-import get from "lodash/get";
+
 const styles: any = (theme: any) => {
   return {};
 };
 
 export interface IDefautProps {
-  classes?: any;
   styles?: any;
   theme?: any;
-  commonName?: any;
+  setConfig?: any;
+  config?: any;
 }
 const Common: React.FC<IDefautProps> = props => {
-  const { classes, mode, setMode, config, setConfig } = props;
+  const { config, setConfig } = props;
   const common = get(config, "rules.common", []);
-
+  const [mode, setMode] = useState("add");
   const [commonValue, setCommonValue] = useState(null);
   const [commonName, setCommonName] = useState(null);
-  const [selectedCommonItem, setSelectedCommonItem] = useState(null);
   const [selectedCommonName, setSelectedCommonName] = useState(null);
   const [selectedCommonValue, setSelectedCommonValue] = useState(null);
+
   return (
     <React.Fragment>
       <CommonInput
         config={config}
         setConfig={setConfig}
-        commonValue={
-          selectedCommonValue ? selectedCommonValue : commonValue
-        }
+        commonValue={selectedCommonValue ? selectedCommonValue : commonValue}
         setCommonValue={
           selectedCommonValue ? setSelectedCommonValue : setCommonValue
         }
         mode={mode}
         setMode={setMode}
         common={common}
-        commonName={
-          selectedCommonName ? selectedCommonName : commonName
+        commonName={selectedCommonName ? selectedCommonName : commonName}
+        setCommonName={
+          selectedCommonName ? setSelectedCommonName : setCommonName
         }
-        setCommonName={selectedCommonName ? setSelectedCommonName : setCommonName}
         selectedCommonValue={selectedCommonValue}
         selectedCommonName={selectedCommonName}
       />

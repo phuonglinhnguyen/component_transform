@@ -106,7 +106,7 @@ const CommonList: React.FC<IDefautProps> = props => {
 
   const [dense] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
-  console.log("common_list:", common);
+  // console.log("common_list:", common);
   const deleteCommon = (e, commonName) => {
     e.stopPropagation();
 
@@ -114,7 +114,7 @@ const CommonList: React.FC<IDefautProps> = props => {
       const key = Object.keys(newItem)[0];
       return key !== commonName;
     })
-    console.log({ newCommon });
+    // console.log({ newCommon });
     setConfig({
       ...config,
       rules: {
@@ -141,12 +141,12 @@ const CommonList: React.FC<IDefautProps> = props => {
     if (isEmpty(strSearch)) {
       return true;
     }
-    console.log("bbb", key);
+    // console.log("bbb", key);
 
     const strToSearch = key.toLowerCase();
 
-    console.log("commonsearch", strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    // console.log("commonsearch", strToSearch, strSearch);
+    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 
