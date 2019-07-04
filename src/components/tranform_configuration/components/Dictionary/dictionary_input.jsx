@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import map from "lodash/map";
-import { isEmpty } from "lodash";
+import { isEmpty, toArray, get } from "lodash";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -12,6 +11,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import ChipInput from "@harshitpant/material-ui-chip-input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { isRequired, configValidators, setConfigValidator } from "../../services";
 
 const styles: any = (theme: any) => {
   return {
@@ -96,22 +96,16 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     setDictItem,
     mode,
     dictionary,
-    setMode
+    setMode,
+    // setIsError
   } = props;
-  const [chips, setChips] = useState([]);
-  const query = map(dictionary, "query");
-  const [key, setKey] = useState(null)
-  const [keyArr, setKeyArr] = useState(() => {
-    let temp = []
-    for (const key in query) {
-      temp.push({ key })
-    }
-    return temp;
-  })
-  console.log({ keyArr });
-
+  
+  const query = get(dictItem, "query", {});
+  const queryArray = Object.keys(query)
+  console.log(dictItem);
+  console.log(queryArray);
+  
   const [errorMessage, setErrorMessage] = useState(null);
-  console.log({ query });
 
   const valDB = [
     { label: "MongoDB", value: "MongoDB" },
@@ -121,6 +115,14 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
+
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else if (configValidators[name]) {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
 
     setDictItem({
       ...dictItem,
@@ -138,6 +140,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       return { message: "invalid", detail: "it's empty" };
     }
   };
+
   const onAddDictionary = (e) => {
     const message = check_input(e);
     if (message.message !== "valid") {
@@ -172,18 +175,35 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     }
 
   };
-  const onAddQuery = chip => {
-    setChips([...chips, chip]);
-  };
-  const onDeleteChip = (chip, index) => {
-    setChips(chips.slice(0, index).concat(chips.slice(index + 1)));
-  };
 
   const onCancel = () => {
     setMode("add");
     setDictItem(null);
   };
 
+  const onChangeQuery = (chips) => {
+    const newQuery = {...query}
+
+    for (const chip of chips) {
+      newQuery[chip] = null
+    }
+    console.log(newQuery);
+
+    setDictItem({
+      ...dictItem,
+      query: newQuery
+    });
+  }
+
+  const onDeleteQuery = (chip) => {
+    const newQuery = {...query}
+
+    delete newQuery[chip]
+    setDictItem({
+      ...dictItem,
+      query: newQuery
+    });
+  }
 
   return (
     <React.Fragment>
@@ -215,28 +235,16 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             <TextField
               label="Field Key"
               className={classes.textField}
-              error={errorMessage}
+              error={configValidators['fieldKey'].error}
               name="fieldKey"
               margin="dense"
               variant="outlined"
-              onChange={e => {
-                // console.log(e.target.value);
-                // console.log(errorMessage);
-                const message = check_input(e);
-                if (message.message !== "valid") {
-                  setErrorMessage(message.detail);
-                } else {
-                  setErrorMessage(null);
-                }
-                onChangeText(e);
-              }}
-              value={
-                dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""
-              }
+              onChange={onChangeText}
+              value={dictItem && dictItem.fieldKey ? dictItem.fieldKey : ""}
               disabled={mode === "edit"}
             />
             <FormHelperText className={classes.error}>
-              {errorMessage}
+              {configValidators['fieldKey'].error ? configValidators['fieldKey'].message : ''}
             </FormHelperText>
           </Grid>
           <Grid item xs={6}>
@@ -346,24 +354,13 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
           <ChipInput
-            name="key"
+            defaultValue={queryArray}
+            name="query"
             label="Query"
             fullWidth
-            // value={keyArr}
-            // onChange={e => {
-            //   setKey(keyArr)
-            //   console.log({ setKey });
-
-            // }}
-            // defaultValue={["foo", "bar"]}
-            // onRequestAdd={key=>{
-            //   if(key.includes("|")){
-            //     return
-            //   }
-            //   keyArr.push(key)
-            //   setKeyArr(key)
-            // }}
-          // onDelete={(chip, index) => onDeleteChip(chip, index)}
+            value={queryArray || []}
+            onChange={(chips) => onChangeQuery(chips)}
+            onDelete={(chip) => onDeleteQuery(chip)}
           />
         </Grid>
       </div>

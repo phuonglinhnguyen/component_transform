@@ -132,6 +132,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   const [configs, setConfigs] = useState(() => {
     return getDataTranform();
   });
+  // const [isError, setIsError] = useState(false)
 
   // const handleGetData = () => {
   //   console.log("projectId: ", projectId);
@@ -289,6 +290,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         setConfigs={setConfigs}
         selectedList={selectedProject}
         setSelectedList={setSelectedProject}
+        // isError={isError}
+        // setIsError={setIsError}
       />
 
       <EditDialog
@@ -300,6 +303,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         setConfig={setSelectedProject}
         selectedList={selectedProject}
         setSelectedList={setSelectedProject}
+        // isError={isError}
+        // setIsError={setIsError}
       />
     </React.Fragment>
   );

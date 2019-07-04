@@ -27,7 +27,7 @@ export interface IDefautProps {
   setConfig?: any;
 }
 const Dictionary: React.FC<IDefautProps> = (props) => {
-  const { classes, config, setConfig } = props
+  const { classes, config, setConfig} = props
   const dictionary = config && config.dictionary ? config.dictionary : []
   const [selectedDictItem, setSelectedDictItem] = useState(null);
   const [dictItem, setDictItem] = useState(null)
@@ -45,6 +45,7 @@ const Dictionary: React.FC<IDefautProps> = (props) => {
           mode={mode}
           setMode={setMode}
           dictionary={dictionary}
+          // setIsError={setIsError}
         />
       </Grid>
       <Grid item xs={12} md={6} className={classes.formControl}>

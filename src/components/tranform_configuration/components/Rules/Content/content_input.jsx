@@ -11,6 +11,8 @@ import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
 import AceEditor from "react-ace";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { isRequired, configValidators, setConfigValidator } from "../../../services";
+
 const styles: any = (theme: any) => {
   return {
     formControl: {
@@ -99,14 +101,23 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentName,
     setContentArray,
     mode,
-    setMode
+    setMode,
+    // setIsError
     // contentDefault,
     // setContentDefault
   } = props;
-  const [errorMessage, setErrorMessage] = useState(null);
-  const onChangeText = (name, value) => {
-    // const name=e.target.name;
-    // const va=e.target.name;
+
+  const onChangeText = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
 
     if (mode === "add") {
       setContentItem({
@@ -123,6 +134,22 @@ const ContentItem: React.FC<IDefautProps> = props => {
       });
     }
   };
+
+  const onChangeContentName = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
+
+    setContentName(value)
+  }
+
   const onChangeEditor = (name, value) => {
     if (mode === "add") {
       setContentItem({
@@ -141,6 +168,13 @@ const ContentItem: React.FC<IDefautProps> = props => {
   };
 
   const onAddContentItem = () => {
+    if (
+      configValidators['contentName'].error || configValidators['dataKey'].error ||
+      isEmpty(contentItem) || isEmpty(contentName) || isEmpty(contentItem.dataKey)
+    ) {
+      return
+    }
+
     if (mode === "add") {
       const newContentArray = [...contentArray];
       newContentArray.unshift({
@@ -183,20 +217,12 @@ const ContentItem: React.FC<IDefautProps> = props => {
       setContentItem(null);
     }
   };
+
   const onCancel = () => {
     setMode("add");
     setContentItem(null);
   };
-  const check_input = e => {
-    const value = e.target.value;
-    let good = !isEmpty(value);
 
-    if (good) {
-      return { message: "valid" };
-    } else {
-      return { message: "invalid", detail: "it's empty" };
-    }
-  };
   return (
     <React.Fragment>
       <div className={classes.content}>
@@ -225,42 +251,28 @@ const ContentItem: React.FC<IDefautProps> = props => {
         name="contentName"
         label="Name"
         className={classes.heading}
-        error={errorMessage}
-        onChange={e => {
-          const message = check_input(e);
-          if (message.message !== "valid") {
-            setErrorMessage(message.detail);
-          } else {
-            setErrorMessage(null);
-          }
-          setContentName(e.target.value);
-        }}
+        error={configValidators['contentName'].error}
+        onChange={onChangeContentName}
         value={contentName ? contentName : ""}
         disabled={mode === "edit"}
       />
-      <FormHelperText className={classes.error}>{errorMessage}</FormHelperText>
+      <FormHelperText className={classes.error}>
+        {configValidators['contentName'].error ? configValidators['contentName'].message : ''}
+      </FormHelperText>
       <div className={classes.formControl}>
         <TextField
           name="dataKey"
           label="DataKey"
-          error={errorMessage}
+          error={configValidators['dataKey'].error}
           margin="dense"
-          onChange={e => {
-            const message = check_input(e);
-            if (message.message !== "valid") {
-              setErrorMessage(message.detail);
-            } else {
-              setErrorMessage(null);
-            } 
-            onChangeText(e.target.name, e.target.value);
-          }}
+          onChange={e=>onChangeEditor(e.target.name, e.target.value)}
           value={
             contentItem && contentItem.dataKey ? contentItem.dataKey : ""
           }
           disabled={mode === "edit"}
         />
         <FormHelperText className={classes.error}>
-          {errorMessage}
+          {configValidators['dataKey'].error ? configValidators['dataKey'].message : ''}
         </FormHelperText>
         
         <label className={classes.titleContent}>Default</label>
@@ -276,7 +288,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
           height="250px"
           mode="javascript"
           onChange={e => {
-            onChangeText("default", e);
+            onChangeEditor("default", e);
           }}
           showGutter={true}
           showPrintMargin={false}
@@ -299,7 +311,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
           height="250px"
           mode="javascript"
           onChange={e => {
-            onChangeText("value", e);
+            onChangeEditor("value", e);
           }}
           showGutter={true}
           showPrintMargin={false}

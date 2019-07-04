@@ -57,6 +57,7 @@ const Content: React.FC<IDefautProps> = props => {
         }
         mode={mode}
         setMode={setMode}
+        // setIsError={setIsError}
       />
       <ContentList
         setMode={setMode}

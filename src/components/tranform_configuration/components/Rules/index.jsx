@@ -28,7 +28,7 @@ export interface IDefautProps {
 }
 
 const Rules: React.FC<IDefautProps> = props => {
-  const { classes, config, setConfig } = props;
+  const { classes, config, setConfig, setIsError } = props;
   
 
   return (
@@ -38,12 +38,14 @@ const Rules: React.FC<IDefautProps> = props => {
           <Common
             config={config}
             setConfig={setConfig}
+            // setIsError={setIsError}
           />
         </Grid>
         <Grid item xs={12} md={6} className={classes.formControl}>
           <Content
             config={config}
             setConfig={setConfig}
+            // setIsError={setIsError}
           />
         </Grid>
       </Grid>

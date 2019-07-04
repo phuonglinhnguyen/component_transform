@@ -1,5 +1,4 @@
 import React, { useState, useContext, useRef } from "react";
-
 // import { CronTriggerQuartz } from "@dgtx/core-component-ui";
 // import { getDataObject } from "@dgtx/coreui";
 
@@ -21,6 +20,7 @@ import Grid from "@material-ui/core/Grid";
 import TransformDialog from "./Dialogs/TranformDialog";
 import Dictionary from "./Dictionary";
 import Rules from "./Rules";
+import { isRequired, configValidators, setConfigValidator } from "../services";
 
 const styles: any = (theme: any) => {
   return {
@@ -92,11 +92,20 @@ const InputComponent: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const name = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
   const cronTrigger = config ? config.cron_trigger : ""
+
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
+
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else if (configValidators[name]) {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
+
     setConfig({
       ...config,
       [name]: value
@@ -153,6 +162,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
       cron_trigger: cronValue
     });
   };
+  
   const check_name = e => {
     const value = e.target.value;
     let good = !isEmpty(value);
@@ -163,6 +173,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
       return { message: "invalid", detail: "it's empty" };
     }
   };
+
   return (
     <React.Fragment>
       <div>
@@ -178,20 +189,11 @@ const InputComponent: React.FC<IDefautProps> = props => {
                   name="name"
                   label="Name"
                   className={classes.textField}
-                  error={errorMessage}
-                  onChange={e => {
-                    console.log(e.target.value);
-                    const message = check_name(e);
-                    if (message.message !== "valid") {
-                      setErrorMessage(message.detail);
-                    } else {
-                      setErrorMessage(null);
-                      onChangeText(e);
-                    }
-                  }}
+                  error={configValidators['name'].error}
+                  onChange={onChangeText}
                 />
                 <FormHelperText className={classes.error}>
-                  {errorMessage}
+                  {configValidators['name'].error ? configValidators['name'].message : ''}
                 </FormHelperText>
               </div>
 

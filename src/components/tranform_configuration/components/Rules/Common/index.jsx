@@ -16,7 +16,7 @@ export interface IDefautProps {
   config?: any;
 }
 const Common: React.FC<IDefautProps> = props => {
-  const { config, setConfig } = props;
+  const { config, setConfig, setIsError } = props;
   const common = get(config, "rules.common", []);
   const [mode, setMode] = useState("add");
   const [commonValue, setCommonValue] = useState(null);
@@ -42,6 +42,7 @@ const Common: React.FC<IDefautProps> = props => {
         }
         selectedCommonValue={selectedCommonValue}
         selectedCommonName={selectedCommonName}
+        // setIsError={setIsError}
       />
       <CommonList
         setMode={setMode}
