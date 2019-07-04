@@ -11,6 +11,7 @@ import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
 import AceEditor from "react-ace";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { isRequired, configValidators, setConfigValidator } from "../../../services";
 const styles: any = (theme: any) => {
   return {
     formControl: {
@@ -100,14 +101,12 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentArray,
     mode,
     setMode
-    // contentDefault,
-    // setContentDefault
   } = props;
+
   const [errorMessage, setErrorMessage] = useState(null);
+
   const onChangeText = (name, value) => {
-    // const name=e.target.name;
-    // const va=e.target.name;
-
+    console.log(name, value)
     if (mode === "add") {
       setContentItem({
         ...contentItem,
@@ -123,24 +122,27 @@ const ContentItem: React.FC<IDefautProps> = props => {
       });
     }
   };
-  const onChangeEditor = (name, value) => {
-    if (mode === "add") {
-      setContentItem({
-        ...contentItem,
-        [name]: value
-      });
-    } else if (mode === "edit") {
-      setContentItem({
-        contentName,
-        contentItem: {
-          ...contentItem,
-          [name]: value
-        }
-      });
-    }
-  };
+  const onChangeContentName = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
 
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
+
+    setContentName(value)
+  }
   const onAddContentItem = () => {
+    if (
+      configValidators['contentName'].error || configValidators['dataKey'].error ||
+      isEmpty(contentItem) || isEmpty(contentName) || isEmpty(contentItem.dataKey)
+    ) {
+      return
+    }
     if (mode === "add") {
       const newContentArray = [...contentArray];
       newContentArray.unshift({
@@ -222,56 +224,33 @@ const ContentItem: React.FC<IDefautProps> = props => {
         </div>
       </div>
       <TextField
+        required
         name="contentName"
         label="Name"
         className={classes.heading}
-        error={errorMessage}
-        onChange={e => {
-          const message = check_input(e);
-          if (message.message !== "valid") {
-            setErrorMessage(message.detail);
-          } else {
-            setErrorMessage(null);
-            setContentName(e.target.value);
-          }
-        }}
-        defaultValue={contentName ? contentName : ""}
+        error={configValidators['contentName'].error}
+        onChange={onChangeContentName}
+        value={contentName ? contentName : ""}
         disabled={mode === "edit"}
       />
-      <FormHelperText className={classes.error}>{errorMessage}</FormHelperText>
+      <FormHelperText className={classes.error}> {configValidators['contentName'].error ? configValidators['contentName'].message : ''}</FormHelperText>
       <div className={classes.formControl}>
         <TextField
+          required
           name="dataKey"
           label="DataKey"
           error={errorMessage}
           margin="dense"
-          onChange={e => {
-            const message = check_input(e);
-            if (message.message !== "valid") {
-              setErrorMessage(message.detail);
-            } else {
-              setErrorMessage(null);
-              onChangeText(e.target.name, e.target.value);
-            }
-          }}
-          defaultValue={
+          onChange={e=>onChangeText(e.target.name, e.target.value)}
+
+          value={
             contentItem && contentItem.dataKey ? contentItem.dataKey : ""
           }
           disabled={mode === "edit"}
         />
         <FormHelperText className={classes.error}>
-          {errorMessage}
+        {configValidators['dataKey'].error ? configValidators['dataKey'].message : ''}
         </FormHelperText>
-        {/* <TextField
-          name="default"
-          label="Default"
-          margin="dense"
-          multiline={true}
-          rows={1}
-          rowsMax={3}
-          onChange={onChangeText}
-          value={contentItem && contentItem.default ? contentItem.default : ""}
-        /> */}
         <label className={classes.titleContent}>Default</label>
         <AceEditor
           name="default"
@@ -290,7 +269,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
           showGutter={true}
           showPrintMargin={false}
           theme="solarized_dark"
-          defaultValue={
+          value={
             contentItem && contentItem.default ? contentItem.default : ""
           }
           width="100%"
@@ -298,7 +277,6 @@ const ContentItem: React.FC<IDefautProps> = props => {
         <label className={classes.titleContent}>Value</label>
         <AceEditor
           name="value"
-          // className={classes.ace}
           editorProps={{ $blockScrolling: "Infinity" }}
           enableBasicAutocompletion={true}
           enableLiveAutocompletion={true}
@@ -313,21 +291,11 @@ const ContentItem: React.FC<IDefautProps> = props => {
           showGutter={true}
           showPrintMargin={false}
           theme="solarized_dark"
-          defaultValue={
+          value={
             contentItem && contentItem.value ? contentItem.value : ""
           }
           width="100%"
         />
-        {/* <TextField
-          name="value"
-          label="Value"
-          margin="dense"
-          multiline={true}
-          rows={1}
-          rowsMax={3}
-          onChange={onChangeText}
-          defaultValue={contentItem && contentItem.value ? contentItem.value : ""}
-        /> */}
       </div>
     </React.Fragment>
   );

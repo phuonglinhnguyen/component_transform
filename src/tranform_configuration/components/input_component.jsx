@@ -23,8 +23,7 @@ import Grid from "@material-ui/core/Grid";
 import TransformDialog from "./Dialogs/TranformDialog";
 import Dictionary from "./Dictionary";
 import Rules from "./Rules";
-
-// import useForm from "./useForm";
+import { isRequired, configValidators, setConfigValidator } from "../services";
 
 const styles: any = (theme: any) => {
   return {
@@ -99,18 +98,26 @@ const InputComponent: React.FC<IDefautProps> = props => {
   } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
-  const [isInputValid, setIsInputValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [value, setValue] = useState("");
+  const name = useState("");
 
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
+
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else if (configValidators[name]) {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
+
     setConfig({
       ...config,
       [name]: value
     });
   };
+
 
   const onChangeActive = e => {
     const name = e.target.name;
@@ -192,20 +199,11 @@ const InputComponent: React.FC<IDefautProps> = props => {
                   name="name"
                   label="Name"
                   className={classes.textField}
-                  error={errorMessage}
-                  onChange={e => {
-                    console.log(e.target.value);
-                    const message = check_name(e);
-                    if (message.message !== "valid") {
-                      setErrorMessage(message.detail);
-                    } else {
-                      setErrorMessage(null);
-                      onChangeText(e);
-                    }
-                  }}
+                  error={configValidators['name'].error}
+                  onChange={onChangeText}
                 />
                 <FormHelperText className={classes.error}>
-                  {errorMessage}
+                {configValidators['name'].error ? configValidators['name'].message : ''}
                 </FormHelperText>
               </div>
 

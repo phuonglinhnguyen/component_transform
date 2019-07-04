@@ -103,7 +103,9 @@ const CommonList: React.FC<IDefautProps> = props => {
     setConfig,
     config,
     setSelectedCommonValue,
-    setSelectedCommonName
+    setSelectedCommonName,
+    setCommonValue,
+    setCommonName
   } = props;
 
   const [dense] = useState(false);
@@ -118,10 +120,11 @@ const CommonList: React.FC<IDefautProps> = props => {
     setConfig({
       ...config,
       rules: {
-        ...config.rules,
+        ...config.rules.common,
         common: newCommon
       }
     });
+  
   };
 
   let searchTimeout = null;

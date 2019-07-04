@@ -140,15 +140,16 @@ const ContentList: React.FC<IDefautProps> = props => {
     const newContentArray = contentArray.filter(
       content_item => content_item.contentItem.dataKey !== dataKey
     );
-    const updateConfig = {
+    setConfig({
       ...config,
       rules: {
-        ...config.rules.content,
-        [contentName]: newContentArray
+        ...config.rules,
+        content: {
+          ...config.rules.content,
+          [contentName]: contentItem
+        }
       }
-    };
-
-    setConfig(updateConfig);
+    });
     setContentArray(newContentArray);
   };
 

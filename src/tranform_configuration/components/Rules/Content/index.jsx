@@ -24,7 +24,6 @@ const Content: React.FC<IDefautProps> = props => {
   const [mode, setMode] = useState("add");
   const [contentName, setContentName] = useState(null);
   const [contentItem, setContentItem] = useState(null);
-  const [contentDefault, setContentDefault] = useState(null);
 
   const [contentArray, setContentArray] = useState(() => {
     let temp = [];
@@ -58,8 +57,6 @@ const Content: React.FC<IDefautProps> = props => {
         }
         mode={mode}
         setMode={setMode}
-        contentDefault={contentDefault}
-        setContentDefault={setContentDefault}
       />
       <ContentList
         setMode={setMode}

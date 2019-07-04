@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField, FormLabel } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
@@ -7,7 +7,9 @@ import DoneIcon from "@material-ui/icons/Done";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 import AceEditor from "react-ace";
-
+import { isEmpty } from "lodash";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { isRequired, configValidators, setConfigValidator } from "../../../services";
 const styles: any = (theme: any) => {
   return {
     formControl: {
@@ -61,6 +63,10 @@ const styles: any = (theme: any) => {
       "&:hover": {
         background: "#e65100"
       }
+    },
+    error: {
+      color: "red",
+      opacity: "0.8"
     }
   };
 };
@@ -90,7 +96,7 @@ const Common: React.FC<IDefautProps> = props => {
     commonValue,
     setCommonValue
   } = props;
-
+  const [errorMessage, setErrorMessage] = useState(null);
   const onAddCommon = () => {
     if (mode === "add") {
       const newConmonItem = { [commonName]: commonValue };
@@ -132,6 +138,32 @@ const Common: React.FC<IDefautProps> = props => {
     setCommonName(null);
     setCommonValue(null);
   };
+  const check_input = e => {
+    const value = e.target.value;
+    let good = !isEmpty(value);
+
+    if (good) {
+      return { message: "valid" };
+    } else {
+      return { message: "invalid", detail: "it's empty" };
+    }
+  };
+  const onChangeCommonName = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    if (configValidators[name] && isRequired(value)) {
+      setConfigValidator(name, true)
+      // setIsError(true)
+    } else {
+      setConfigValidator(name, false)
+      // setIsError(false)
+    }
+
+    setCommonName(value)
+  }
+
+  // console.log(commonName);
   return (
     <React.Fragment>
       <div className={classes.common}>
@@ -156,13 +188,16 @@ const Common: React.FC<IDefautProps> = props => {
         </div>
       </div>
       <TextField
+        required
         name="commonName"
         label="Name"
+        error={configValidators['commonName'].error}
         margin="normal"
         value={commonName ? commonName : ""}
-        onChange={e => setCommonName(e.target.value)}
+        onChange={onChangeCommonName}
         disabled={mode === "edit"}
       />
+      <FormHelperText className={classes.error}>{configValidators['commonName'].error ? configValidators['commonName'].message : '' }</FormHelperText>
       <AceEditor
         name="commonValue"
         className={classes.ace}

@@ -48,8 +48,8 @@ const Common: React.FC<IDefautProps> = props => {
         common={common}
         config={config}
         setConfig={setConfig}
-        commonName={commonName}
-        commonValue={commonValue}
+        setCommonName={setCommonName}
+        setCommonValue={setCommonValue}
         setSelectedCommonValue={setSelectedCommonValue}
         setSelectedCommonName={setSelectedCommonName}
       />
