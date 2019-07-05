@@ -106,7 +106,6 @@ const ContentItem: React.FC<IDefautProps> = props => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onChangeText = (name, value) => {
-    console.log(name, value)
     if (mode === "add") {
       setContentItem({
         ...contentItem,

@@ -162,7 +162,7 @@ const DictionaryList: React.FC<IDefautProps> = props => {
       <div className={classes.demo}>
         <List dense={dense}>
           {dictData.map(dict_item => {
-            console.log({ dictData });
+            {/* console.log({ dictData }); */}
             return (
               <ListItem
                 key={dict_item.id}

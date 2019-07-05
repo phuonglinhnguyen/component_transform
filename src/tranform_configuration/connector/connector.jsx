@@ -3,7 +3,7 @@ import { PageDecorator, getDataObject } from "@dgtx/coreui";
 import { compose } from "recompose";
 import WapperComponent from "../components/wapper_component";
 import { getDataTranform } from "../../../store/actionsCreator/tranform_configuration";
-import Reducer from "../../../store/reducers/tranform_configuration";
+import Reducer from "../../../store/reducers/tranform_configuration_reducer";
 import * as constant from "../../../store/actions/tranform_configuration";
 interface LayoutDefautProps {
   classes?: any;
@@ -26,10 +26,10 @@ class TranformConfigurationPage extends React.Component<LayoutDefautProps,any> {
     const { data, match, getDataTranform = () => null,  } = this.props;
     const projectId = getDataObject("params.projectid", match);
     return (
-      <WapperComponent data={data} 
+      <WapperComponent 
       projectId={projectId} 
       constant={constant} 
-      getDataTranform={getDataTranform} 
+      {...this.props}
       />
     );
   }

@@ -121,15 +121,15 @@ export interface IDefautProps {
 }
 
 const WapperComponent: React.FC<IDefautProps> = props => {
-  const { classes } = props;
-
+  const { classes, projectId, data } = props;
+  const configs = data.data || [];
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [configs, setConfigs] = useState(() => {
+  const [ setConfigs] = useState(() => {
     return getDataTranform();
   });
 
@@ -138,6 +138,10 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   //   console.log("data: ", data);
   //   getDataTranform(data, projectId);
   // };
+
+  // console.log( "data la:",data.data);
+  
+  console.log("configs:", configs);
 
   // =====Search
   let searchTimeout = null;
@@ -164,8 +168,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
       return true;
     }
     const strToSearch = config.name.toLowerCase();
-    console.log(strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    // console.log(strToSearch, strSearch);
+    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 
@@ -174,9 +178,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
     e.stopPropagation();
     const newConfigs = configs.filter(
       config => config.project_id !== project_id
-    ); // use ===, !==. Need to read different == and === in js
-    console.log(newConfigs);
-    setConfigs(newConfigs);
+    ); 
+    console.log({newConfigs});
   };
 
   return (

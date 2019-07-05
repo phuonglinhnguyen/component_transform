@@ -100,8 +100,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   } = props;
   const query = get(dictItem, "query", {});
   const queryArray = Object.keys(query)
-  console.log(dictItem);
-  console.log(queryArray);
+  // console.log(dictItem);
+  // console.log(queryArray);
   const valDB = [
     { label: "MongoDB", value: "MongoDB" },
     { label: "PostgresSQL", value: "PostgresSQL" }
@@ -171,7 +171,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     for (const chip of chips) {
       newQuery[chip] = null
     }
-    console.log(newQuery);
+    // console.log(newQuery);
 
     setDictItem({
       ...dictItem,

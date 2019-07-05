@@ -1,0 +1,11 @@
+export declare const GET_ONE = "@DGS/DATA_FETCH/GET_ONE";
+export declare const GET_LIST = "@DGS/DATA_FETCH/GET_LIST";
+export declare const GET_MANY = "@DGS/DATA_FETCH/GET_MANY";
+export declare const GET_COUNT = "@DGS/DATA_FETCH/GET_COUNT";
+export declare const GET_MANY_REFERENCE = "@DGS/DATA_FETCH/GET_MANY_REFERENCE";
+export declare const CREATE = "@DGS/DATA_FETCH/CREATE";
+export declare const CREATE_MANY = "@DGS/DATA_FETCH/CREATE_MANY";
+export declare const UPDATE = "@DGS/DATA_FETCH/UPDATE";
+export declare const UPDATE_MANY = "@DGS/DATA_FETCH/UPDATE_MANY";
+export declare const DELETE = "@DGS/DATA_FETCH/DELETE";
+export declare const DELETE_MANY = "@DGS/DATA_FETCH/DELETE_MANY";

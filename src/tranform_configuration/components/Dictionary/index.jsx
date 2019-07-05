@@ -33,7 +33,7 @@ const Dictionary: React.FC<IDefautProps> = props => {
 
   // const dictionary = config && config.dictionary ? config.dictionary : []
   const dictionary = get(config, "dictionary", []);
-  console.log({ dictionary });
+  // console.log({ dictionary });
 
   const [selectedDictItem, setSelectedDictItem] = useState(null);
   const [dictItem, setDictItem] = useState(null);

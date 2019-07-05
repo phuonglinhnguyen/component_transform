@@ -1,0 +1,30 @@
+import * as React from 'react';
+export interface LayoutDefautProps {
+    classes?: any;
+    buttonActionInToolbar?: any;
+    selectView?: any;
+    viewActionInRows?: any;
+    buttonActionsInRow?: any;
+    nameTable?: any;
+    rowsPerPageOptions?: any;
+    isHover?: boolean;
+    width_default: any;
+    width_item: any;
+    height_table: any;
+    iconTable?: boolean;
+    data?: any;
+    columns?: any;
+    rowsPerPage?: any;
+    refName?: any;
+    shadows?: any;
+    onSelect?: (...args: any[]) => void | any;
+    onClickRow?: (...args: any[]) => void | any;
+    onClickCell?: (...args: any[]) => void | any;
+    onSearch?: (...args: any[]) => void | any;
+    onClickEditTaskAssign?: (...args: any[]) => void | any;
+    selected?: any;
+    onClickEdit?: (...args: any[]) => void | any;
+    onGetStyleCell?: (...args: any[]) => void | any;
+}
+declare const _default: React.ComponentType<Pick<LayoutDefautProps, "data" | "columns" | "onSelect" | "selected" | "selectView" | "onSearch" | "iconTable" | "nameTable" | "buttonActionInToolbar" | "viewActionInRows" | "buttonActionsInRow" | "rowsPerPageOptions" | "isHover" | "width_default" | "width_item" | "height_table" | "rowsPerPage" | "refName" | "shadows" | "onClickRow" | "onClickCell" | "onClickEditTaskAssign" | "onClickEdit" | "onGetStyleCell"> & import("@material-ui/core").StyledComponentProps<string>>;
+export default _default;
