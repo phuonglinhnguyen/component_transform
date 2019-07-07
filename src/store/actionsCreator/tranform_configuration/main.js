@@ -10,7 +10,7 @@ export const getDataTranform = (projectId: any) => async (
   getState: any
 ) => {
   const data = await dispatch(callAPIGetData({ projectId }));
-  // if(data.code){
+  // if(data.code === 404){
 
   // }
   // else{
@@ -26,14 +26,10 @@ export const getDataTranform = (projectId: any) => async (
     }
   });
 };
-export const deleteData = () => async (dispatch: any, getState: any) => {
+
+export const deleteData = (config: any) => async (dispatch: any, getState: any) => {
   console.log("test");
-  dispatch({
-    type: actions.TRANFORM_CONFIGURATION_DELETE_DATA,
-    payload: {
-    },
-    meta: {
-      resource: actions.NAME_REDUCER
-    }
-  });
+  dispatch(callAPIDeleteData(config))
 };
+
+// createDataTransform

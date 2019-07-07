@@ -40,13 +40,12 @@ const AddDialog: React.FC<IDefautProps> = props => {
   const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = () => {
-    // if (isError) return;
+    // config
 
-    const newConfigs = [...configs, config];
-    console.log(config);
-    
-    return
-    setConfigs(newConfigs);
+    // const newConfigs = [...configs, config];
+    // setConfigs(newConfigs);
+    // createDataTransform({config})
+
     setIsOpen(false);
     setConfig(new Config());
   };

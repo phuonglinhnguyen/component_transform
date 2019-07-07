@@ -12,15 +12,7 @@ export default {
   ): any => {
     switch (type) {
       case actions.TRANFORM_CONFIGURATION_GET_DATA:
-        return {
-          ...state,
-          ...payload
-        };
       case actions.TRANFORM_CONFIGURATION_UPDATE_DATA:
-        return {
-          ...state,
-          ...payload
-        };
       case actions.TRANFORM_CONFIGURATION_DELETE_DATA:
         return {
           ...state,

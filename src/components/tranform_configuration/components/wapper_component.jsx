@@ -5,7 +5,7 @@ import isEmpty from "lodash/isEmpty";
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
-import { getDataTranform } from "./../../../providers/faKedata/tranform_configuration";
+import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
 // import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
 
 import { Button } from "@material-ui/core";
@@ -121,24 +121,40 @@ export interface IDefautProps {
 }
 
 const WapperComponent: React.FC<IDefautProps> = props => {
-  const { classes } = props;
+  const { classes, projectId, data } = props;
+  // const { getDa.., update..., addDataTranform } = props;
 
+  console.log(data);
+
+  const onAddConfig = () => {
+    const config = {}
+    // addDataTranform(config)
+  }
+
+  return <div>
+    <button onClick={onAddConfig}>add</button>
+    <button>update</button>
+    <button>delete</button>
+  </div>
+
+  const configs = data.data || [];
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [configs, setConfigs] = useState(() => {
+  const [configs2, setConfigs] = useState(() => {
     return getDataTranform();
   });
-  // const [isError, setIsError] = useState(false)
 
   // const handleGetData = () => {
   //   console.log("projectId: ", projectId);
   //   console.log("data: ", data);
   //   getDataTranform(data, projectId);
   // };
+
+  console.log("configs:", configs);
 
   // =====Search
   let searchTimeout = null;
@@ -152,21 +168,24 @@ const WapperComponent: React.FC<IDefautProps> = props => {
       setStrSearch(value);
     }, 500);
   };
+
   //==Rows Per Page
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(event.target.value);
   };
+
   //===Filter Data
   const configData = filter(configs, config => {
     if (isEmpty(strSearch)) {
       return true;
     }
     const strToSearch = config.name.toLowerCase();
-    console.log(strToSearch, strSearch);
-    console.log(strToSearch.indexOf(strSearch.toLowerCase()));
+    // console.log(strToSearch, strSearch);
+    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 
@@ -175,17 +194,17 @@ const WapperComponent: React.FC<IDefautProps> = props => {
     e.stopPropagation();
     const newConfigs = configs.filter(
       config => config.project_id !== project_id
-    ); // use ===, !==. Need to read different == and === in js
-    console.log(newConfigs);
-    setConfigs(newConfigs);
+    );
+    console.log({ newConfigs });
   };
 
   return (
     <React.Fragment>
       <div className={classes.container}>
         <div className={classes.top}>
-          <FormLabel className={classes.titleField}>Test
+          <FormLabel className={classes.titleField}>
             {/* <Translate value={`${KEY_TRANSLATE}.title_wrapper`} /> */}
+            test
           </FormLabel>
           <div className={classes.top}>
             <div className={classes.search}>
@@ -234,7 +253,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                   key={config.name}
                   className={classes.selectRow}
                   onClick={() => {
-                    setSelectedProject(config);
+                    setSelectedConfig(config);
                     setIsOpenEditModal(true);
                   }}
                 >
@@ -288,10 +307,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         setIsOpen={setIsOpenAddModal}
         configs={configs}
         setConfigs={setConfigs}
-        selectedList={selectedProject}
-        setSelectedList={setSelectedProject}
-        // isError={isError}
-        // setIsError={setIsError}
+        selectedList={selectedConfig}
+        setSelectedList={setSelectedConfig}
       />
 
       <EditDialog
@@ -299,12 +316,10 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         setIsOpen={setIsOpenEditModal}
         configs={configs}
         setConfigs={setConfigs}
-        config={selectedProject}
-        setConfig={setSelectedProject}
-        selectedList={selectedProject}
-        setSelectedList={setSelectedProject}
-        // isError={isError}
-        // setIsError={setIsError}
+        config={selectedConfig}
+        setConfig={setSelectedConfig}
+        selectedList={selectedConfig}
+        setSelectedList={setSelectedConfig}
       />
     </React.Fragment>
   );
