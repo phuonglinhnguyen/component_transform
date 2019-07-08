@@ -11,7 +11,7 @@ export const getDataTranform = (projectId: any) => async (
   getState: any
 ) => {
   const data = await dispatch(callAPIGetData({ projectId }));
-  if (data.code) {
+  if (data.code === 404) { //null, underfied, []... =. false ; 200, 404
     // dispatch(setError());
   } else {
     dispatch({
@@ -24,28 +24,6 @@ export const getDataTranform = (projectId: any) => async (
       }
     });
   }
-};
-export const deleteData = (config: any) => async (
-  dispatch: any,
-  getState: any
-) => {
-  console.log("config_main", config);
-  dispatch(
-    callAPIDeleteData({
-      data: config,
-      projectId:config.project_id
-    })
-  );
-  // const data = await
-  // dispatch({
-  //   type: actions.TRANFORM_CONFIGURATION_DELETE_DATA,
-  //   payload: {
-  //     config
-  //   },
-  //   meta: {
-  //     resource: actions.NAME_REDUCER
-  //   }
-  // });
 };
 
 export const createData = (config: any) => async (
@@ -68,20 +46,47 @@ export const createData = (config: any) => async (
     }
   });
 };
+
 export const updateData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
   console.log("config_main", config);
-
-  dispatch(
+  const projectId = config.project_id;
+  await dispatch(
     callAPIUpdateData({
+      data: config,
+      projectId: config.project_id,
+      id: config.id
+    })
+  );
+
+  await dispatch(getDataGeneralConfiguration(projectId));
+  dispatch({
+    type: actions.TRANFORM_CONFIGURATION_UPDATE_DATA,
+    payload: {
+      config
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  });
+};
+
+export const deleteData = (config: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  console.log("config_main", config);
+  dispatch(
+    callAPIDeleteData({
       data: config,
       projectId: config.project_id
     })
   );
+  // const data = await
   // dispatch({
-  //   type: actions.TRANFORM_CONFIGURATION_CREATE_DATA,
+  //   type: actions.TRANFORM_CONFIGURATION_DELETE_DATA,
   //   payload: {
   //     config
   //   },
@@ -90,6 +95,8 @@ export const updateData = (config: any) => async (
   //   }
   // });
 };
+
+
 
 
 // createDataTransform

@@ -33,20 +33,22 @@ export interface IDefautProps {
   setIsOpen?: any;
 }
 const AddDialog: React.FC<IDefautProps> = props => {
-  const { isOpen, setIsOpen, configs, setConfigs, classes,createData } = props;
+  const { isOpen, setIsOpen, configs, classes,createData } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [config, setConfig] = useState(() => {
     return new Config();
   });
+  console.log('config');
+  console.log(config);
+  
   const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = e => {
-    // const newConfigs = [...configs, config];
-
-    // setConfigs(newConfigs);
+   
+    console.log(config);
     createData(config)
-    setIsOpen(false);
-    setConfig(new Config());
+    // setIsOpen(false);
+    // setConfig(new Config());
   };
   // const validateInput = () => {
   //   let errorMessage = "test";
