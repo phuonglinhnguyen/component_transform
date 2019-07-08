@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Translate } from "react-redux-i18n";
 import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
 import { withStyles } from "@material-ui/core/styles";
-
+// import * as constants from '../../../store/actions/tranform_configuration'
 import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -33,17 +33,18 @@ export interface IDefautProps {
   setIsOpen?: any;
 }
 const AddDialog: React.FC<IDefautProps> = props => {
-  const { isOpen, setIsOpen, configs, setConfigs, classes } = props;
-  const [errorMessage, setErrorMessage] = useState("fdfdfd");
+  const { isOpen, setIsOpen, configs, setConfigs, classes,createData } = props;
+  const [errorMessage, setErrorMessage] = useState("");
   const [config, setConfig] = useState(() => {
     return new Config();
   });
   const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = e => {
-    const newConfigs = [...configs, config];
+    // const newConfigs = [...configs, config];
 
-    setConfigs(newConfigs);
+    // setConfigs(newConfigs);
+    createData(config)
     setIsOpen(false);
     setConfig(new Config());
   };

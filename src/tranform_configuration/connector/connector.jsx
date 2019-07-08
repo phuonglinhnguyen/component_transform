@@ -2,17 +2,19 @@ import * as React from "react";
 import { PageDecorator, getDataObject } from "@dgtx/coreui";
 import { compose } from "recompose";
 import WapperComponent from "../components/wapper_component";
-import { getDataTranform } from "../../../store/actionsCreator/tranform_configuration";
+import { getDataTranform ,deleteData ,createData,updateData} from "../../../store/actionsCreator/tranform_configuration";
 import Reducer from "../../../store/reducers/tranform_configuration_reducer";
 import * as constant from "../../../store/actions/tranform_configuration";
 interface LayoutDefautProps {
   classes?: any;
   theme?: any;
   getDataTranform?: any;
+  deleteData?: any;
+  createData?: any;
 }
 class TranformConfigurationPage extends React.Component<LayoutDefautProps,any> {
   componentWillMount = () => {
-    const { getDataTranform = () => null, match, actions } = this.props;
+    const { getDataTranform, match, actions} = this.props;
     const projectId = getDataObject("params.projectid", match);
     getDataTranform(projectId);
   };
@@ -23,7 +25,7 @@ class TranformConfigurationPage extends React.Component<LayoutDefautProps,any> {
   };
 
   render() {
-    const { data, match, getDataTranform = () => null,  } = this.props;
+    const { match } = this.props;
     const projectId = getDataObject("params.projectid", match);
     return (
       <WapperComponent 
@@ -43,16 +45,13 @@ export default compose(
   PageDecorator({
     resources,
     actions: {
-      getDataTranform
+      getDataTranform,
+      deleteData,
+      createData,
+      updateData
     },
     mapState: (state: any) => ({
       data: getDataObject(`resources.${constant.NAME_REDUCER}.data`, state.core) || [],
     })
   })
 )(TranformConfigurationPage);
-// data: {
-//   item1: {
-//     item2: ''
-//   }
-// }
-// dataParent: getDataObject('item1.item2', data) || [],

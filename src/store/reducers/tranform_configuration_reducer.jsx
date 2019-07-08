@@ -1,8 +1,13 @@
 import * as actions from "../actions/tranform_configuration";
 import { cloneDeep } from "lodash";
-import { API_ENDPOINT, APP_NAME } from "../../constants";
 
-const initialState = {};
+const initialState = {
+  pending:false,
+  error:false,
+  success:false,
+  data:[],
+  
+};
 
 export default {
   name: actions.NAME_REDUCER,
@@ -13,6 +18,7 @@ export default {
     switch (type) {
       case actions.TRANFORM_CONFIGURATION_GET_DATA:
       case actions.TRANFORM_CONFIGURATION_UPDATE_DATA:
+      case actions.TRANFORM_CONFIGURATION_CREATE_DATA:
       case actions.TRANFORM_CONFIGURATION_DELETE_DATA:
         return {
           ...state,

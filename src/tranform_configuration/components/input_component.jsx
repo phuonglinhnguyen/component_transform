@@ -139,7 +139,7 @@ const InputComponent: React.FC<IDefautProps> = props => {
 
     for (const key in collector) {
       if (key === value) {
-        newCollector[key] = "final";
+        newCollector[key] = "350";
       } else {
         newCollector[key] = "";
       }
@@ -158,8 +158,8 @@ const InputComponent: React.FC<IDefautProps> = props => {
     let value = "";
     const collector = get(config, "filter.collector", {});
     for (const key in collector) {
-      const final = collector[key]; // final = 'final'
-      if (final === "final") {
+      const final = collector[key]; // final = '350'
+      if (final === "350") {
         value = key; // value = doc_status
       }
     }
