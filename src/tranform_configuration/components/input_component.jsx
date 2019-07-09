@@ -90,12 +90,13 @@ export interface IDefautProps {
   config?: any;
   setConfig?: any;
 }
-const InputComponent: React.FC<IDefautProps> = props => {
-  const {
-    classes,
-    config,
-    setConfig
-  } = props;
+export interface IDefautState {
+  isOpenTransformModal?: any;
+  setIsOpenTransformModal?: any;
+  name?: any;
+}
+const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
+  const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
   const name = useState("");
@@ -105,11 +106,9 @@ const InputComponent: React.FC<IDefautProps> = props => {
     const value = e.target.value;
 
     if (configValidators[name] && isRequired(value)) {
-      setConfigValidator(name, true)
-      // setIsError(true)
+      setConfigValidator(name, true);
     } else if (configValidators[name]) {
-      setConfigValidator(name, false)
-      // setIsError(false)
+      setConfigValidator(name, false);
     }
 
     setConfig({
@@ -117,7 +116,6 @@ const InputComponent: React.FC<IDefautProps> = props => {
       [name]: value
     });
   };
-
 
   const onChangeActive = e => {
     const name = e.target.name;
@@ -144,7 +142,6 @@ const InputComponent: React.FC<IDefautProps> = props => {
         newCollector[key] = "";
       }
     }
-
     setConfig({
       ...config,
       filter: {
@@ -172,18 +169,6 @@ const InputComponent: React.FC<IDefautProps> = props => {
       cron_trigger: cronValue
     });
   };
-  //****Check validation */
-  const check_name = e => {
-    const value = e.target.value;
-    let good = !isEmpty(value);
-
-    if (good) {
-      return { message: "valid" };
-    } else {
-      return { message: "invalid", detail: "it's empty" };
-    }
-  };
-
   return (
     <React.Fragment>
       <div>
@@ -199,11 +184,13 @@ const InputComponent: React.FC<IDefautProps> = props => {
                   name="name"
                   label="Name"
                   className={classes.textField}
-                  error={configValidators['name'].error}
+                  error={configValidators["name"].error}
                   onChange={onChangeText}
                 />
                 <FormHelperText className={classes.error}>
-                {configValidators['name'].error ? configValidators['name'].message : ''}
+                  {configValidators["name"].error
+                    ? configValidators["name"].message
+                    : ""}
                 </FormHelperText>
               </div>
 

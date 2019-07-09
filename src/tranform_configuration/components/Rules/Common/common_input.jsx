@@ -74,8 +74,10 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
+  common?: any;
   mode?: any;
   setMode?: any;
+  config?: any;
   setConfig?: any;
   commonName?: any;
   setCommonName?: any;
@@ -96,7 +98,7 @@ const Common: React.FC<IDefautProps> = props => {
     commonValue,
     setCommonValue
   } = props;
-  const [errorMessage, setErrorMessage] = useState(null);
+
   const onAddCommon = () => {
     if (mode === "add") {
       const newConmonItem = { [commonName]: commonValue };
@@ -138,32 +140,20 @@ const Common: React.FC<IDefautProps> = props => {
     setCommonName(null);
     setCommonValue(null);
   };
-  const check_input = e => {
-    const value = e.target.value;
-    let good = !isEmpty(value);
 
-    if (good) {
-      return { message: "valid" };
-    } else {
-      return { message: "invalid", detail: "it's empty" };
-    }
-  };
   const onChangeCommonName = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
     if (configValidators[name] && isRequired(value)) {
       setConfigValidator(name, true)
-      // setIsError(true)
     } else {
       setConfigValidator(name, false)
-      // setIsError(false)
     }
 
     setCommonName(value)
   }
 
-  // console.log(commonName);
   return (
     <React.Fragment>
       <div className={classes.common}>

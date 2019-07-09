@@ -93,7 +93,6 @@ const ContentItem: React.FC<IDefautProps> = props => {
     config,
     setConfig,
     setContentItem,
-    content,
     contentItem,
     contentName,
     contentArray,
@@ -102,8 +101,6 @@ const ContentItem: React.FC<IDefautProps> = props => {
     mode,
     setMode
   } = props;
-
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const onChangeText = (name, value) => {
     if (mode === "add") {
@@ -238,7 +235,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
           required
           name="dataKey"
           label="DataKey"
-          error={errorMessage}
+          error={configValidators['dataKey'].error}
           margin="dense"
           onChange={e=>onChangeText(e.target.name, e.target.value)}
 

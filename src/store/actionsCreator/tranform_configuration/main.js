@@ -5,7 +5,7 @@ import {
   callAPIDeleteData,
   callAPIUpdateData
 } from "./call_api";
-
+import {cloneDeep} from 'lodash';
 export const getDataTranform = (projectId: any) => async (
   dispatch: any,
   getState: any
@@ -26,16 +26,19 @@ export const getDataTranform = (projectId: any) => async (
   }
 };
 
+// createDataTransform
 export const createData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  dispatch(
+  const projectId = config.project_id;
+  await dispatch(
     callAPICreateData({
       data: config,
       projectId: config.project_id
     })
   );
+  await dispatch(getDataTranform(projectId));
   dispatch({
     type: actions.TRANFORM_CONFIGURATION_CREATE_DATA,
     payload: {
@@ -47,21 +50,21 @@ export const createData = (config: any) => async (
   });
 };
 
+// updateDataTransform
 export const updateData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  console.log("config_main", config);
-  const projectId = config.project_id;
-  await dispatch(
+  const projectId = cloneDeep(config.project_id);
+  delete config.project_id;
+   await dispatch(
     callAPIUpdateData({
       data: config,
-      projectId: config.project_id,
+      projectId: projectId,
       id: config.id
     })
   );
-
-  await dispatch(getDataGeneralConfiguration(projectId));
+  await dispatch(getDataTranform(projectId));
   dispatch({
     type: actions.TRANFORM_CONFIGURATION_UPDATE_DATA,
     payload: {
@@ -73,30 +76,62 @@ export const updateData = (config: any) => async (
   });
 };
 
+// deleteDataTransform
 export const deleteData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  console.log("config_main", config);
-  dispatch(
+  const projectId = config.project_id;
+  await dispatch(
     callAPIDeleteData({
-      data: config,
+      id: config.id,
       projectId: config.project_id
     })
   );
-  // const data = await
-  // dispatch({
-  //   type: actions.TRANFORM_CONFIGURATION_DELETE_DATA,
-  //   payload: {
-  //     config
-  //   },
-  //   meta: {
-  //     resource: actions.NAME_REDUCER
-  //   }
-  // });
+  await dispatch(getDataTranform(projectId));
+  dispatch({
+    type: actions.TRANFORM_CONFIGURATION_DELETE_DATA,
+    payload: {
+      config
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  });
 };
+// export const unmount = () => async (dispatch: any, getState: any) => {
+//   dispatch({
+//     type: actions.TRANFORM_CONFIGURATION_UNMOUNT,
+//     payload: {},
+//     meta: {
+//       resource: actions.NAME_REDUCER
+//     }
+//   });
+// };
+// export const setPending = () => {
+//   return {
+//     type: actions.PENDING,
+//     payload: {
+//       success: false,
+//       pending: true,
+//       error: false
+//     },
+//     meta: {
+//       resource: actions.NAME_REDUCER
+//     }
+//   };
+// };
 
-
-
-
-// createDataTransform
+// export const setError = () => {
+//   return {
+//     type: actions.ERROR,
+//     payload: {
+//       success: false,
+//       pending: false,
+//       error: true
+//     },
+//     meta: {
+//       resource: actions.NAME_REDUCER
+//     }
+//   };
+// }

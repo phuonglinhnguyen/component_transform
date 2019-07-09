@@ -13,10 +13,21 @@ export interface IDefautProps {
   theme?: any;
   config?: any;
   setConfig?: any;
+}
+export interface IDefautState {
+  selectedContentItem?: any;
+  setSelectedContentItem?: any;
   mode?: any;
   setMode?: any;
+  contentName?: any;
+  setContentName?: any;
+  contentItem?: any;
+  setContentName?: any;
+  contentArray?: any;
+  setContentArray?: any;
 }
-const Content: React.FC<IDefautProps> = props => {
+
+const Content: React.FC<IDefautProps,IDefautState> = props => {
   const { config, setConfig} = props;
 
   const content = get(config, "rules.content", {});

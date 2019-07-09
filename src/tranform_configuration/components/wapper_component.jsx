@@ -5,7 +5,7 @@ import isEmpty from "lodash/isEmpty";
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
-import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
+// import { getDataTranform } from "../../../providers/faKedata/tranform_configuration";
 import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
 
 import { Button } from "@material-ui/core";
@@ -46,6 +46,10 @@ const styles: any = (theme: any) => {
       color: "white",
       fontWeight: "700",
       textAlign: "center"
+    },
+    tableConfig: {
+      height: "200px",
+      overflowY: "scroll"
     },
     tableItem: {
       textAlign: "center",
@@ -117,10 +121,26 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
-  projectId?: any;
+  data?: any;
+  createData?: any;
+  updateData?: any;
+  deleteData?: any;
 }
-
-const WapperComponent: React.FC<IDefautProps> = props => {
+export interface IDefautState {
+  isOpenAddModal?: any;
+  setIsOpenAddModal?: any;
+  selectedConfig?: any;
+  setSelectedConfig?: any;
+  setIsOpenEditModal?: any;
+  isOpenEditModal?: any;
+  page?: any;
+  setPage?: any;
+  rowsPerPage?: any;
+  setsetRowsPerPagePage?: any;
+  strSearch?: any;
+  setStrSearch?: any;
+}
+const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
   const { classes, data, deleteData, createData, updateData } = props;
 
   const configs = data.data || [];
@@ -130,10 +150,6 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [configs2, setConfigs] = useState(() => {
-    return getDataTranform();
-  });
-  console.log("configs:", configs);
 
   // =====Search
   let searchTimeout = null;
@@ -160,16 +176,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
       return true;
     }
     const strToSearch = config.name.toLowerCase();
-    // console.log(strToSearch, strSearch);
-    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
-
-  //===Delete config
-  const deleteConfig = (e, id) => {
-    e.stopPropagation();
-    deleteData({ id });
-  };
 
   return (
     <React.Fragment>
@@ -217,7 +225,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
               </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody className={classes.tableConfig}>
             {configData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(config => (
@@ -246,7 +254,8 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                     <IconButton
                       aria-label="Delete"
                       onClick={e => {
-                        deleteConfig(e, config.id);
+                        e.stopPropagation();
+                        deleteData(config);
                       }}
                     >
                       <DeleteIcon />
@@ -258,6 +267,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         </Table>
         {/* <Test/> */}
       </div>
+      {/* .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) */}
       <TablePagination
         className={classes.rowPerPage}
         rowsPerPageOptions={[5, 10, 25]}
@@ -277,8 +287,6 @@ const WapperComponent: React.FC<IDefautProps> = props => {
       <AddDialog
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
-        configs={configs}
-        setConfigs={setConfigs}
         selectedList={selectedConfig}
         setSelectedList={setSelectedConfig}
         createData={createData}
@@ -287,12 +295,11 @@ const WapperComponent: React.FC<IDefautProps> = props => {
       <EditDialog
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}
-        configs={configs}
-        setConfigs={setConfigs}
         config={selectedConfig}
         setConfig={setSelectedConfig}
         selectedList={selectedConfig}
         setSelectedList={setSelectedConfig}
+        updateData={updateData}
       />
     </React.Fragment>
   );

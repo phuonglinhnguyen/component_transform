@@ -1,12 +1,13 @@
 class Config {
   constructor() {
-    this.project_id = new Date().getTime();
+    
     this.name = "";
     this.active = true;
     this.cron_trigger = "";
+    this.project_id ="5b9f49f8ea99f2002092b9cc";
     this.filter = {
       collector: {
-        doc_status: "final",
+        doc_status: "350",
         batch_status: "",
         doc_set_status: ""
       },

@@ -15,8 +15,20 @@ export interface IDefautProps {
   setConfig?: any;
   config?: any;
 }
+export interface IDefautState {
+  common?: any;
+  mode?: any;
+  setMode?: any;
+  commonValue?: any;
+  setCommonValue?: any;
+  commonName?: any;
+  setCommonName?: any;
+  selectedCommonValue?: any;
+  setSelectedCommonValue?: any;
+}
 const Common: React.FC<IDefautProps> = props => {
   const { config, setConfig } = props;
+
   const common = get(config, "rules.common", []);
   const [mode, setMode] = useState("add");
   const [commonValue, setCommonValue] = useState(null);
@@ -40,16 +52,12 @@ const Common: React.FC<IDefautProps> = props => {
         setCommonName={
           selectedCommonName ? setSelectedCommonName : setCommonName
         }
-        selectedCommonValue={selectedCommonValue}
-        selectedCommonName={selectedCommonName}
       />
       <CommonList
         setMode={setMode}
         common={common}
         config={config}
         setConfig={setConfig}
-        setCommonName={setCommonName}
-        setCommonValue={setCommonValue}
         setSelectedCommonValue={setSelectedCommonValue}
         setSelectedCommonName={setSelectedCommonName}
       />

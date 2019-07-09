@@ -94,8 +94,13 @@ export interface IDefautProps {
   config?: any;
   setConfig?: any;
 }
+export interface IDefautState {
+  dense?: any;
+  strSearch?: any;
+  setStrSearch?: any;
+}
 
-const DictionaryList: React.FC<IDefautProps> = props => {
+const DictionaryList: React.FC<IDefautProps,IDefautState> = props => {
   const {
     classes,
     dictionary,
@@ -135,8 +140,6 @@ const DictionaryList: React.FC<IDefautProps> = props => {
       return true;
     }
     const strToSearch = dictItem.fieldKey.toLowerCase();
-    // console.log("dictsearch", strToSearch, strSearch);
-    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 
@@ -162,7 +165,6 @@ const DictionaryList: React.FC<IDefautProps> = props => {
       <div className={classes.demo}>
         <List dense={dense}>
           {dictData.map(dict_item => {
-            {/* console.log({ dictData }); */}
             return (
               <ListItem
                 key={dict_item.id}

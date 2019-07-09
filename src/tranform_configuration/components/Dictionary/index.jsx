@@ -28,12 +28,18 @@ export interface IDefautProps {
   config?: any;
   setConfig?: any;
 }
-const Dictionary: React.FC<IDefautProps> = props => {
+export interface IDefautState {
+  selectedDictItem?: any;
+  setSelectedDictItem?: any;
+  dictItem?: any;
+  setDictItem?: any;
+  mode?: any;
+  setMode?: any;
+}
+const Dictionary: React.FC<IDefautProps, IDefautState> = props => {
   const { classes, config, setConfig } = props;
 
-  // const dictionary = config && config.dictionary ? config.dictionary : []
   const dictionary = get(config, "dictionary", []);
-  // console.log({ dictionary });
 
   const [selectedDictItem, setSelectedDictItem] = useState(null);
   const [dictItem, setDictItem] = useState(null);

@@ -99,7 +99,12 @@ export interface IDefautProps {
   setMode?: any;
   setSelectedContentItem?: any;
 }
-const ContentList: React.FC<IDefautProps> = props => {
+export interface IDefautState {
+  dense?: any;
+  strSearch?: any;
+  setStrSearch?: any;
+}
+const ContentList: React.FC<IDefautProps, IDefautState> = props => {
   const {
     classes,
     setSelectedContentItem,

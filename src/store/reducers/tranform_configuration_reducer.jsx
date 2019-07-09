@@ -2,11 +2,10 @@ import * as actions from "../actions/tranform_configuration";
 import { cloneDeep } from "lodash";
 
 const initialState = {
-  pending:false,
-  error:false,
-  success:false,
-  data:[],
-  
+  pending: false,
+  error: false,
+  success: false,
+  data: []
 };
 
 export default {

@@ -10,8 +10,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Translate } from "react-redux-i18n";
 import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
 import AceEditor from "react-ace";
-// import JSONInput from "react-json-editor-ajrm";
-// import locale from "react-json-editor-ajrm/locale/en";
 
 const styles: any = (theme: any) => {
   return {
@@ -28,16 +26,19 @@ export interface IDefautProps {
   theme?: any;
   config?: any;
   setConfig?: any;
-  configs?: any;
-  setConfigs?: any;
   isOpen?: any;
   setIsOpen?: any;
 }
-const TransformDialog: React.FC<IDefautProps> = props => {
-  const {classes, isOpen, setIsOpen, configs, setConfigs, config, setConfig } = props;
+export interface IDefautState {
+  patternValue?: any;
+  setPatternValue?: any;
+}
 
-  // const [pattern, setTransform] = useState({});
+const TransformDialog: React.FC<IDefautProps, IDefautState> = props => {
+  const { classes, isOpen, setIsOpen, config, setConfig } = props;
+
   const [patternValue, setPatternValue] = useState(null);
+
   const onAgree = () => {
     console.log(patternValue);
     setIsOpen(false);
@@ -61,15 +62,6 @@ const TransformDialog: React.FC<IDefautProps> = props => {
     >
       <DialogTitle className="tilte-dialog">{"Pattern"}</DialogTitle>
       <DialogContent>
-        {/* <JSONInput
-          id="a_unique_id"
-          placeholder={pattern}
-          locale={locale}
-          height="300px"
-          onChange={e => {
-            setTransform(e.jsObject);
-          }}
-        /> */}
         <AceEditor
           name="pattern"
           className={classes.ace}
@@ -81,7 +73,6 @@ const TransformDialog: React.FC<IDefautProps> = props => {
           width="500px"
           height="500px"
           mode="javascript"
-          // onChange={pattern => setTransform(pattern)}
           onChange={patternValue => {
             setPatternValue(patternValue);
           }}

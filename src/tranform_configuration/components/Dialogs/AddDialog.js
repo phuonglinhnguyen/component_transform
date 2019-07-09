@@ -27,36 +27,30 @@ export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  configs?: any;
-  setConfigs?: any;
   isOpen?: any;
   setIsOpen?: any;
 }
-const AddDialog: React.FC<IDefautProps> = props => {
-  const { isOpen, setIsOpen, configs, classes,createData } = props;
+export interface IDefautState {
+  errorMessage?: any;
+  setErrorMessage?: any;
+  config?: any;
+  setConfig?: any;
+  cronValue?: any;
+  setCronValue?: any;
+}
+const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
+  const { isOpen, setIsOpen, classes, createData } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [config, setConfig] = useState(() => {
     return new Config();
   });
-  console.log('config');
-  console.log(config);
-  
   const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = e => {
-   
-    console.log(config);
-    createData(config)
-    // setIsOpen(false);
-    // setConfig(new Config());
+    createData(config);
+    setIsOpen(false);
+    setConfig(new Config());
   };
-  // const validateInput = () => {
-  //   let errorMessage = "test";
-  //   if (isEmpty(name)) {
-  //     return setErrorMessage(errorMessage);
-  //   }
-  // };
-
   return (
     <Dialog
       open={isOpen}

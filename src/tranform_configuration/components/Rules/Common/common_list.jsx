@@ -95,7 +95,12 @@ export interface IDefautProps {
   setSelectedCommonValue?: any;
   setMode?: any;
 }
-const CommonList: React.FC<IDefautProps> = props => {
+export interface IDefautState {
+  dense?: any;
+  strSearch?: any;
+  setStrSearch?: any;
+}
+const CommonList: React.FC<IDefautProps, IDefautState> = props => {
   const {
     classes,
     common,
@@ -103,9 +108,7 @@ const CommonList: React.FC<IDefautProps> = props => {
     setConfig,
     config,
     setSelectedCommonValue,
-    setSelectedCommonName,
-    setCommonValue,
-    setCommonName
+    setSelectedCommonName
   } = props;
 
   const [dense] = useState(false);
@@ -124,7 +127,6 @@ const CommonList: React.FC<IDefautProps> = props => {
         common: newCommon
       }
     });
-  
   };
 
   let searchTimeout = null;
@@ -144,11 +146,7 @@ const CommonList: React.FC<IDefautProps> = props => {
     if (isEmpty(strSearch)) {
       return true;
     }
-
     const strToSearch = key.toLowerCase();
-
-    // console.log("commonsearch", strToSearch, strSearch);
-    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 

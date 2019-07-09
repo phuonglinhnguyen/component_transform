@@ -87,6 +87,7 @@ export interface IDefautProps {
   setMode?: any;
   dictionary?: any;
 }
+
 const DictionaryComponent: React.FC<IDefautProps> = props => {
   const {
     classes,
@@ -100,8 +101,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   } = props;
   const query = get(dictItem, "query", {});
   const queryArray = Object.keys(query)
-  // console.log(dictItem);
-  // console.log(queryArray);
+
   const valDB = [
     { label: "MongoDB", value: "MongoDB" },
     { label: "PostgresSQL", value: "PostgresSQL" }
@@ -111,10 +111,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     const value = e.target.value;
     if (configValidators[name] && isRequired(value)) {
       setConfigValidator(name, true)
-      // setIsError(true)
     } else if (configValidators[name]) {
       setConfigValidator(name, false)
-      // setIsError(false)
     }
     setDictItem({
       ...dictItem,
@@ -129,12 +127,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     if (mode === "add") {
       if (configValidators[name] && isRequired(value)) {
         setConfigValidator(name, true)
-        // setIsError(true)
         
       } else if (configValidators[name]) {
         setConfigValidator(name, false)
-        // setIsError(false)
-        
       }
       const newDictItem = { ...dictItem };
 
@@ -157,7 +152,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       });
       setMode("add");
       setDictItem(null);
-      // console.log(newDictionary);
     }
   };
   const onCancel = () => {
@@ -171,8 +165,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     for (const chip of chips) {
       newQuery[chip] = null
     }
-    // console.log(newQuery);
-
     setDictItem({
       ...dictItem,
       query: newQuery
@@ -340,7 +332,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
           <ChipInput
-            // defaultValue={queryArray}
             name="query"
             label="Query"
             fullWidth

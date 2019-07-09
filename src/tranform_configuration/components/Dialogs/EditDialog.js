@@ -12,7 +12,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import "./dialog.css"
 
 import InputComponent from "../input_component";
-import { updateData } from "../../../store/actionsCreator/tranform_configuration/main";
 const styles: any = (theme: any) => {
   return {
     paper: {
@@ -26,30 +25,21 @@ export interface IDefautProps {
   theme?: any;
   config?: any;
   setConfig?: any;
-  configs?: any;
-  setConfigs?: any;
   isOpen?: any;
   setIsOpen?: any;
 }
+
 const EditDialog: React.FC<IDefautProps> = props => {
   const {
     isOpen,
     setIsOpen,
-    configs,
-    setConfigs,
     config,
-    setConfig
+    setConfig,
+    updateData
   } = props;
 
   const onAgree = () => {
-    // const newConfigs = configs.map(_config => {
-    //   if (_config.project_id === config.project_id) {
-    //     return { ...config };
-    //   }
-    //   return _config;
-    // });
-    // setConfigs(newConfigs);
-    updateData(config);
+    updateData(config)
     setIsOpen(false);
     setConfig(null);
   };

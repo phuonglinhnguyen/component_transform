@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Common from "./Common";
@@ -29,8 +29,6 @@ export interface IDefautProps {
 
 const Rules: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
-  
-
   return (
     <React.Fragment>
       <Grid className={classes.wrapForm} spacing={24}>
