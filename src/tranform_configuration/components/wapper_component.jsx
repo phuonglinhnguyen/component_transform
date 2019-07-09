@@ -145,8 +145,9 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
 
   const configs = data.data || [];
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+
+  // const [selectedConfig, setSelectedConfig] = useState(null);
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -287,16 +288,14 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
       <AddDialog
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
-        selectedList={selectedConfig}
-        setSelectedList={setSelectedConfig}
         createData={createData}
       />
 
       <EditDialog
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}
-        config={selectedConfig}
-        setConfig={setSelectedConfig}
+        // config={selectedConfig}
+        // setConfig={setSelectedConfig}
         selectedList={selectedConfig}
         setSelectedList={setSelectedConfig}
         updateData={updateData}

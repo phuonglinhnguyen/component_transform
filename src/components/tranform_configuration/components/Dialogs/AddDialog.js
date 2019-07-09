@@ -42,8 +42,8 @@ const AddDialog: React.FC<IDefautProps> = props => {
   const onAgree = () => {
     // config
 
-    // const newConfigs = [...configs, config];
-    // setConfigs(newConfigs);
+    const newConfigs = [...configs, config];
+    setConfigs(newConfigs);
     // createDataTransform({config})
 
     setIsOpen(false);

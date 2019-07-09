@@ -1,6 +1,5 @@
 class Config {
   constructor() {
-    
     this.name = "";
     this.active = true;
     this.cron_trigger = "";

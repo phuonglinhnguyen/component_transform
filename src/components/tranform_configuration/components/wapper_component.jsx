@@ -122,40 +122,15 @@ export interface IDefautProps {
 
 const WapperComponent: React.FC<IDefautProps> = props => {
   const { classes, projectId, data } = props;
-  // const { getDa.., update..., addDataTranform } = props;
-
-  console.log(data);
-
-  const onAddConfig = () => {
-    const config = {}
-    // addDataTranform(config)
-  }
-
-  return <div>
-    <button onClick={onAddConfig}>add</button>
-    <button>update</button>
-    <button>delete</button>
-  </div>
-
-  const configs = data.data || [];
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [configs2, setConfigs] = useState(() => {
+  const [configs, setConfigs] = useState(() => {
     return getDataTranform();
   });
-
-  // const handleGetData = () => {
-  //   console.log("projectId: ", projectId);
-  //   console.log("data: ", data);
-  //   getDataTranform(data, projectId);
-  // };
-
-  console.log("configs:", configs);
-
   // =====Search
   let searchTimeout = null;
 

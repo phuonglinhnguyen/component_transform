@@ -5,7 +5,7 @@ import {
   callAPIDeleteData,
   callAPIUpdateData
 } from "./call_api";
-import {cloneDeep} from 'lodash';
+import {cloneDeep,isEmpty} from 'lodash';
 export const getDataTranform = (projectId: any) => async (
   dispatch: any,
   getState: any
@@ -13,6 +13,9 @@ export const getDataTranform = (projectId: any) => async (
   const data = await dispatch(callAPIGetData({ projectId }));
   if (data.code === 404) { //null, underfied, []... =. false ; 200, 404
     // dispatch(setError());
+    // if(!isEmpty(projectId)&& isEmpty(data)){
+
+    // }
   } else {
     dispatch({
       type: actions.TRANFORM_CONFIGURATION_GET_DATA,
@@ -64,6 +67,7 @@ export const updateData = (config: any) => async (
       id: config.id
     })
   );
+  
   await dispatch(getDataTranform(projectId));
   dispatch({
     type: actions.TRANFORM_CONFIGURATION_UPDATE_DATA,
@@ -122,16 +126,16 @@ export const deleteData = (config: any) => async (
 //   };
 // };
 
-// export const setError = () => {
-//   return {
-//     type: actions.ERROR,
-//     payload: {
-//       success: false,
-//       pending: false,
-//       error: true
-//     },
-//     meta: {
-//       resource: actions.NAME_REDUCER
-//     }
-//   };
-// }
+export const setError = () => {
+  return {
+    type: actions.ERROR,
+    payload: {
+      success: false,
+      pending: false,
+      error: true
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+}
