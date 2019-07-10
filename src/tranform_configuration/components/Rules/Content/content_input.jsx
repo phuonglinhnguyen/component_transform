@@ -185,16 +185,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setMode("add");
     setContentItem(null);
   };
-  const check_input = e => {
-    const value = e.target.value;
-    let good = !isEmpty(value);
 
-    if (good) {
-      return { message: "valid" };
-    } else {
-      return { message: "invalid", detail: "it's empty" };
-    }
-  };
   return (
     <React.Fragment>
       <div className={classes.content}>
@@ -229,7 +220,9 @@ const ContentItem: React.FC<IDefautProps> = props => {
         value={contentName ? contentName : ""}
         disabled={mode === "edit"}
       />
-      <FormHelperText className={classes.error}> {configValidators['contentName'].error ? configValidators['contentName'].message : ''}</FormHelperText>
+      <FormHelperText className={classes.error}>
+        {configValidators['contentName'].error ? configValidators['contentName'].message : ''}
+      </FormHelperText>
       <div className={classes.formControl}>
         <TextField
           required
@@ -237,7 +230,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
           label="DataKey"
           error={configValidators['dataKey'].error}
           margin="dense"
-          onChange={e=>onChangeText(e.target.name, e.target.value)}
+          onChange={e => onChangeText(e.target.name, e.target.value)}
 
           value={
             contentItem && contentItem.dataKey ? contentItem.dataKey : ""
@@ -245,19 +238,19 @@ const ContentItem: React.FC<IDefautProps> = props => {
           disabled={mode === "edit"}
         />
         <FormHelperText className={classes.error}>
-        {configValidators['dataKey'].error ? configValidators['dataKey'].message : ''}
+          {configValidators['dataKey'].error ? configValidators['dataKey'].message : ''}
         </FormHelperText>
         <label className={classes.titleContent}>Default</label>
         <AceEditor
           name="default"
-          // className={classes.ace}
           editorProps={{ $blockScrolling: "Infinity" }}
           enableBasicAutocompletion={true}
           enableLiveAutocompletion={true}
           enableSnippets={true}
           highlightActiveLine={true}
           width="100%"
-          height="250px"
+          height="200px"
+          fontSize="15px"
           mode="javascript"
           onChange={e => {
             onChangeText("default", e);
@@ -279,8 +272,9 @@ const ContentItem: React.FC<IDefautProps> = props => {
           enableSnippets={true}
           highlightActiveLine={true}
           width="100%"
-          height="250px"
+          height="200px"
           mode="javascript"
+          fontSize="15px"
           onChange={e => {
             onChangeText("value", e);
           }}

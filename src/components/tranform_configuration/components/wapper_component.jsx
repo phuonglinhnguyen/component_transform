@@ -19,7 +19,6 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
-import TablePagination from "@material-ui/core/TablePagination";
 
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
@@ -117,17 +116,14 @@ const styles: any = (theme: any) => {
 export interface IDefautProps {
   classes?: any;
   theme?: any;
-  projectId?: any;
 }
 
 const WapperComponent: React.FC<IDefautProps> = props => {
-  const { classes, projectId, data } = props;
+  const { classes } = props;
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [configs, setConfigs] = useState(() => {
     return getDataTranform();
   });
@@ -144,23 +140,12 @@ const WapperComponent: React.FC<IDefautProps> = props => {
     }, 500);
   };
 
-  //==Rows Per Page
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(event.target.value);
-  };
-
   //===Filter Data
   const configData = filter(configs, config => {
     if (isEmpty(strSearch)) {
       return true;
     }
     const strToSearch = config.name.toLowerCase();
-    // console.log(strToSearch, strSearch);
-    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
 
@@ -174,37 +159,35 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   };
 
   return (
-    <React.Fragment>
-      <div className={classes.container}>
-        <div className={classes.top}>
-          <FormLabel className={classes.titleField}>
-            {/* <Translate value={`${KEY_TRANSLATE}.title_wrapper`} /> */}
-            test
+    <div className={classes.container}>
+      <div className={classes.top}>
+        <FormLabel className={classes.titleField}>
+          test
           </FormLabel>
-          <div className={classes.top}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput
-                }}
-                onChange={onChangeSearch}
-              />
+        <div className={classes.top}>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
             </div>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setIsOpenAddModal(true)}
-            >
-              Add Config
-            </Button>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput
+              }}
+              onChange={onChangeSearch}
+            />
           </div>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setIsOpenAddModal(true)}
+          >
+            Add Config
+            </Button>
         </div>
-
+      </div>
+      <div style={{ overflow: "auto" }}>
         <Table>
           <TableHead className={classes.headTab}>
             <TableRow>
@@ -220,9 +203,12 @@ const WapperComponent: React.FC<IDefautProps> = props => {
               </TableCell>
             </TableRow>
           </TableHead>
+        </Table>
+      </div>
+      <div style={{ overflow: 'auto', height: '150px' }}>
+        <Table style={{ tableLayout: 'fixed' }}>
           <TableBody>
             {configData
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(config => (
                 <TableRow
                   key={config.name}
@@ -231,6 +217,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
                     setSelectedConfig(config);
                     setIsOpenEditModal(true);
                   }}
+
                 >
                   <TableCell
                     component="th"
@@ -259,24 +246,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
               ))}
           </TableBody>
         </Table>
-        {/* <Test/> */}
       </div>
-      <TablePagination
-        className={classes.rowPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={configData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        backIconButtonProps={{
-          "aria-label": "Previous Page"
-        }}
-        nextIconButtonProps={{
-          "aria-label": "Next Page"
-        }}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
       <AddDialog
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
@@ -296,7 +266,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         selectedList={selectedConfig}
         setSelectedList={setSelectedConfig}
       />
-    </React.Fragment>
+    </div>
   );
 };
 export default withStyles(styles, { withTheme: true })(WapperComponent);

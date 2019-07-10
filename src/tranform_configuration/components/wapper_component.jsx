@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Translate } from "react-redux-i18n";
 import filter from "lodash/filter";
 import isEmpty from "lodash/isEmpty";
-import { AutoSizer, Column } from 'react-virtualized';
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
-
 import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
-
 import { Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,7 +16,6 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
-import TablePagination from "@material-ui/core/TablePagination";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import AddDialog from "./Dialogs/AddDialog";
@@ -46,7 +42,8 @@ const styles: any = (theme: any) => {
       fontSize: "17px",
       color: "white",
       fontWeight: "700",
-      textAlign: "center"
+      textAlign: "center",
+      width:"25%"
     },
     tableConfig: {
       height: "200px",
@@ -122,26 +119,7 @@ const styles: any = (theme: any) => {
       color: theme.palette.primary.contrastText,
       top: '0px',
       right: "0px"
-    },
-    flexContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      boxSizing: 'border-box',
-    },
-    tableRow: {
-      cursor: 'pointer',
-    },
-    tableRowHover: {
-      '&:hover': {
-        backgroundColor: theme.palette.grey[200],
-      },
-    },
-    tableCell: {
-      flex: 1,
-    },
-    noClick: {
-      cursor: 'initial',
-    },
+    }
   };
 };
 
@@ -167,68 +145,6 @@ export interface IDefautState {
   isOpenEditModal?: any;
   strSearch?: any;
   setStrSearch?: any;
-
-}
-const MuiVirtualizedTable: React.PureComponent = props => {
-  const { classes, columns, ...tableProps } = props;
-
-  const cellRenderer = ({ cellData, columnIndex }) => {
-    const { rowHeight, onRowClick } = props;
-    return (
-      <TableCell
-        component="div"
-        // className={clsx(classes.tableCell, classes.flexContainer, {
-        //   [classes.noClick]: onRowClick == null,
-        // })}
-        variant="body"
-        style={{ height: rowHeight }}
-        align={(columnIndex != null && columns[columnIndex].numeric) || false ? 'right' : 'left'}
-      >
-        {cellData}
-      </TableCell>
-    );
-  };
-
-  const headerRenderer = ({ label, columnIndex }) => {
-    const { headerHeight, columns, classes } = props;
-
-    return (
-      <TableCell
-        component="div"
-        // className={clsx(classes.tableCell, classes.flexContainer, classes.noClick)}
-        variant="head"
-        style={{ height: headerHeight }}
-        align={columns[columnIndex].numeric || false ? 'right' : 'left'}
-      >
-        <span>{label}</span>
-      </TableCell>
-    );
-  };
-  return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <Table height={height} width={width} {...tableProps} rowClassName={this.getRowClassName}>
-          {columns.map(({ dataKey, ...other }, index) => {
-            return (
-              <Column
-                key={dataKey}
-                headerRenderer={headerProps =>
-                  this.headerRenderer({
-                    ...headerProps,
-                    columnIndex: index,
-                  })
-                }
-                className={classes.flexContainer}
-                cellRenderer={this.cellRenderer}
-                dataKey={dataKey}
-                {...other}
-              />
-            );
-          })}
-        </Table>
-      )}
-    </AutoSizer>
-  );
 
 }
 const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
@@ -262,6 +178,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
       setStrSearch(value);
     }, 500);
   };
+
   //===Filter Data
   const configData = filter(configs, config => {
     if (isEmpty(strSearch)) {
@@ -272,99 +189,105 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
   });
 
   return (
-    <React.Fragment>
-      <div className={classes.container}>
+    <div className={classes.container}>
+      <div className={classes.top}>
+        <FormLabel className={classes.titleField}>
+          <Translate value={`${KEY_TRANSLATE}.title_wrapper`} />
+        </FormLabel>
         <div className={classes.top}>
-          <FormLabel className={classes.titleField}>
-            <Translate value={`${KEY_TRANSLATE}.title_wrapper`} />
-          </FormLabel>
-          <div className={classes.top}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput
-                }}
-                onChange={onChangeSearch}
-              />
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
             </div>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setIsOpenAddModal(true)}
-            >
-              Add Config
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput
+              }}
+              onChange={onChangeSearch}
+            />
+          </div>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setIsOpenAddModal(true)}
+          >
+           <Translate value={`${KEY_TRANSLATE}.add_config`} />
             </Button>
 
-          </div>
         </div>
-
+      </div>
+      <div style={{ overflow: "auto" }}>
         <Table>
           <TableHead className={classes.headTab}>
             <TableRow>
-              <TableCell className={classes.table}>Name</TableCell>
-              <TableCell className={classes.table} align="right">
-                Cron Trigger
+              <TableCell className={classes.table}>
+              <Translate value={`${KEY_TRANSLATE}.name`} />
               </TableCell>
               <TableCell className={classes.table} align="right">
-                Version
+                <Translate value={`${KEY_TRANSLATE}.cron_trigger`} />
               </TableCell>
               <TableCell className={classes.table} align="right">
-                Actions
+                <Translate value={`${KEY_TRANSLATE}.version`} />
+              </TableCell>
+              <TableCell className={classes.table} align="right">
+                <Translate value={`${KEY_TRANSLATE}.actions`} />
               </TableCell>
             </TableRow>
           </TableHead>
+        </Table>
+      </div>
+      <div style={{ overflowY: 'auto', height: '500px' }}>
+        <Table style={{ tableLayout: 'fixed' }}>
           <TableBody className={classes.tableConfig}>
-            {configData.map(config => (
-              <TableRow
-                key={config.name}
-                className={classes.selectRow}
-                onClick={() => {
-                  setSelectedConfig(config);
-                  setIsOpenEditModal(true);
-                }}
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  className={classes.tableItem}
+            {configData
+              .map(config => (
+                <TableRow
+                  key={config.name}
+                  className={classes.selectRow}
+                  onClick={() => {
+                    setSelectedConfig(config);
+                    setIsOpenEditModal(true);
+                  }}
                 >
-                  {config.name}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  {config.cron_trigger}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  {config.version}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  <IconButton
-                    aria-label="Delete"
-                    onClick={e => {
-                      e.stopPropagation();
-                      deleteData(config);
-                    }}
-                    disabled={pending}
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className={classes.tableItem}
                   >
-                    <DeleteIcon />
-                  </IconButton>
-                  {pending ?
-                    <div className={classes.iconProgress}>
-                      <CircularProgress
-                        color="secondary"
-                        size={40}
-                      />
-                    </div>
-                    :
-                    ""
-                  }
-                </TableCell>
-              </TableRow>
-            ))}
+                    {config.name}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    {config.cron_trigger}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    {config.version}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    <IconButton
+                      aria-label="Delete"
+                      onClick={e => {
+                        e.stopPropagation();
+                        deleteData(config);
+                      }}
+                      disabled={pending}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    {pending ?
+                      <div className={classes.iconProgress}>
+                        <CircularProgress
+                          color="secondary"
+                          size={40}
+                        />
+                      </div>
+                      :
+                      ""
+                    }
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>
@@ -378,7 +301,6 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         success={success}
         refreshPage={refreshPage}
       />
-
       <EditDialog
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}
@@ -391,7 +313,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         success={success}
         refreshPage={refreshPage}
       />
-    </React.Fragment>
+    </div>
   );
 };
 export default withStyles(styles, { withTheme: true })(WapperComponent);

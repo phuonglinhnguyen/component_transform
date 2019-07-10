@@ -2,6 +2,7 @@ import * as actions from "../../actions/general_configuration";
 import { crudGetList, showNotification } from "@dgtx/coreui";
 import { ConstantRender } from "@dgtx/core-component-ui";
 import { cloneDeep, isEmpty } from "lodash";
+
 export const getData = (projectId: any) => async (
   dispatch: any,
   getState: any

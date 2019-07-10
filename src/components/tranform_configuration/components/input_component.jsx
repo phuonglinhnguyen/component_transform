@@ -92,7 +92,6 @@ const InputComponent: React.FC<IDefautProps> = props => {
   const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const name = useState("");
-  const cronTrigger = config ? config.cron_trigger : ""
 
   const onChangeText = e => {
     const name = e.target.name;

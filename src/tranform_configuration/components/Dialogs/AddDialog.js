@@ -15,7 +15,6 @@ import InputComponent from "../input_component";
 import Config from "../Models/Config";
 
 import "./dialog.css";
-import { isEmpty } from "lodash";
 
 const styles: any = (theme: any) => {
   return {

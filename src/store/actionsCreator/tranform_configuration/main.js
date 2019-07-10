@@ -5,27 +5,56 @@ import {
   callAPIDeleteData,
   callAPIUpdateData
 } from "./call_api";
-import {cloneDeep,isEmpty} from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
+import { showNotification } from "@dgtx/coreui";
+
+export const getData = (projectId: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  dispatch(resetStateAPI());
+  dispatch(setPending());
+  dispatch(getDataTranform(projectId));
+};
+//get all list data tranform
 export const getDataTranform = (projectId: any) => async (
   dispatch: any,
   getState: any
 ) => {
   const data = await dispatch(callAPIGetData({ projectId }));
-  if (data.code === 404) { //null, underfied, []... =. false ; 200, 404
-    // dispatch(setError());
-    // if(!isEmpty(projectId)&& isEmpty(data)){
-
-    // }
+  if (data.code) {
+    dispatch(setError());
+    if (!isEmpty(projectId) && isEmpty(data)) {
+      dispatch({
+        type: actions.TRANFORM_CONFIGURATION_GET_DATA_ERROR,
+        payload: {
+          data: [],
+          refreshPage: true
+        },
+        meta: {
+          resource: actions.NAME_REDUCER
+        }
+      });
+    } else {
+      dispatch(
+        showNotification(`${actions.KEY_TRANSLATE}.get_error`, "error", {
+          i18n: true,
+          duration: 1500
+        })
+      );
+    }
   } else {
     dispatch({
       type: actions.TRANFORM_CONFIGURATION_GET_DATA,
       payload: {
-        data
+        data: data,
+        refreshPage: false
       },
       meta: {
         resource: actions.NAME_REDUCER
       }
     });
+    dispatch(setSuccess())
   }
 };
 
@@ -38,7 +67,7 @@ export const createData = (config: any) => async (
   await dispatch(
     callAPICreateData({
       data: config,
-      projectId: config.project_id
+      projectId: projectId
     })
   );
   await dispatch(getDataTranform(projectId));
@@ -60,14 +89,13 @@ export const updateData = (config: any) => async (
 ) => {
   const projectId = cloneDeep(config.project_id);
   delete config.project_id;
-   await dispatch(
+  await dispatch(
     callAPIUpdateData({
       data: config,
       projectId: projectId,
       id: config.id
     })
   );
-  
   await dispatch(getDataTranform(projectId));
   dispatch({
     type: actions.TRANFORM_CONFIGURATION_UPDATE_DATA,
@@ -89,7 +117,7 @@ export const deleteData = (config: any) => async (
   await dispatch(
     callAPIDeleteData({
       id: config.id,
-      projectId: config.project_id
+      projectId: projectId
     })
   );
   await dispatch(getDataTranform(projectId));
@@ -112,20 +140,34 @@ export const deleteData = (config: any) => async (
 //     }
 //   });
 // };
-// export const setPending = () => {
-//   return {
-//     type: actions.PENDING,
-//     payload: {
-//       success: false,
-//       pending: true,
-//       error: false
-//     },
-//     meta: {
-//       resource: actions.NAME_REDUCER
-//     }
-//   };
-// };
 
+export const setPending = () => {
+  return {
+    type: actions.PENDING,
+    payload: {
+      success: false,
+      pending: true,
+      error: false
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+};
+
+export const setSuccess = () => {
+  return {
+    type: actions.SUCCESS,
+    payload: {
+      success: true,
+      pending: false,
+      error: false
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+};
 export const setError = () => {
   return {
     type: actions.ERROR,
@@ -139,3 +181,16 @@ export const setError = () => {
     }
   };
 }
+export const resetStateAPI = () => {
+  return {
+    type: actions.RESET,
+    payload: {
+      success: false,
+      pending: false,
+      error: false
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+};

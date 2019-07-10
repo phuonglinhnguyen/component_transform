@@ -5,7 +5,8 @@ const initialState = {
   pending: false,
   error: false,
   success: false,
-  data: []
+  data: [],
+  refreshPage: false,
 };
 
 export default {
@@ -19,6 +20,10 @@ export default {
       case actions.TRANFORM_CONFIGURATION_UPDATE_DATA:
       case actions.TRANFORM_CONFIGURATION_CREATE_DATA:
       case actions.TRANFORM_CONFIGURATION_DELETE_DATA:
+      case actions.PENDING:
+      case actions.RESET:
+      case actions.ERROR:
+      case actions.SUCCESS:
         return {
           ...state,
           ...payload

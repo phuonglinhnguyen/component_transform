@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-
+import { Translate } from "react-redux-i18n";
 import { CronTriggerQuartz } from "@dgtx/core-component-ui";
 import { getDataObject } from "@dgtx/coreui";
-
+import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
 import get from "lodash/get";
-
-import { isEmail, isEmpty } from "validator";
 import Form from "react-validation/build/form";
 
 import { withStyles } from "@material-ui/core/styles";
@@ -93,13 +91,11 @@ export interface IDefautProps {
 export interface IDefautState {
   isOpenTransformModal?: any;
   setIsOpenTransformModal?: any;
-  name?: any;
 }
 const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig,refreshPage,pending } = props;
+  const { classes, config, setConfig } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
-  const name = useState("");
 
   const onChangeText = e => {
     const name = e.target.name;
@@ -257,7 +253,7 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
                 color="primary"
                 onClick={() => setIsOpenTransformModal(true)}
               >
-                Transform
+                <Translate value={`${KEY_TRANSLATE}.add_tranform`} />
               </Button>
               <TransformDialog
                 isOpen={isOpenTransformModal}
