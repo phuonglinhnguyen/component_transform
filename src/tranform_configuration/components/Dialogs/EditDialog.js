@@ -9,6 +9,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import "./dialog.css"
 
 import InputComponent from "../input_component";
@@ -16,6 +17,13 @@ const styles: any = (theme: any) => {
   return {
     paper: {
       maxWidth: "800px !important"
+    },
+    iconProgress: {
+      position: "absolute",
+      padding: `${theme.spacing.unit}px`,
+      color: theme.palette.primary.contrastText,
+      top: '0px',
+      right: "0px"
     }
   };
 };
@@ -35,7 +43,10 @@ const EditDialog: React.FC<IDefautProps> = props => {
     setIsOpen,
     config,
     setConfig,
-    updateData
+    updateData,
+    pending,
+    refreshPage,
+    classes
   } = props;
 
   const onAgree = () => {
@@ -65,9 +76,24 @@ const EditDialog: React.FC<IDefautProps> = props => {
         <Button onClick={() => setIsOpen(false)} color="primary">
           <Translate value={`${KEY_TRANSLATE}.disagree`} />
         </Button>
-        <Button onClick={onAgree} color="primary" autoFocus>
+        <Button
+          onClick={onAgree}
+          color="primary"
+          autoFocus
+          disabled={pending ? pending : refreshPage}
+        >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
+        {pending ?
+          <div className={classes.iconProgress}>
+            <CircularProgress
+              color="secondary"
+              size={40}
+            />
+          </div>
+          :
+          ""
+        }
       </DialogActions>
     </Dialog>
   );

@@ -3,7 +3,7 @@ import { PageDecorator, getDataObject } from "@dgtx/coreui";
 import { compose } from "recompose";
 import WapperComponent from "../components/wapper_component";
 import {
-  getDataTranform,
+  getData,
   deleteData,
   createData,
   // unmount,
@@ -14,18 +14,21 @@ import * as constant from "../../../store/actions/tranform_configuration";
 interface LayoutDefautProps {
   classes?: any;
   theme?: any;
-  getDataTranform?: any;
+  getData?: any;
   deleteData?: any;
   createData?: any;
+  updateData?: any;
+  pending?: any;
+  success?: any;
+  refreshPage?: any;
+  keyTranslate?: any;
+  match?: any;
 }
-class TranformConfigurationPage extends React.Component<
-  LayoutDefautProps,
-  any
-> {
+class TranformConfigurationPage extends React.Component<LayoutDefautProps, any> {
   componentWillMount = () => {
-    const { getDataTranform, match, actions } = this.props;
+    const { getData, match, actions } = this.props;
     const projectId = getDataObject("params.projectid", match);
-    getDataTranform(projectId);
+    getData(projectId);
   };
 
   // componentWillUnmount = () => {
@@ -54,16 +57,18 @@ export default compose(
   PageDecorator({
     resources,
     actions: {
-      getDataTranform,
+      getData,
       // unmount,
       deleteData,
       createData,
       updateData
     },
     mapState: (state: any) => ({
-      data:
-        getDataObject(`resources.${constant.NAME_REDUCER}.data`, state.core) ||
-        []
+      data: getDataObject(`resources.${constant.NAME_REDUCER}.data`, state.core) || [],
+      pending: getDataObject(`resources.${constant.NAME_REDUCER}.data.pending`, state.core),
+      success: getDataObject(`resources.${constant.NAME_REDUCER}.data.success`, state.core),
+      refreshPage: getDataObject(`resources.${constant.NAME_REDUCER}.data.refreshPage`, state.core),
+      keyTranslate: constant.KEY_TRANSLATE,
     })
   })
 )(TranformConfigurationPage);

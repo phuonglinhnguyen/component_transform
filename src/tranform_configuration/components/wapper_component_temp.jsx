@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Translate } from "react-redux-i18n";
 import filter from "lodash/filter";
 import isEmpty from "lodash/isEmpty";
-import { AutoSizer, Column } from 'react-virtualized';
 import { withStyles } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 
+// import { getData } from "../../../providers/faKedata/tranform_configuration";
 import { KEY_TRANSLATE } from "../../../store/actions/tranform_configuration";
 
 import { Button } from "@material-ui/core";
@@ -122,26 +122,7 @@ const styles: any = (theme: any) => {
       color: theme.palette.primary.contrastText,
       top: '0px',
       right: "0px"
-    },
-    flexContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      boxSizing: 'border-box',
-    },
-    tableRow: {
-      cursor: 'pointer',
-    },
-    tableRowHover: {
-      '&:hover': {
-        backgroundColor: theme.palette.grey[200],
-      },
-    },
-    tableCell: {
-      flex: 1,
-    },
-    noClick: {
-      cursor: 'initial',
-    },
+    }
   };
 };
 
@@ -165,70 +146,12 @@ export interface IDefautState {
   setSelectedConfig?: any;
   setIsOpenEditModal?: any;
   isOpenEditModal?: any;
+  page?: any;
+  setPage?: any;
+  rowsPerPage?: any;
+  setsetRowsPerPagePage?: any;
   strSearch?: any;
   setStrSearch?: any;
-
-}
-const MuiVirtualizedTable: React.PureComponent = props => {
-  const { classes, columns, ...tableProps } = props;
-
-  const cellRenderer = ({ cellData, columnIndex }) => {
-    const { rowHeight, onRowClick } = props;
-    return (
-      <TableCell
-        component="div"
-        // className={clsx(classes.tableCell, classes.flexContainer, {
-        //   [classes.noClick]: onRowClick == null,
-        // })}
-        variant="body"
-        style={{ height: rowHeight }}
-        align={(columnIndex != null && columns[columnIndex].numeric) || false ? 'right' : 'left'}
-      >
-        {cellData}
-      </TableCell>
-    );
-  };
-
-  const headerRenderer = ({ label, columnIndex }) => {
-    const { headerHeight, columns, classes } = props;
-
-    return (
-      <TableCell
-        component="div"
-        // className={clsx(classes.tableCell, classes.flexContainer, classes.noClick)}
-        variant="head"
-        style={{ height: headerHeight }}
-        align={columns[columnIndex].numeric || false ? 'right' : 'left'}
-      >
-        <span>{label}</span>
-      </TableCell>
-    );
-  };
-  return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <Table height={height} width={width} {...tableProps} rowClassName={this.getRowClassName}>
-          {columns.map(({ dataKey, ...other }, index) => {
-            return (
-              <Column
-                key={dataKey}
-                headerRenderer={headerProps =>
-                  this.headerRenderer({
-                    ...headerProps,
-                    columnIndex: index,
-                  })
-                }
-                className={classes.flexContainer}
-                cellRenderer={this.cellRenderer}
-                dataKey={dataKey}
-                {...other}
-              />
-            );
-          })}
-        </Table>
-      )}
-    </AutoSizer>
-  );
 
 }
 const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
@@ -249,6 +172,8 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // =====Search
   let searchTimeout = null;
@@ -261,6 +186,13 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
     searchTimeout = setTimeout(() => {
       setStrSearch(value);
     }, 500);
+  };
+  //==Rows Per Page
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(event.target.value);
   };
   //===Filter Data
   const configData = filter(configs, config => {
@@ -319,55 +251,73 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
             </TableRow>
           </TableHead>
           <TableBody className={classes.tableConfig}>
-            {configData.map(config => (
-              <TableRow
-                key={config.name}
-                className={classes.selectRow}
-                onClick={() => {
-                  setSelectedConfig(config);
-                  setIsOpenEditModal(true);
-                }}
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  className={classes.tableItem}
+            {configData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map(config => (
+                <TableRow
+                  key={config.name}
+                  className={classes.selectRow}
+                  onClick={() => {
+                    setSelectedConfig(config);
+                    setIsOpenEditModal(true);
+                  }}
                 >
-                  {config.name}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  {config.cron_trigger}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  {config.version}
-                </TableCell>
-                <TableCell align="right" className={classes.tableItem}>
-                  <IconButton
-                    aria-label="Delete"
-                    onClick={e => {
-                      e.stopPropagation();
-                      deleteData(config);
-                    }}
-                    disabled={pending}
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className={classes.tableItem}
                   >
-                    <DeleteIcon />
-                  </IconButton>
-                  {pending ?
-                    <div className={classes.iconProgress}>
-                      <CircularProgress
-                        color="secondary"
-                        size={40}
-                      />
-                    </div>
-                    :
-                    ""
-                  }
-                </TableCell>
-              </TableRow>
-            ))}
+                    {config.name}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    {config.cron_trigger}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    {config.version}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableItem}>
+                    <IconButton
+                      aria-label="Delete"
+                      onClick={e => {
+                        e.stopPropagation();
+                        deleteData(config);
+                      }}
+                      disabled={pending}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    {pending ?
+                      <div className={classes.iconProgress}>
+                        <CircularProgress
+                          color="secondary"
+                          size={40}
+                        />
+                      </div>
+                      :
+                      ""
+                    }
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>
+      <TablePagination
+        className={classes.rowPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={configData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          "aria-label": "Previous Page"
+        }}
+        nextIconButtonProps={{
+          "aria-label": "Next Page"
+        }}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
       <AddDialog
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}

@@ -9,6 +9,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import InputComponent from "../input_component";
 import Config from "../Models/Config";
@@ -20,6 +21,13 @@ const styles: any = (theme: any) => {
   return {
     showDialog: {
       maxWidth: "1200px"
+    },
+    iconProgress: {
+      position: "absolute",
+      padding: `${theme.spacing.unit}px`,
+      color: theme.palette.primary.contrastText,
+      top: '0px',
+      right: "0px"
     }
   };
 };
@@ -29,6 +37,9 @@ export interface IDefautProps {
   theme?: any;
   isOpen?: any;
   setIsOpen?: any;
+  pending?: any;
+  success?: any;
+  refreshPage?: any;
 }
 export interface IDefautState {
   errorMessage?: any;
@@ -39,7 +50,14 @@ export interface IDefautState {
   setCronValue?: any;
 }
 const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
-  const { isOpen, setIsOpen, classes, createData } = props;
+  const {
+    isOpen,
+    setIsOpen,
+    classes,
+    createData,
+    pending = false,
+    success,
+    refreshPage } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [config, setConfig] = useState(() => {
     return new Config();
@@ -62,6 +80,8 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
       </DialogTitle>
       <DialogContent>
         <InputComponent
+          pending={pending}
+          refreshPage={refreshPage}
           config={config}
           setConfig={setConfig}
           cronValue={cronValue}
@@ -72,12 +92,30 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={() => setIsOpen(false)} color="primary">
+        <Button
+          onClick={() => setIsOpen(false)}
+          color="primary"
+        >
           <Translate value={`${KEY_TRANSLATE}.disagree`} />
         </Button>
-        <Button onClick={onAgree} color="primary" autoFocus>
+        <Button
+          onClick={onAgree}
+          color="primary"
+          autoFocus
+          disabled={pending ? pending : refreshPage}
+        >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
+        {pending ?
+          <div className={classes.iconProgress}>
+            <CircularProgress
+              color="primary"
+              size={40}
+            />
+          </div>
+          :
+          ""
+        }
       </DialogActions>
     </Dialog>
   );

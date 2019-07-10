@@ -96,7 +96,7 @@ export interface IDefautState {
   name?: any;
 }
 const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig } = props;
+  const { classes, config, setConfig,refreshPage,pending } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
   const name = useState("");
