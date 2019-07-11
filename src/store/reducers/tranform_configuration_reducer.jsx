@@ -9,7 +9,9 @@ const initialState = {
   data: [],
   refreshPage: false,
   config: new Config(),
-  isOpen: false
+  isOpenAdd: false,
+  isOpenEdit: false,
+  isOpenDel: false
 };
 
 export default {
@@ -29,7 +31,9 @@ export default {
       case actions.SUCCESS:
       case actions.SET_CONFIG:
       case actions.SET_SELECTED_CONFIG:
-      case actions.SET_IS_OPEN_DIALOG:
+      case actions.SET_IS_OPEN_ADD_DIALOG:
+      case actions.SET_IS_OPEN_EDIT_DIALOG:
+      case actions.SET_IS_OPEN_DEL_DIALOG:
         return {
           ...state,
           ...payload

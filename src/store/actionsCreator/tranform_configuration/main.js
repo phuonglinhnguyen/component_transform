@@ -182,11 +182,33 @@ export const setError = () => {
     }
   };
 }
-export const setIsOpen = (value) => {
+export const setIsOpenAddDialog = (value) => {
   return {
-    type: actions.SET_IS_OPEN_DIALOG,
+    type: actions.SET_IS_OPEN_ADD_DIALOG,
     payload: {
-      isOpen: value
+      isOpenAdd: value
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+}
+export const setIsOpenEditDialog = (value) => {
+  return {
+    type: actions.SET_IS_OPEN_EDIT_DIALOG,
+    payload: {
+      isOpenEdit: value
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+}
+export const setIsOpenDelDialog = (value) => {
+  return {
+    type: actions.SET_IS_OPEN_DEL_DIALOG,
+    payload: {
+      isOpenDel: value
     },
     meta: {
       resource: actions.NAME_REDUCER

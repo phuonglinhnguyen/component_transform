@@ -141,8 +141,6 @@ export interface IDefautState {
   setIsOpenAddModal?: any;
   selectedConfig?: any;
   setSelectedConfig?: any;
-  setIsOpenEditModal?: any;
-  isOpenEditModal?: any;
   strSearch?: any;
   setStrSearch?: any;
 
@@ -157,14 +155,18 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
     success,
     refreshPage,
     setSelectedConfig,
-    setIsOpen,
-    isOpen 
+    setIsOpenAddDialog,
+    isOpenAdd,
+    isOpenEdit,
+    isOpenDel,
+    setIsOpenEditDialog,
+    setIsOpenDelDialog
   } = props;
 
   const configs = data.data || [];
   const [selectedConfig] = useState(null);
   // const [isOpenAddModal, setIsOpenAddModal] = useState();
-  const [isOpenDelModal, setIsOpenDelModal] = useState(false);
+  // const [isOpenDelModal, setIsOpenDelModal] = useState(false);
   // const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
@@ -222,8 +224,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
           <Button
             variant="outlined"
             color="primary"
-            // onClick={() => setIsOpenAddModal(true)}
-            onClick={() => setIsOpen(true)}
+            onClick={() => setIsOpenAddDialog(true)}
           >
             <Translate value={`${KEY_TRANSLATE}.add_config`} />
           </Button>
@@ -261,8 +262,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
                   className={classes.selectRow}
                   onClick={() => {
                     setSelectedConfig(config);
-                    setIsOpen(true)
-                    // setIsOpenEditModal(true);
+                    setIsOpenEditDialog(true);
                   }}
                 >
                   <TableCell
@@ -284,7 +284,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
                       onClick={e => {
                         e.stopPropagation();
                         setSelectedConfig(config);
-                        setIsOpenDelModal(true)
+                        setIsOpenDelDialog(true)
                       }}
                     // disabled={pending}
                     >
@@ -323,8 +323,8 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
       <AddDialog
-        // isOpen={isOpenAddModal}
-        // setIsOpen={setIsOpenAddModal}
+        isOpen={isOpenAdd}
+        setIsOpen={setIsOpenAddDialog}
         createData={createData}
         pending={pending}
         success={success}
@@ -334,8 +334,8 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         {...props}
       />
       <EditDialog
-        // isOpen={isOpenEditModal}
-        // setIsOpen={setIsOpenEditModal}
+        isOpen={isOpenEdit}
+        setIsOpen={setIsOpenEditDialog}
         config={selectedConfig}
         setConfig={setSelectedConfig}
         selectedList={selectedConfig}
@@ -347,8 +347,8 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         {...props}
       />
       <DeleteDialog
-        isOpen={isOpenDelModal}
-        setIsOpen={setIsOpenDelModal}
+        isOpen={isOpenDel}
+        setIsOpen={setIsOpenDelDialog}
         config={selectedConfig}
         setConfig={setSelectedConfig}
         selectedList={selectedConfig}
