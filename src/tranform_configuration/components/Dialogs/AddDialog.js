@@ -56,6 +56,7 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
     setConfig,
   } = props;
   const [cronValue, setCronValue] = useState(" ");
+  console.log("isAdd", isOpen);
 
   const onAgree = e => {
     createData(config);
@@ -77,8 +78,6 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           setConfig={setConfig}
           cronValue={cronValue}
           setCronValue={setCronValue}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
         />
       </DialogContent>
 

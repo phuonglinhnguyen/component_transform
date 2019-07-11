@@ -182,11 +182,11 @@ export const setError = () => {
     }
   };
 }
-export const setIsOpen = () => {
+export const setIsOpen = (value) => {
   return {
     type: actions.SET_IS_OPEN_DIALOG,
     payload: {
-      isOpen: false
+      isOpen: value
     },
     meta: {
       resource: actions.NAME_REDUCER

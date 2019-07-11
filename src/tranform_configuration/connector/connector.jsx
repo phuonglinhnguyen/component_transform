@@ -44,7 +44,7 @@ class TranformConfigurationPage extends React.Component<LayoutDefautProps, any> 
     const projectId = getDataObject("params.projectid", match);
     // console.log("testlogconfig", this.props.config);
    
-
+    // console.log("isOpen", this.props.isOpen);
     return (
       <React.Fragment>
         <WapperComponent
