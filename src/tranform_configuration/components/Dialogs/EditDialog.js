@@ -80,7 +80,7 @@ const EditDialog: React.FC<IDefautProps> = props => {
           onClick={onAgree}
           color="primary"
           autoFocus
-          disabled={pending ? pending : refreshPage}
+          // disabled={pending ? pending : refreshPage}
         >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>

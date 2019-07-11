@@ -54,13 +54,14 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
     setIsOpen,
     classes,
     createData,
-    pending = false,
+    pending ,
     success,
+    config,setConfig,
     refreshPage } = props;
   const [errorMessage, setErrorMessage] = useState("");
-  const [config, setConfig] = useState(() => {
-    return new Config();
-  });
+  // const [config, setConfig] = useState(() => {
+  //   return new Config();
+  // });
   const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = e => {
@@ -101,7 +102,7 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           onClick={onAgree}
           color="primary"
           autoFocus
-          disabled={pending ? pending : refreshPage}
+          // disabled={pending ? pending : refreshPage}
         >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>

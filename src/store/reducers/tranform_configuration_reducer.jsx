@@ -7,7 +7,10 @@ const initialState = {
   success: false,
   data: [],
   refreshPage: false,
+  config:{}
 };
+console.log({initialState});
+
 
 export default {
   name: actions.NAME_REDUCER,
@@ -23,7 +26,9 @@ export default {
       case actions.PENDING:
       case actions.RESET:
       case actions.ERROR:
-      case actions.SUCCESS:
+      case actions.ERROR:
+      case actions.SET_CONFIG:
+      case actions.SET_SELECTED_CONFIG:
         return {
           ...state,
           ...payload

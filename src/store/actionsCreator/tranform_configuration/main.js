@@ -131,15 +131,16 @@ export const deleteData = (config: any) => async (
     }
   });
 };
-// export const unmount = () => async (dispatch: any, getState: any) => {
-//   dispatch({
-//     type: actions.TRANFORM_CONFIGURATION_UNMOUNT,
-//     payload: {},
-//     meta: {
-//       resource: actions.NAME_REDUCER
-//     }
-//   });
-// };
+
+export const unmount = () => async (dispatch: any, getState: any) => {
+  dispatch({
+    type: actions.TRANFORM_CONFIGURATION_UNMOUNT,
+    payload: {},
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  });
+};
 
 export const setPending = () => {
   return {
@@ -193,4 +194,36 @@ export const resetStateAPI = () => {
       resource: actions.NAME_REDUCER
     }
   };
+};
+export const setConfig = (config: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  console.log("config_main",config);
+  
+  dispatch({
+    type: actions.SET_CONFIG,
+    payload: {
+      config
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  })
+
+};
+export const setSelectedConfig = (config: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  dispatch({
+    type: actions.SET_SELECTED_CONFIG,
+    payload: {
+     config
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  })
+
 };

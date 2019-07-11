@@ -17,7 +17,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import TablePagination from "@material-ui/core/TablePagination";
 import AddDialog from "./Dialogs/AddDialog";
 import EditDialog from "./Dialogs/EditDialog";
 
@@ -26,7 +26,7 @@ const styles: any = (theme: any) => {
     container: {
       maxHeight: `calc(100vh - ${theme.spacing.unit * 8}px)`,
       margin: `${theme.spacing.unit * 8}px 0px 0px 0px`,
-      height: "880px"
+      // height: "880px"
     },
     top: {
       display: "flex",
@@ -43,7 +43,7 @@ const styles: any = (theme: any) => {
       color: "white",
       fontWeight: "700",
       textAlign: "center",
-      width:"25%"
+      width: "25%"
     },
     tableConfig: {
       height: "200px",
@@ -155,16 +155,21 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
     deleteData,
     createData,
     updateData,
-    pending = false,
+    pending ,
     success,
     refreshPage,
-    keyTranlate } = props;
+    setConfig,
+    setSelectedConfig
+  } = props;
 
   const configs = data.data || [];
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [selectedConfig, setSelectedConfig] = useState(null);
+  const [selectedConfig, setSelectedConfigdd] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // console.log({ setConfig });
 
   // =====Search
   let searchTimeout = null;
@@ -178,7 +183,14 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
       setStrSearch(value);
     }, 500);
   };
+  //==Rows Per Page
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(event.target.value);
+  };
   //===Filter Data
   const configData = filter(configs, config => {
     if (isEmpty(strSearch)) {
@@ -213,8 +225,8 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
             color="primary"
             onClick={() => setIsOpenAddModal(true)}
           >
-           <Translate value={`${KEY_TRANSLATE}.add_config`} />
-            </Button>
+            <Translate value={`${KEY_TRANSLATE}.add_config`} />
+          </Button>
 
         </div>
       </div>
@@ -223,7 +235,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
           <TableHead className={classes.headTab}>
             <TableRow>
               <TableCell className={classes.table}>
-              <Translate value={`${KEY_TRANSLATE}.name`} />
+                <Translate value={`${KEY_TRANSLATE}.name`} />
               </TableCell>
               <TableCell className={classes.table} align="right">
                 <Translate value={`${KEY_TRANSLATE}.cron_trigger`} />
@@ -242,6 +254,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         <Table style={{ tableLayout: 'fixed' }}>
           <TableBody className={classes.tableConfig}>
             {configData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(config => (
                 <TableRow
                   key={config.name}
@@ -291,15 +304,32 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
           </TableBody>
         </Table>
       </div>
+      <TablePagination
+        className={classes.rowPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={configData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          "aria-label": "Previous Page"
+        }}
+        nextIconButtonProps={{
+          "aria-label": "Next Page"
+        }}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
       <AddDialog
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
-        selectedList={selectedConfig}
-        setSelectedList={setSelectedConfig}
         createData={createData}
         pending={pending}
         success={success}
         refreshPage={refreshPage}
+        selectedList={selectedConfig}
+        setSelectedList={setSelectedConfig}
+      // {...props}
       />
       <EditDialog
         isOpen={isOpenEditModal}
@@ -312,6 +342,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         pending={pending}
         success={success}
         refreshPage={refreshPage}
+      // {...props}
       />
     </div>
   );

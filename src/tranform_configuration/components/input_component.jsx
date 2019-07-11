@@ -97,6 +97,8 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
 
+  console.log("config_input",config);
+  
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -192,7 +194,7 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
 
               <TextField
                 name="version"
-                value={config ? config.version : "test version"}
+                value={config ? config.version : ""}
                 label="Version"
                 className={classes.textField}
                 onChange={e => {

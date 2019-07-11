@@ -6,11 +6,14 @@ import {
   getData,
   deleteData,
   createData,
-  // unmount,
-  updateData
+  unmount,
+  updateData,
+  setConfig,
+  setSelectedConfig
 } from "../../../store/actionsCreator/tranform_configuration";
 import Reducer from "../../../store/reducers/tranform_configuration_reducer";
 import * as constant from "../../../store/actions/tranform_configuration";
+import { Button } from "@material-ui/core";
 interface LayoutDefautProps {
   classes?: any;
   theme?: any;
@@ -26,25 +29,29 @@ interface LayoutDefautProps {
 }
 class TranformConfigurationPage extends React.Component<LayoutDefautProps, any> {
   componentWillMount = () => {
-    const { getData, match, actions } = this.props;
+    const { getData, match } = this.props;
     const projectId = getDataObject("params.projectid", match);
     getData(projectId);
   };
 
-  // componentWillUnmount = () => {
-  //   const { unmount = () => null } = this.props;
-  //   unmount();
-  // };
+  componentWillUnmount = () => {
+    const { unmount = () => null } = this.props;
+    unmount();
+  };
 
   render() {
     const { match } = this.props;
     const projectId = getDataObject("params.projectid", match);
+    console.log("testlogconfig", this.props.config);
+
     return (
-      <WapperComponent
-        projectId={projectId}
-        constant={constant}
-        {...this.props}
-      />
+      <React.Fragment>
+        <WapperComponent
+          projectId={projectId}
+          constant={constant}
+          {...this.props}
+        />
+      </React.Fragment>
     );
   }
 }
@@ -58,10 +65,12 @@ export default compose(
     resources,
     actions: {
       getData,
-      // unmount,
+      unmount,
       deleteData,
       createData,
-      updateData
+      updateData,
+      setConfig,
+      setSelectedConfig
     },
     mapState: (state: any) => ({
       data: getDataObject(`resources.${constant.NAME_REDUCER}.data`, state.core) || [],
@@ -69,6 +78,8 @@ export default compose(
       success: getDataObject(`resources.${constant.NAME_REDUCER}.data.success`, state.core),
       refreshPage: getDataObject(`resources.${constant.NAME_REDUCER}.data.refreshPage`, state.core),
       keyTranslate: constant.KEY_TRANSLATE,
+      config: getDataObject(`resources.${constant.NAME_REDUCER}.data.config`, state.core),
+      selectedConfig: getDataObject(`resources.${constant.NAME_REDUCER}.data.selectedConfig`, state.core),
     })
   })
 )(TranformConfigurationPage);
