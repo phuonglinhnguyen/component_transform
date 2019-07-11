@@ -37,7 +37,7 @@ export interface IDefautState {
   setMode?: any;
 }
 const Dictionary: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig } = props;
+  const { classes, config, setConfig, isOpen, setIsOpen } = props;
 
   const dictionary = get(config, "dictionary", []);
 
@@ -66,6 +66,8 @@ const Dictionary: React.FC<IDefautProps, IDefautState> = props => {
           setMode={setMode}
           config={config}
           setConfig={setConfig}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
         />
       </Grid>
     </Grid>

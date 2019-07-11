@@ -41,8 +41,6 @@ export interface IDefautProps {
   refreshPage?: any;
 }
 export interface IDefautState {
-  errorMessage?: any;
-  setErrorMessage?: any;
   config?: any;
   setConfig?: any;
   cronValue?: any;
@@ -54,20 +52,15 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
     setIsOpen,
     classes,
     createData,
-    pending ,
-    success,
-    config,setConfig,
-    refreshPage } = props;
-  const [errorMessage, setErrorMessage] = useState("");
-  // const [config, setConfig] = useState(() => {
-  //   return new Config();
-  // });
+    config,
+    setConfig,
+  } = props;
   const [cronValue, setCronValue] = useState(" ");
 
   const onAgree = e => {
     createData(config);
     setIsOpen(false);
-    setConfig(new Config());
+    setConfig(config);
   };
   return (
     <Dialog
@@ -80,14 +73,12 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
       </DialogTitle>
       <DialogContent>
         <InputComponent
-          pending={pending}
-          refreshPage={refreshPage}
           config={config}
           setConfig={setConfig}
           cronValue={cronValue}
           setCronValue={setCronValue}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
         />
       </DialogContent>
 
@@ -102,11 +93,11 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           onClick={onAgree}
           color="primary"
           autoFocus
-          // disabled={pending ? pending : refreshPage}
+        // disabled={pending ? pending : refreshPage}
         >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
-        {pending ?
+        {/* {pending ?
           <div className={classes.iconProgress}>
             <CircularProgress
               color="primary"
@@ -115,7 +106,7 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           </div>
           :
           ""
-        }
+        } */}
       </DialogActions>
     </Dialog>
   );

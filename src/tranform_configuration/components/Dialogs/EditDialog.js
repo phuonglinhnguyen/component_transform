@@ -44,9 +44,6 @@ const EditDialog: React.FC<IDefautProps> = props => {
     config,
     setConfig,
     updateData,
-    pending,
-    refreshPage,
-    classes
   } = props;
 
   const onAgree = () => {
@@ -79,12 +76,11 @@ const EditDialog: React.FC<IDefautProps> = props => {
         <Button
           onClick={onAgree}
           color="primary"
-          autoFocus
           // disabled={pending ? pending : refreshPage}
         >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
-        {pending ?
+        {/* {pending ?
           <div className={classes.iconProgress}>
             <CircularProgress
               color="secondary"
@@ -93,7 +89,7 @@ const EditDialog: React.FC<IDefautProps> = props => {
           </div>
           :
           ""
-        }
+        } */}
       </DialogActions>
     </Dialog>
   );

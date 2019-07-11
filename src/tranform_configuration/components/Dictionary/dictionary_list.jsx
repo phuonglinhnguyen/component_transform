@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import filter from "lodash/filter";
 import isEmpty from "lodash/isEmpty";
 import { withStyles } from "@material-ui/core/styles";
-
+import { Translate } from "react-redux-i18n";
+import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
 import FormLabel from "@material-ui/core/FormLabel";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import FolderIcon from "@material-ui/icons/Folder";
@@ -15,6 +16,10 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import { Button } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 
 const styles: any = (theme: any) => {
   return {
@@ -100,21 +105,20 @@ export interface IDefautState {
   setStrSearch?: any;
 }
 
-const DictionaryList: React.FC<IDefautProps,IDefautState> = props => {
+const DictionaryList: React.FC<IDefautProps, IDefautState> = props => {
   const {
     classes,
     dictionary,
     setSelectedDictItem,
     setMode,
     setConfig,
-    config
+    config,
   } = props;
 
   const [dense] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
-
-  const deleteDict = (e, fieldKey) => {
-    e.stopPropagation();
+  const [isOpen, setIsOpen] = useState(false)
+  const deleteDict = (fieldKey) => {
     const newDict = dictionary.filter(
       dict_item => dict_item.fieldKey !== fieldKey
     );
@@ -184,17 +188,42 @@ const DictionaryList: React.FC<IDefautProps,IDefautState> = props => {
                 <ListItemSecondaryAction>
                   <IconButton
                     aria-label="Delete"
-                    onClick={e => {
-                      deleteDict(e, dict_item.fieldKey);
-                    }}
+                    onClick={() => setIsOpen(true)}
                   >
                     <DeleteIcon />
                   </IconButton>
+                  <Dialog
+                    open={isOpen}
+                    onClose={() => setIsOpen(false)}
+                  >
+                    <DialogContent>Delete Dict? </DialogContent>
+
+                    <DialogActions>
+                      <Button
+                        onClick={() => setIsOpen(false)}
+                        color="primary"
+                      >
+                        <Translate value={`${KEY_TRANSLATE}.disagree`} />
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteDict(dict_item.fieldKey)
+                          setIsOpen(false);
+                        }}
+                        color="primary"
+                        autoFocus
+                      >
+                        <Translate value={`${KEY_TRANSLATE}.ok_delete`} />
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </ListItemSecondaryAction>
               </ListItem>
             );
           })}
         </List>
+
       </div>
     </React.Fragment>
   );

@@ -182,6 +182,17 @@ export const setError = () => {
     }
   };
 }
+export const setIsOpen = () => {
+  return {
+    type: actions.ISOPEN_DIALOG,
+    payload: {
+      setIsOpen: false
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+}
 export const resetStateAPI = () => {
   return {
     type: actions.RESET,
@@ -199,8 +210,6 @@ export const setConfig = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  console.log("config_main",config);
-  
   dispatch({
     type: actions.SET_CONFIG,
     payload: {
@@ -219,7 +228,7 @@ export const setSelectedConfig = (config: any) => async (
   dispatch({
     type: actions.SET_SELECTED_CONFIG,
     payload: {
-     config
+      config
     },
     meta: {
       resource: actions.NAME_REDUCER

@@ -3,7 +3,8 @@ import filter from "lodash/filter";
 import isEmpty from "lodash/isEmpty";
 
 import { withStyles } from "@material-ui/core/styles";
-
+import { Translate } from "react-redux-i18n";
+import { KEY_TRANSLATE } from "../../../../../store/actions/tranform_configuration";
 import FormLabel from "@material-ui/core/FormLabel";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import FolderIcon from "@material-ui/icons/Folder";
@@ -16,6 +17,10 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import { Button } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 
 const styles: any = (theme: any) => {
   return {
@@ -120,7 +125,7 @@ const ContentList: React.FC<IDefautProps, IDefautState> = props => {
 
   const [dense] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
-
+  const [isOpen, setIsOpen] = useState(false)
   const onAddContent = (contentName, contentItem) => {
     setConfig({
       ...config,
@@ -140,8 +145,7 @@ const ContentList: React.FC<IDefautProps, IDefautState> = props => {
   };
 
   //Delete Content Item
-  const deleteContentItem = (e, dataKey) => {
-    e.stopPropagation();
+  const deleteContentItem = (dataKey) => {
     const newContentArray = contentArray.filter(
       content_item => content_item.contentItem.dataKey !== dataKey
     );
@@ -175,8 +179,6 @@ const ContentList: React.FC<IDefautProps, IDefautState> = props => {
       return true;
     }
     const strToSearch = contentItem.contentName.toLowerCase();
-    // console.log("contentserach", strToSearch, strSearch);
-    // console.log(strToSearch.indexOf(strSearch.toLowerCase()));
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
   //-------
@@ -221,12 +223,35 @@ const ContentList: React.FC<IDefautProps, IDefautState> = props => {
                 <ListItemSecondaryAction>
                   <IconButton
                     aria-label="Delete"
-                    onClick={e => {
-                      deleteContentItem(e, contentItem.contentItem.dataKey);
-                    }}
+                    onClick={() => setIsOpen(true)}
                   >
                     <DeleteIcon />
                   </IconButton>
+                  <Dialog
+                    open={isOpen}
+                    onClose={() => setIsOpen(false)}
+                  >
+                    <DialogContent>Delete Content Item? </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={() => setIsOpen(false)}
+                        color="primary"
+                      >
+                        <Translate value={`${KEY_TRANSLATE}.disagree`} />
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteContentItem(contentItem.contentItem.dataKey)
+                          setIsOpen(false);
+                        }}
+                        color="primary"
+                        autoFocus
+                      >
+                        <Translate value={`${KEY_TRANSLATE}.ok_delete`} />
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </ListItemSecondaryAction>
               </ListItem>
             );

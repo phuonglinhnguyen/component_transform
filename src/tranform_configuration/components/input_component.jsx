@@ -93,12 +93,10 @@ export interface IDefautState {
   setIsOpenTransformModal?: any;
 }
 const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig } = props;
+  const { classes, config, setConfig, isOpen, setIsOpen } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
 
-  console.log("config_input",config);
-  
   const onChangeText = e => {
     const name = e.target.name;
     const value = e.target.value;
@@ -194,7 +192,7 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
 
               <TextField
                 name="version"
-                value={config ? config.version : ""}
+                value={config ? config.version : " "}
                 label="Version"
                 className={classes.textField}
                 onChange={e => {
@@ -280,7 +278,11 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
           onChange={handleChangeCron}
         />
 
-        <Dictionary config={config} setConfig={setConfig} />
+        <Dictionary 
+        config={config} 
+        setConfig={setConfig} 
+        isOpen={isOpen}
+        setIsOpen={setIsOpen} />
         <FormLabel className={classes.titleField}>Rules</FormLabel>
         <Rules config={config} setConfig={setConfig} />
       </div>

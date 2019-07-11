@@ -1,5 +1,6 @@
 import * as actions from "../actions/tranform_configuration";
 import { cloneDeep } from "lodash";
+import Config from "../../views/tranform_configuration/components/Models/Config";
 
 const initialState = {
   pending: false,
@@ -7,10 +8,9 @@ const initialState = {
   success: false,
   data: [],
   refreshPage: false,
-  config:{}
+  config: new Config(),
+  setIsOpen: false
 };
-console.log({initialState});
-
 
 export default {
   name: actions.NAME_REDUCER,
@@ -26,9 +26,10 @@ export default {
       case actions.PENDING:
       case actions.RESET:
       case actions.ERROR:
-      case actions.ERROR:
+      case actions.SUCCESS:
       case actions.SET_CONFIG:
       case actions.SET_SELECTED_CONFIG:
+      case actions.ISOPEN_DIALOG:
         return {
           ...state,
           ...payload

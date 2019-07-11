@@ -9,11 +9,11 @@ import {
   unmount,
   updateData,
   setConfig,
-  setSelectedConfig
+  setSelectedConfig,
+  setIsOpen
 } from "../../../store/actionsCreator/tranform_configuration";
 import Reducer from "../../../store/reducers/tranform_configuration_reducer";
 import * as constant from "../../../store/actions/tranform_configuration";
-import { Button } from "@material-ui/core";
 interface LayoutDefautProps {
   classes?: any;
   theme?: any;
@@ -42,7 +42,9 @@ class TranformConfigurationPage extends React.Component<LayoutDefautProps, any> 
   render() {
     const { match } = this.props;
     const projectId = getDataObject("params.projectid", match);
-    console.log("testlogconfig", this.props.config);
+    // console.log("testlogconfig", this.props.config);
+    // this.props.setIsOpen(true)
+    // console.log("isOpen", this.props.setIsOpen);
 
     return (
       <React.Fragment>
@@ -70,7 +72,8 @@ export default compose(
       createData,
       updateData,
       setConfig,
-      setSelectedConfig
+      setSelectedConfig,
+      setIsOpen
     },
     mapState: (state: any) => ({
       data: getDataObject(`resources.${constant.NAME_REDUCER}.data`, state.core) || [],
@@ -80,6 +83,7 @@ export default compose(
       keyTranslate: constant.KEY_TRANSLATE,
       config: getDataObject(`resources.${constant.NAME_REDUCER}.data.config`, state.core),
       selectedConfig: getDataObject(`resources.${constant.NAME_REDUCER}.data.selectedConfig`, state.core),
+      setIsOpen: getDataObject(`resources.${constant.NAME_REDUCER}.data.setIsOpen`, state.core),
     })
   })
 )(TranformConfigurationPage);
