@@ -43,8 +43,7 @@ class TranformConfigurationPage extends React.Component<LayoutDefautProps, any> 
     const { match } = this.props;
     const projectId = getDataObject("params.projectid", match);
     // console.log("testlogconfig", this.props.config);
-    // this.props.setIsOpen(true)
-    // console.log("isOpen", this.props.setIsOpen);
+   
 
     return (
       <React.Fragment>
@@ -83,7 +82,7 @@ export default compose(
       keyTranslate: constant.KEY_TRANSLATE,
       config: getDataObject(`resources.${constant.NAME_REDUCER}.data.config`, state.core),
       selectedConfig: getDataObject(`resources.${constant.NAME_REDUCER}.data.selectedConfig`, state.core),
-      setIsOpen: getDataObject(`resources.${constant.NAME_REDUCER}.data.setIsOpen`, state.core),
+      isOpen: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpen`, state.core),
     })
   })
 )(TranformConfigurationPage);

@@ -9,7 +9,7 @@ const initialState = {
   data: [],
   refreshPage: false,
   config: new Config(),
-  setIsOpen: false
+  isOpen: false
 };
 
 export default {
@@ -29,7 +29,7 @@ export default {
       case actions.SUCCESS:
       case actions.SET_CONFIG:
       case actions.SET_SELECTED_CONFIG:
-      case actions.ISOPEN_DIALOG:
+      case actions.SET_IS_OPEN_DIALOG:
         return {
           ...state,
           ...payload

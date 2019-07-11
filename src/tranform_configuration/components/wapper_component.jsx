@@ -161,7 +161,6 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
     setSelectedConfig,
     setIsOpen
   } = props;
-  console.log({ setIsOpen });
 
   const configs = data.data || [];
   const [selectedConfig] = useState(null);
@@ -325,7 +324,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
       />
       <AddDialog
         // isOpen={isOpenAddModal}
-        setIsOpen={true}
+        setIsOpen={setIsOpen}
         createData={createData}
         pending={pending}
         success={success}

@@ -184,9 +184,9 @@ export const setError = () => {
 }
 export const setIsOpen = () => {
   return {
-    type: actions.ISOPEN_DIALOG,
+    type: actions.SET_IS_OPEN_DIALOG,
     payload: {
-      setIsOpen: false
+      isOpen: false
     },
     meta: {
       resource: actions.NAME_REDUCER
