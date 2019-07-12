@@ -87,6 +87,7 @@ export default compose(
       isOpenAdd: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpenAdd`, state.core),
       isOpenEdit: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpenEdit`, state.core),
       isOpenDel: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpenDel`, state.core),
+      isErrorsConfig: getDataObject(`resources.${constant.NAME_REDUCER}.data.isErrorsConfig`, state.core),
     })
   })
 )(TranformConfigurationPage);

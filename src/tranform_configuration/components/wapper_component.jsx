@@ -18,9 +18,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TablePagination from "@material-ui/core/TablePagination";
-import AddDialog from "./Dialogs/AddDialog";
-import EditDialog from "./Dialogs/EditDialog";
-import DeleteDialog from "./Dialogs/DeleteDialog";
+import { AddDialog, EditDialog, DeleteDialog } from './Dialogs'
 const styles: any = (theme: any) => {
   return {
     container: {
@@ -160,14 +158,11 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
     isOpenEdit,
     isOpenDel,
     setIsOpenEditDialog,
-    setIsOpenDelDialog
+    setIsOpenDelDialog,
   } = props;
 
   const configs = data.data || [];
   const [selectedConfig] = useState(null);
-  // const [isOpenAddModal, setIsOpenAddModal] = useState();
-  // const [isOpenDelModal, setIsOpenDelModal] = useState(false);
-  // const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);

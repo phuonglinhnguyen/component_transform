@@ -6,8 +6,9 @@ import {
   getDataObject
 } from "@dgtx/coreui";
 import { showNotification } from '@dgtx/coreui'
-import { setPending, setSuccess, setError } from './main'
+import { setPending, setSuccess, setError, setIsOpenAddDialog, setConfig } from './main'
 import * as actions from '../../actions/tranform_configuration';
+import Config from "../../../tranform_configuration/components/Models/Config";
 export const callAPIGetData = (input: any) => async (
   dispatch: any,
   getState: any
@@ -102,7 +103,10 @@ export const callAPICreateData = (input: any) => async (
       { data: data, projectId: projectId },
       {
         onSuccess: async () => {
+          dispatch(setSuccess())
+          dispatch(setConfig(new Config()))
           dispatch(showNotification(`${actions.KEY_TRANSLATE}.add_success`, 'success', { i18n: true, duration: 1500 }));
+          dispatch(setIsOpenAddDialog(false))
         },
         onFailure: () => {
           dispatch(setError());

@@ -54,15 +54,15 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
     createData,
     config,
     setConfig,
+    isErrorsConfig
   } = props;
   const [cronValue, setCronValue] = useState(" ");
-  console.log("isAdd", isOpen);
 
-  const onAgree = e => {
+  const onAgree = () => {
     createData(config);
-    setIsOpen(false);
-    setConfig(config);
   };
+  console.log({ pending });
+
   return (
     <Dialog
       open={isOpen}
@@ -78,6 +78,7 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           setConfig={setConfig}
           cronValue={cronValue}
           setCronValue={setCronValue}
+          {...props}
         />
       </DialogContent>
 
@@ -92,7 +93,8 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           onClick={onAgree}
           color="primary"
           autoFocus
-        // disabled={pending ? pending : refreshPage}
+          disabled={pending || refreshPage || isErrorsConfig}
+        // 
         >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>

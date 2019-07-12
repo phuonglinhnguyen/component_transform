@@ -5,8 +5,9 @@ import {
   callAPIDeleteData,
   callAPIUpdateData
 } from "./call_api";
-import { cloneDeep, isEmpty } from 'lodash';
+import { cloneDeep, isEmpty, isNumber } from 'lodash';
 import { showNotification } from "@dgtx/coreui";
+import { isNumberLiteral } from "@babel/types";
 
 export const getData = (projectId: any) => async (
   dispatch: any,
@@ -63,23 +64,27 @@ export const createData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  const projectId = config.project_id;
-  await dispatch(
-    callAPICreateData({
-      data: config,
-      projectId: projectId
-    })
-  );
-  await dispatch(getDataTranform(projectId));
-  dispatch({
-    type: actions.TRANFORM_CONFIGURATION_CREATE_DATA,
-    payload: {
-      config
-    },
-    meta: {
-      resource: actions.NAME_REDUCER
-    }
-  });
+  const checkConfigResult = checkConfigValidator(config)
+
+  if (checkConfigResult) {
+    const projectId = config.project_id;
+    await dispatch(
+      callAPICreateData({
+        data: config,
+        projectId: projectId
+      })
+    );
+    await dispatch(getDataTranform(projectId));
+    dispatch({
+      type: actions.TRANFORM_CONFIGURATION_CREATE_DATA,
+      payload: {
+        config
+      },
+      meta: {
+        resource: actions.NAME_REDUCER
+      }
+    });
+  }
 };
 
 // updateDataTransform
@@ -135,7 +140,9 @@ export const deleteData = (config: any) => async (
 export const unmount = () => async (dispatch: any, getState: any) => {
   dispatch({
     type: actions.TRANFORM_CONFIGURATION_UNMOUNT,
-    payload: {},
+    payload: {
+       
+    },
     meta: {
       resource: actions.NAME_REDUCER
     }
@@ -243,10 +250,12 @@ export const setConfig = (config: any) => async (
   })
 
 };
+
 export const setSelectedConfig = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
+  checkErrorsConfig(config)
   dispatch({
     type: actions.SET_SELECTED_CONFIG,
     payload: {
@@ -258,3 +267,52 @@ export const setSelectedConfig = (config: any) => async (
   })
 
 };
+
+const checkConfigValidator = (config: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  let result = true;
+
+  // if (config && isEmpty(config.name)) {
+  //   setConfigValidator('name', true)
+  //   result = false
+  // }
+  if (config) {
+    if (isEmpty(config.name)) {
+      setConfigValidator('name', true)
+      result = false
+    } else if(ddsd){
+      setConfigValidator('name', true)
+      result = false
+    }
+
+  }
+  if (config && isEmpty(config.dictionary.fieldKey)) {
+    result = false
+  }
+  if (config && isEmpty(config.dictionary.port) || isNumber(config.dictionary.port)) {
+    result = false
+  }
+
+  return result
+};
+
+const setConfigValidator = (name, value) => async (
+  dispatch: any,
+  getState: any
+) => {
+  const { core } = cloneDeep(getState());
+  const configValidators = getDataObject(`resources.${actions.NAME_REDUCER}.data.configValidators`, core);
+  configValidators[name].error = value
+  // dispatch
+  dispatch({
+    type: actions.SET_CONFIG_VALIDATOR,
+    payload: {
+      configValidators
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  })
+}

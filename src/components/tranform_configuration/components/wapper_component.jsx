@@ -19,9 +19,7 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
-
-import AddDialog from "./Dialogs/AddDialog";
-import EditDialog from "./Dialogs/EditDialog";
+import { AddDialog, EditDialog, DeleteDialog } from './Dialogs'
 
 const styles: any = (theme: any) => {
   return {
@@ -123,6 +121,7 @@ const WapperComponent: React.FC<IDefautProps> = props => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedConfig, setSelectedConfig] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenDelModal, setIsOpenDelModal] = useState(false);
   const [strSearch, setStrSearch] = useState(null);
   const [configs, setConfigs] = useState(() => {
     return getDataTranform();
@@ -261,6 +260,14 @@ const WapperComponent: React.FC<IDefautProps> = props => {
         setIsOpen={setIsOpenEditModal}
         configs={configs}
         setConfigs={setConfigs}
+        config={selectedConfig}
+        setConfig={setSelectedConfig}
+        selectedList={selectedConfig}
+        setSelectedList={setSelectedConfig}
+      />
+      <DeleteDialog
+        isOpen={isOpenDelModal}
+        setIsOpen={setIsOpenDelModal}
         config={selectedConfig}
         setConfig={setSelectedConfig}
         selectedList={selectedConfig}

@@ -21,7 +21,8 @@ import Grid from "@material-ui/core/Grid";
 import TransformDialog from "./Dialogs/TranformDialog";
 import Dictionary from "./Dictionary";
 import Rules from "./Rules";
-import { isRequired, configValidators, setConfigValidator } from "../services";
+
+// import { isRequired, configValidators, setConfigValidator } from "../services";
 
 const styles: any = (theme: any) => {
   return {
@@ -93,7 +94,7 @@ export interface IDefautState {
   setIsOpenTransformModal?: any;
 }
 const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig, isOpen, setIsOpen } = props;
+  const { classes, config, setConfig, isOpen, setIsOpen, configValidators, setConfigValidator } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
 
