@@ -124,30 +124,62 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       [name]: value
     });
   };
+
   const checkIsEmpty = (newDictItem) => {
     let result = false;
-    if (
-      isEmpty(newDictItem.fieldKey) ||
-      isEmpty(newDictItem.host) ||
-      isEmpty(newDictItem.port) ||
-      isEmpty(newDictItem.username) ||
-      isEmpty(newDictItem.password) ||
-      isEmpty(newDictItem.database_name) ||
-      isEmpty(newDictItem.schema_name)
-    ) {
-      result = true;
-      setConfigValidator("fieldKey", !newDictItem.fieldKey ? true : false)
-      setConfigValidator("host", !newDictItem.host ? true : false)
-      setConfigValidator("port", !newDictItem.port ? true : false)
-      setConfigValidator("username", !newDictItem.username ? true : false)
-      setConfigValidator("password", !newDictItem.password ? true : false)
-      setConfigValidator("database_name", !newDictItem.database_name ? true : false)
-      setConfigValidator("schema_name", !newDictItem.schema_name ? true : false)
+    console.log("newDictItem Check", newDictItem);
+
+    if (isEmpty(newDictItem.fieldKey)) {
+      result = true
+      setConfigValidator("fieldKey", true)
+    } else {
+      setConfigValidator("fieldKey", false)
     }
+
+    if (isEmpty(newDictItem.host)) {
+      result = true
+      setConfigValidator("host", true)
+    } else {
+      setConfigValidator("host", false)
+    }
+
+    if (isEmpty(newDictItem.port)) {
+      result = true
+      setConfigValidator("port", true)
+    } else {
+      setConfigValidator("port", false)
+    }
+
+    if (isEmpty(newDictItem.username)) {
+      result = true
+      setConfigValidator("username", true)
+    } else {
+      setConfigValidator("username", false)
+    }
+    if (isEmpty(newDictItem.password)) {
+      result = true
+      setConfigValidator("password", true)
+    } else {
+      setConfigValidator("password", false)
+    }
+
+    if (isEmpty(newDictItem.database_name)) {
+      result = true
+      setConfigValidator("database_name", true)
+    } else {
+      setConfigValidator("database_name", false)
+    }
+
+    if (isEmpty(newDictItem.schema_name)) {
+      result = true
+      setConfigValidator("schema_name", true)
+    } else {
+      setConfigValidator("schema_name", false)
+    }
+
     return result
   }
-
-   const setNull = () => {
+  const setNull = () => {
     setConfigValidator('fieldKey', false)
     setConfigValidator('host', false)
     setConfigValidator('port', false)
@@ -175,16 +207,16 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         }
         return _dictItem;
       });
-      console.log(newDictionary);
 
-      const checkEmpty = checkIsEmpty(newDictionary)
-      if (checkEmpty) {
+      const checkEmptyEdit = checkIsEmpty(newDictionary)
+      if (!checkEmptyEdit) {
         setConfig({
           ...config,
           dictionary: newDictionary
         });
         setMode("add");
         setDictItem(null);
+        setNull()
       }
     }
   };
@@ -394,7 +426,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             label="Query"
             fullWidth
             value={chips || []}
-            onChange={(chip) => onChangeQuery(chip)}
+            onAdd={(chip) => onChangeQuery(chip)}
             onDelete={(chip) => onDeleteQuery(chip)}
           />
         </Grid>
