@@ -100,25 +100,27 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentArray,
     mode,
     setMode,
-    configValidators, setConfigValidator
+    configValidators, 
+    setConfigValidator
   } = props;
+
   const checkIsEmpty = (contentName) => {
-    let result = false;
+    let result = true;
     if (isEmpty(contentName)) {
-      result = true
+      result = false
       setConfigValidator("contentName", true)
     } else {
       setConfigValidator("contentName", false)
     }
     return result
   }
+
   const checkIsEmptyItem = (contentItem) => {
-    let result = false;
+    let result = true;
     console.log({ contentItem });
-    // console.log("dddd", contentItem.dataKey);
 
     if (contentItem && contentItem.dataKey && isEmpty(contentItem.dataKey)) {
-      result = true
+      result = false
       setConfigValidator("dataKey", true)
     } else {
       setConfigValidator("dataKey", false)
@@ -126,6 +128,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
 
     return result
   }
+
   const onChangeText = (name, value) => {
     if (mode === "add") {
       setContentItem({
@@ -142,6 +145,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
       });
     }
   };
+
   const onChangeContentName = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -156,28 +160,28 @@ const ContentItem: React.FC<IDefautProps> = props => {
 
     setContentName(value)
   }
-  const onAddContentItem = () => {
 
+  const onAddContentItem = () => {
     if (mode === "add") {
       const newContentArray = [...contentArray];
       const checkEmptyName = checkIsEmpty(contentName)
       const checkEmptyItem = checkIsEmptyItem(contentItem)
-      if (!checkEmptyName || !checkEmptyItem) {
+      if (checkEmptyName || checkEmptyItem) {
         newContentArray.unshift({
           contentName,
           contentItem
         });
-        setConfig({
-          ...config,
-          rules: {
-            ...config.rules,
-            content: {
-              ...config.rules.content,
-              [contentName]: contentItem
-            }
-          }
-        });
-        setContentArray(newContentArray);
+        // setConfig({
+        //   ...config,
+        //   rules: {
+        //     ...config.rules,
+        //     content: {
+        //       ...config.rules.content,
+        //       [contentName]: contentItem
+        //     }
+        //   }
+        // });
+        // setContentArray(newContentArray);
         setContentItem(null);
         setContentName(null);
       }
@@ -205,6 +209,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
       setContentItem(null);
     }
   };
+
   const onCancel = () => {
     setMode("add");
     setContentItem(null);

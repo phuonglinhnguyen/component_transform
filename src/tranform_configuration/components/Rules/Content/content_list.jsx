@@ -218,7 +218,7 @@ const ContentList: React.FC<IDefautProps, IDefautState> = props => {
                 </ListItemIcon>
                 <ListItemText
                   primary={contentItem.contentName}
-                  secondary={contentItem.contentItem.dataKey}
+                  // secondary={contentItem.contentItem.dataKey}
                 />
                 <ListItemSecondaryAction>
                   <IconButton

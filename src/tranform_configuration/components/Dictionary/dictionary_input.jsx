@@ -126,52 +126,50 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   };
 
   const checkIsEmpty = (newDictItem) => {
-    let result = false;
+    let result = true;
     if (isEmpty(newDictItem.fieldKey)) {
-      result = true
+      result = false
       setConfigValidator("fieldKey", true)
-      console.log("isEmpty fieldKey true");
     } else {
       setConfigValidator("fieldKey", false)
-      console.log("isEmpty fieldKey true");
     }
 
     if (isEmpty(newDictItem.host)) {
-      result = true
+      result = false
       setConfigValidator("host", true)
     } else {
       setConfigValidator("host", false)
     }
 
     if (isEmpty(newDictItem.port)) {
-      result = true
+      result = false
       setConfigValidator("port", true)
     } else {
       setConfigValidator("port", false)
     }
 
     if (isEmpty(newDictItem.username)) {
-      result = true
+      result = false
       setConfigValidator("username", true)
     } else {
       setConfigValidator("username", false)
     }
     if (isEmpty(newDictItem.password)) {
-      result = true
+      result = false
       setConfigValidator("password", true)
     } else {
       setConfigValidator("password", false)
     }
 
     if (isEmpty(newDictItem.database_name)) {
-      result = true
+      result = false
       setConfigValidator("database_name", true)
     } else {
       setConfigValidator("database_name", false)
     }
 
     if (isEmpty(newDictItem.schema_name)) {
-      result = true
+      result = false
       setConfigValidator("schema_name", true)
     } else {
       setConfigValidator("schema_name", false)
@@ -193,7 +191,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     if (mode === "add") {
       const newDictItem = { ...dictItem };
       const checkEmpty = checkIsEmpty(newDictItem)
-      if (!checkEmpty) {
+      if (checkEmpty) {
         setConfig({
           ...config,
           dictionary: [...config.dictionary, newDictItem]
@@ -209,7 +207,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       });
 
       const checkEmptyEdit = checkIsEmpty(dictItem)
-      if (!checkEmptyEdit) {
+      if (checkEmptyEdit) {
         setConfig({
           ...config,
           dictionary: newDictionary
