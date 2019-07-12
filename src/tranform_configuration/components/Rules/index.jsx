@@ -28,7 +28,7 @@ export interface IDefautProps {
 }
 
 const Rules: React.FC<IDefautProps> = props => {
-  const { classes, config, setConfig } = props;
+  const { classes, config, setConfig, configValidators, setConfigValidator } = props;
   return (
     <React.Fragment>
       <Grid className={classes.wrapForm} spacing={24}>
@@ -36,12 +36,16 @@ const Rules: React.FC<IDefautProps> = props => {
           <Common
             config={config}
             setConfig={setConfig}
+            setConfigValidator={setConfigValidator}
+            configValidators={configValidators}
           />
         </Grid>
         <Grid item xs={12} md={6} className={classes.formControl}>
           <Content
             config={config}
             setConfig={setConfig}
+            setConfigValidator={setConfigValidator}
+            configValidators={configValidators}
           />
         </Grid>
       </Grid>

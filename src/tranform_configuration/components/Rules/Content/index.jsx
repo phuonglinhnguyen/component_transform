@@ -27,8 +27,8 @@ export interface IDefautState {
   setContentArray?: any;
 }
 
-const Content: React.FC<IDefautProps,IDefautState> = props => {
-  const { config, setConfig} = props;
+const Content: React.FC<IDefautProps, IDefautState> = props => {
+  const { config, setConfig, configValidators, setConfigValidator } = props;
 
   const content = get(config, "rules.content", {});
   const [selectedContentItem, setSelectedContentItem] = useState(null);
@@ -48,6 +48,7 @@ const Content: React.FC<IDefautProps,IDefautState> = props => {
   return (
     <React.Fragment>
       <ContentInput
+        {...props}
         content={content}
         config={config}
         setConfig={setConfig}
@@ -70,6 +71,7 @@ const Content: React.FC<IDefautProps,IDefautState> = props => {
         setMode={setMode}
       />
       <ContentList
+        {...props}
         setMode={setMode}
         content={content}
         contentName={contentName}

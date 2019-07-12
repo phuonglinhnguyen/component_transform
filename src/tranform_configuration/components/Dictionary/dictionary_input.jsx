@@ -127,13 +127,13 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
 
   const checkIsEmpty = (newDictItem) => {
     let result = false;
-    console.log("newDictItem Check", newDictItem);
-
     if (isEmpty(newDictItem.fieldKey)) {
       result = true
       setConfigValidator("fieldKey", true)
+      console.log("isEmpty fieldKey true");
     } else {
       setConfigValidator("fieldKey", false)
+      console.log("isEmpty fieldKey true");
     }
 
     if (isEmpty(newDictItem.host)) {
@@ -208,7 +208,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         return _dictItem;
       });
 
-      const checkEmptyEdit = checkIsEmpty(newDictionary)
+      const checkEmptyEdit = checkIsEmpty(dictItem)
       if (!checkEmptyEdit) {
         setConfig({
           ...config,

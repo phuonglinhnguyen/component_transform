@@ -113,7 +113,9 @@ const CommonList: React.FC<IDefautProps, IDefautState> = props => {
     setConfig,
     config,
     setSelectedCommonValue,
-    setSelectedCommonName
+    setSelectedCommonName,
+    setConfigValidator,
+    configValidators
   } = props;
 
   const [dense] = useState(false);
@@ -153,7 +155,10 @@ const CommonList: React.FC<IDefautProps, IDefautState> = props => {
     const strToSearch = key.toLowerCase();
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
+  const setNull = () => {
+    setConfigValidator('commonName', false)
 
+  }
   return (
     <React.Fragment>
       <div className={classes.customSearch}>
@@ -183,6 +188,7 @@ const CommonList: React.FC<IDefautProps, IDefautState> = props => {
                 onClick={() => {
                   setSelectedCommonName(key);
                   setSelectedCommonValue(commonItem[key]);
+                  setNull()
                   setMode("edit");
                 }}
               >

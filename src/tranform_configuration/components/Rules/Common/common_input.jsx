@@ -9,7 +9,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import AceEditor from "react-ace";
 import { isEmpty } from "lodash";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { isRequired, configValidators, setConfigValidator } from "../../../services";
+import { isRequired } from "../../../services";
 const styles: any = (theme: any) => {
   return {
     formControl: {
@@ -96,24 +96,43 @@ const Common: React.FC<IDefautProps> = props => {
     commonName,
     setCommonName,
     commonValue,
-    setCommonValue
+    setCommonValue,
+    configValidators,
+    setConfigValidator
   } = props;
+  const checkIsEmptyCommon = (commonName) => {
+    let result = false;
 
+    if (!commonName) {
+      setConfigValidator("commonName", true)
+      result = true
+    } else {
+      setConfigValidator("commonName", false)
+    }
+
+    return result
+  }
   const onAddCommon = () => {
     if (mode === "add") {
       const newConmonItem = { [commonName]: commonValue };
-      const newCommon = [...common];
-      newCommon.unshift(newConmonItem);
+      const checkEmpty = checkIsEmptyCommon(commonName)
+      console.log({ checkEmpty });
 
-      setConfig({
-        ...config,
-        rules: {
-          ...config.rules,
-          common: newCommon
-        }
-      });
-      setCommonName(null);
-      setCommonValue(null);
+      if (!checkEmpty) {
+        const newCommon = [...common];
+        newCommon.unshift(newConmonItem);
+
+        setConfig({
+          ...config,
+          rules: {
+            ...config.rules,
+            common: newCommon
+          }
+        });
+        setCommonName(null);
+        setCommonValue(null);
+      }
+
     } else if (mode === "edit") {
       const newCommons = common.map(newItem => {
         const key = Object.keys(newItem)[0];
@@ -187,7 +206,7 @@ const Common: React.FC<IDefautProps> = props => {
         onChange={onChangeCommonName}
         disabled={mode === "edit"}
       />
-      <FormHelperText className={classes.error}>{configValidators['commonName'].error ? configValidators['commonName'].message : '' }</FormHelperText>
+      <FormHelperText className={classes.error}>{configValidators['commonName'].error ? configValidators['commonName'].message : ''}</FormHelperText>
       <AceEditor
         name="commonValue"
         className={classes.ace}

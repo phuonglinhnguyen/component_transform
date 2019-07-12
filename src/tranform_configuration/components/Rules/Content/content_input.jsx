@@ -11,7 +11,7 @@ import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
 import AceEditor from "react-ace";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { isRequired, configValidators, setConfigValidator } from "../../../services";
+import { isRequired } from "../../../services";
 const styles: any = (theme: any) => {
   return {
     formControl: {
@@ -99,9 +99,33 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentName,
     setContentArray,
     mode,
-    setMode
+    setMode,
+    configValidators, setConfigValidator
   } = props;
+  const checkIsEmpty = (contentName) => {
+    let result = false;
+    if (isEmpty(contentName)) {
+      result = true
+      setConfigValidator("contentName", true)
+    } else {
+      setConfigValidator("contentName", false)
+    }
+    return result
+  }
+  const checkIsEmptyItem = (contentItem) => {
+    let result = false;
+    console.log({ contentItem });
+    // console.log("dddd", contentItem.dataKey);
 
+    if (contentItem && contentItem.dataKey && isEmpty(contentItem.dataKey)) {
+      result = true
+      setConfigValidator("dataKey", true)
+    } else {
+      setConfigValidator("dataKey", false)
+    }
+
+    return result
+  }
   const onChangeText = (name, value) => {
     if (mode === "add") {
       setContentItem({
@@ -133,31 +157,31 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentName(value)
   }
   const onAddContentItem = () => {
-    if (
-      configValidators['contentName'].error || configValidators['dataKey'].error ||
-      isEmpty(contentItem) || isEmpty(contentName) || isEmpty(contentItem.dataKey)
-    ) {
-      return
-    }
+
     if (mode === "add") {
       const newContentArray = [...contentArray];
-      newContentArray.unshift({
-        contentName,
-        contentItem
-      });
-      setConfig({
-        ...config,
-        rules: {
-          ...config.rules,
-          content: {
-            ...config.rules.content,
-            [contentName]: contentItem
+      const checkEmptyName = checkIsEmpty(contentName)
+      const checkEmptyItem = checkIsEmptyItem(contentItem)
+      if (!checkEmptyName || !checkEmptyItem) {
+        newContentArray.unshift({
+          contentName,
+          contentItem
+        });
+        setConfig({
+          ...config,
+          rules: {
+            ...config.rules,
+            content: {
+              ...config.rules.content,
+              [contentName]: contentItem
+            }
           }
-        }
-      });
-      setContentArray(newContentArray);
-      setContentItem(null);
-      setContentName(null);
+        });
+        setContentArray(newContentArray);
+        setContentItem(null);
+        setContentName(null);
+      }
+
     } else if (mode === "edit") {
       const newContentArray = contentArray.map(_contentItem => {
         if (_contentItem.contentItem.dataKey === contentItem.dataKey) {

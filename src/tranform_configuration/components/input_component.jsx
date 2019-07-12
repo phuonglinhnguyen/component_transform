@@ -295,7 +295,12 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
           configValidators={configValidators}
         />
         <FormLabel className={classes.titleField}>Rules</FormLabel>
-        <Rules config={config} setConfig={setConfig} />
+        <Rules
+          config={config}
+          setConfig={setConfig}
+          setConfigValidator={setConfigValidator}
+          configValidators={configValidators}
+        />
       </div>
     </React.Fragment>
   );
