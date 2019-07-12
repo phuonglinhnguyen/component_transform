@@ -1,14 +1,38 @@
 import * as actions from "../actions/tranform_configuration";
 import { cloneDeep } from "lodash";
 import Config from "../../views/tranform_configuration/components/Models/Config";
-const configValidators = {
+export const configValidators = {
   'name': {
     error: false,
-    message: `The field name is wrong!`
+    message: `The field name is required!`
   },
   'fieldKey': {
     error: false,
     message: `The field fieldKey is required!`
+  },
+  'host': {
+    error: false,
+    message: `The field host is required!`
+  },
+  'port': {
+    error: false,
+    message: `The field port is required!`
+  },
+  'username': {
+    error: false,
+    message: `The field username is required!`
+  },
+  'password': {
+    error: false,
+    message: `The field password is required!`
+  },
+  'database_name': {
+    error: false,
+    message: `The field database name is required!`
+  },
+  'schema_name': {
+    error: false,
+    message: `The field scheme name is required!`
   },
   'commonName': {
     error: false,
@@ -33,8 +57,7 @@ const initialState = {
   isOpenAdd: false,
   isOpenEdit: false,
   isOpenDel: false,
-  isErrorsConfig: true,
-  configValidators
+  configValidators,
 };
 
 export default {
@@ -57,7 +80,7 @@ export default {
       case actions.SET_IS_OPEN_ADD_DIALOG:
       case actions.SET_IS_OPEN_EDIT_DIALOG:
       case actions.SET_IS_OPEN_DEL_DIALOG:
-      case actions.SET_ERRORS_CONFIG:
+      case actions.SET_IS_CLOSE_DIALOG:
       case actions.SET_CONFIG_VALIDATOR:
         return {
           ...state,

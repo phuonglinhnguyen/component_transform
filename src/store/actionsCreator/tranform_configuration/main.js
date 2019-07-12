@@ -1,4 +1,5 @@
 import * as actions from "../../actions/tranform_configuration";
+import { getDataObject } from "@dgtx/coreui";
 import {
   callAPIGetData,
   callAPICreateData,
@@ -7,7 +8,8 @@ import {
 } from "./call_api";
 import { cloneDeep, isEmpty, isNumber } from 'lodash';
 import { showNotification } from "@dgtx/coreui";
-import { isNumberLiteral } from "@babel/types";
+import Config from "../../../views/tranform_configuration/components/Models/Config";
+import { configValidators as default_configValidator } from '../../reducers/tranform_configuration_reducer'
 
 export const getData = (projectId: any) => async (
   dispatch: any,
@@ -64,8 +66,7 @@ export const createData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  const checkConfigResult = checkConfigValidator(config)
-
+  const checkConfigResult = await dispatch(checkConfigValidator(config))
   if (checkConfigResult) {
     const projectId = config.project_id;
     await dispatch(
@@ -85,6 +86,7 @@ export const createData = (config: any) => async (
       }
     });
   }
+
 };
 
 // updateDataTransform
@@ -92,25 +94,28 @@ export const updateData = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  const projectId = cloneDeep(config.project_id);
-  delete config.project_id;
-  await dispatch(
-    callAPIUpdateData({
-      data: config,
-      projectId: projectId,
-      id: config.id
-    })
-  );
-  await dispatch(getDataTranform(projectId));
-  dispatch({
-    type: actions.TRANFORM_CONFIGURATION_UPDATE_DATA,
-    payload: {
-      config
-    },
-    meta: {
-      resource: actions.NAME_REDUCER
-    }
-  });
+  const checkConfigResult = await dispatch(checkConfigValidator(config))
+  if (checkConfigResult) {
+    const projectId = cloneDeep(config.project_id);
+    delete config.project_id;
+    await dispatch(
+      callAPIUpdateData({
+        data: config,
+        projectId: projectId,
+        id: config.id
+      })
+    );
+    await dispatch(getDataTranform(projectId));
+    dispatch({
+      type: actions.TRANFORM_CONFIGURATION_UPDATE_DATA,
+      payload: {
+        config
+      },
+      meta: {
+        resource: actions.NAME_REDUCER
+      }
+    });
+  }
 };
 
 // deleteDataTransform
@@ -140,9 +145,7 @@ export const deleteData = (config: any) => async (
 export const unmount = () => async (dispatch: any, getState: any) => {
   dispatch({
     type: actions.TRANFORM_CONFIGURATION_UNMOUNT,
-    payload: {
-       
-    },
+    payload: {},
     meta: {
       resource: actions.NAME_REDUCER
     }
@@ -222,6 +225,20 @@ export const setIsOpenDelDialog = (value) => {
     }
   };
 }
+export const setIsCloseDialog = (value) => {
+  return {
+    type: actions.SET_IS_CLOSE_DIALOG,
+    payload: {
+      isOpenAdd: value,
+      isOpenEdit: value,
+      config: new Config(),
+      configValidators: default_configValidator
+    },
+    meta: {
+      resource: actions.NAME_REDUCER
+    }
+  };
+}
 export const resetStateAPI = () => {
   return {
     type: actions.RESET,
@@ -250,12 +267,10 @@ export const setConfig = (config: any) => async (
   })
 
 };
-
 export const setSelectedConfig = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
-  checkErrorsConfig(config)
   dispatch({
     type: actions.SET_SELECTED_CONFIG,
     payload: {
@@ -268,45 +283,39 @@ export const setSelectedConfig = (config: any) => async (
 
 };
 
+
 const checkConfigValidator = (config: any) => async (
   dispatch: any,
   getState: any
 ) => {
   let result = true;
-
-  // if (config && isEmpty(config.name)) {
-  //   setConfigValidator('name', true)
-  //   result = false
-  // }
   if (config) {
+    console.log(config.dictionary)
     if (isEmpty(config.name)) {
-      setConfigValidator('name', true)
-      result = false
-    } else if(ddsd){
-      setConfigValidator('name', true)
+      await dispatch(setConfigValidator('name', true))
       result = false
     }
-
-  }
-  if (config && isEmpty(config.dictionary.fieldKey)) {
-    result = false
-  }
-  if (config && isEmpty(config.dictionary.port) || isNumber(config.dictionary.port)) {
-    result = false
+    // if (!config.dictionary.length) {
+    //   console.log('asdjaksdjas')
+    //   result = false
+    // }
+   
+  } else {
+    result = false;
   }
 
   return result
 };
 
-const setConfigValidator = (name, value) => async (
+export const setConfigValidator = (name, value) => async (
   dispatch: any,
   getState: any
 ) => {
   const { core } = cloneDeep(getState());
-  const configValidators = getDataObject(`resources.${actions.NAME_REDUCER}.data.configValidators`, core);
+  let configValidators = getDataObject(`resources.${actions.NAME_REDUCER}.data.configValidators`, core);
   configValidators[name].error = value
-  // dispatch
-  dispatch({
+
+  await dispatch({
     type: actions.SET_CONFIG_VALIDATOR,
     payload: {
       configValidators

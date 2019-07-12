@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { isEmpty, toArray, get } from "lodash";
+import React from "react";
+import { get, isEmpty } from "lodash";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -11,7 +11,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import ChipInput from "@harshitpant/material-ui-chip-input";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { isRequired, configValidators, setConfigValidator } from "../../services";
+import { isRequired } from "../../services";
 
 const styles: any = (theme: any) => {
   return {
@@ -97,7 +97,8 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     setDictItem,
     mode,
     dictionary,
-    setMode
+    setMode, setConfigValidator,
+    configValidators
   } = props;
   const query = get(dictItem, "query", {});
   const queryArray = Object.keys(query)
@@ -119,25 +120,50 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
       [name]: value
     });
   };
+  const checkIsEmpty = (newDictItem) => {
+    let result = false;
+    if (
+      isEmpty(newDictItem.fieldKey) ||
+      isEmpty(newDictItem.host) ||
+      isEmpty(newDictItem.port) ||
+      isEmpty(newDictItem.username) ||
+      isEmpty(newDictItem.password) ||
+      isEmpty(newDictItem.database_name) ||
+      isEmpty(newDictItem.schema_name)
+    ) {
+      result = true;
+      setConfigValidator("fieldKey", !newDictItem.fieldKey ? true : false)
+      setConfigValidator("host", !newDictItem.host ? true : false)
+      setConfigValidator("port", !newDictItem.port ? true : false)
+      setConfigValidator("username", !newDictItem.username ? true : false)
+      setConfigValidator("password", !newDictItem.password ? true : false)
+      setConfigValidator("database_name", !newDictItem.database_name ? true : false)
+      setConfigValidator("schema_name", !newDictItem.schema_name ? true : false)
+    }
+    return result
+  }
 
+  const setNull = () => {
+    setConfigValidator('fieldKey', false)
+    setConfigValidator('host', false)
+    setConfigValidator('port', false)
+    setConfigValidator('username', false)
+    setConfigValidator('password', false)
+    setConfigValidator('database_name', false)
+    setConfigValidator('schema_name', false)
+  }
   const onAddDictionary = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-   
-    if (mode === "add") {
-      if (configValidators[name] && isRequired(value)) {
-        setConfigValidator(name, true)
-        
-      } else if (configValidators[name]) {
-        setConfigValidator(name, false)
-      }
-      const newDictItem = { ...dictItem };
 
+    if (mode === "add") {
+      const newDictItem = { ...dictItem };
+      const checkEmpty =checkIsEmpty(newDictItem)
+      if (!checkEmpty) {
         setConfig({
           ...config,
           dictionary: [...config.dictionary, newDictItem]
         });
         setDictItem(null);
+      }
     } else if (mode === "edit") {
       const newDictionary = dictionary.map(_dictItem => {
         if (_dictItem.fieldKey === dictItem.fieldKey) {
@@ -145,22 +171,28 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         }
         return _dictItem;
       });
+      console.log(newDictionary);
 
-      setConfig({
-        ...config,
-        dictionary: newDictionary
-      });
-      setMode("add");
-      setDictItem(null);
+      const checkEmpty = checkIsEmpty(newDictionary)
+      if (checkEmpty) {
+        setConfig({
+          ...config,
+          dictionary: newDictionary
+        });
+        setMode("add");
+        setDictItem(null);
+      }
     }
   };
+
   const onCancel = () => {
     setMode("add");
     setDictItem(null);
+    setNull()
   };
 
   const onChangeQuery = (chips) => {
-    const newQuery = {...query}
+    const newQuery = { ...query }
 
     for (const chip of chips) {
       newQuery[chip] = null
@@ -172,7 +204,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   }
 
   const onDeleteQuery = (chip) => {
-    const newQuery = {...query}
+    const newQuery = { ...query }
 
     delete newQuery[chip]
     setDictItem({
@@ -222,7 +254,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
               disabled={mode === "edit"}
             />
             <FormHelperText className={classes.error}>
-            {configValidators['fieldKey'].error ? configValidators['fieldKey'].message : ''}
+              {configValidators['fieldKey'].error ? configValidators['fieldKey'].message : ''}
             </FormHelperText>
           </Grid>
           <Grid item xs={6}>
@@ -254,23 +286,32 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
             <TextField
               name="host"
               label="Host"
+              error={configValidators['host'].error}
               className={classes.textField}
               margin="dense"
               onChange={onChangeText}
               variant="outlined"
               value={dictItem && dictItem.host ? dictItem.host : ""}
             />
+            <FormHelperText className={classes.error}>
+              {configValidators['host'].error ? configValidators['host'].message : ''}
+            </FormHelperText>
           </Grid>
           <Grid item xs={6}>
             <TextField
+              type="number"
               name="port"
               label="Port"
+              error={configValidators['port'].error}
               className={classes.textField}
               margin="dense"
               onChange={onChangeText}
               variant="outlined"
               value={dictItem && dictItem.port ? dictItem.port : ""}
             />
+            <FormHelperText className={classes.error}>
+              {configValidators['port'].error ? configValidators['port'].message : ''}
+            </FormHelperText>
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
@@ -279,12 +320,16 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
               name="username"
               label="Username"
               className={classes.textField}
+              error={configValidators['username'].error}
               type="text"
               margin="dense"
               onChange={onChangeText}
               variant="outlined"
               value={dictItem && dictItem.username ? dictItem.username : ""}
             />
+            <FormHelperText className={classes.error}>
+              {configValidators['username'].error ? configValidators['username'].message : ''}
+            </FormHelperText>
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -292,12 +337,16 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
               placeHolder="Password"
               label="Password"
               type="password"
+              error={configValidators['password'].error}
               className={classes.textField}
               margin="dense"
               onChange={onChangeText}
               variant="outlined"
               value={dictItem && dictItem.password ? dictItem.password : ""}
             />
+            <FormHelperText className={classes.error}>
+              {configValidators['password'].error ? configValidators['password'].message : ''}
+            </FormHelperText>
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
@@ -307,6 +356,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
               label="Database Name"
               className={classes.textField}
               type="text"
+              error={configValidators['database_name'].error}
               margin="dense"
               onChange={onChangeText}
               variant="outlined"
@@ -314,10 +364,14 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
                 dictItem && dictItem.database_name ? dictItem.database_name : ""
               }
             />
+            <FormHelperText className={classes.error}>
+              {configValidators['database_name'].error ? configValidators['database_name'].message : ''}
+            </FormHelperText>
           </Grid>
           <Grid item xs={6}>
             <TextField
               name="schema_name"
+              error={configValidators['schema_name'].error}
               label="Schema Name"
               type="text"
               className={classes.textField}
@@ -328,6 +382,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
                 dictItem && dictItem.schema_name ? dictItem.schema_name : ""
               }
             />
+            <FormHelperText className={classes.error}>
+              {configValidators['schema_name'].error ? configValidators['schema_name'].message : ''}
+            </FormHelperText>
           </Grid>
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">

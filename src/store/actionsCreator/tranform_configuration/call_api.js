@@ -6,9 +6,18 @@ import {
   getDataObject
 } from "@dgtx/coreui";
 import { showNotification } from '@dgtx/coreui'
-import { setPending, setSuccess, setError, setIsOpenAddDialog, setConfig } from './main'
+import { 
+  setPending, 
+  setSuccess, 
+  setError, 
+  setIsOpenAddDialog, 
+  setConfig, 
+  setIsOpenEditDialog, 
+  setIsOpenDelDialog 
+} from './main'
 import * as actions from '../../actions/tranform_configuration';
-import Config from "../../../tranform_configuration/components/Models/Config";
+import Config from "../../../views/tranform_configuration/components/Models/Config";
+
 export const callAPIGetData = (input: any) => async (
   dispatch: any,
   getState: any
@@ -36,61 +45,6 @@ export const callAPIGetData = (input: any) => async (
   return data;
 };
 
-export const callAPIDeleteData = (input: any) => async (
-  dispatch: any,
-  getState: any
-) => {
-  const { projectId, id } = input;
-  dispatch(setPending())
-  dispatch(
-    crudDelete("tranform_configuration", { id: id, projectId },
-      {
-        onSuccess: async () => {
-          dispatch(setSuccess());
-          dispatch(
-            showNotification(
-              `${actions.KEY_TRANSLATE}.delete_success`,
-              'success',
-              {
-                i18n: true,
-                duration: 1500
-              }));
-        },
-        onFailure: (error) => {
-          console.log(error);
-          dispatch(setError());
-          dispatch(showNotification(`${actions.KEY_TRANSLATE}.delete_error`, 'error', { i18n: true, duration: 1500 }));
-        }
-      }
-    )
-  );
-};
-
-export const callAPIUpdateData = (input: any) => async (
-  dispatch: any,
-  getState: any
-) => {
-  const { projectId, data, id } = input;
-  dispatch(setPending())
-  dispatch(
-    crudUpdate(
-      "tranform_configuration",
-      { data: data, projectId, id },
-      {
-        onSuccess: async () => {
-          dispatch(setSuccess());
-          dispatch(showNotification(`${actions.KEY_TRANSLATE}.edit_success`, 'success', { i18n: true, duration: 1500 }));
-        },
-        onFailure: (error) => {
-          console.log(error);
-          dispatch(setError());
-          dispatch(showNotification(`${actions.KEY_TRANSLATE}.edit_error`, 'error', { i18n: true, duration: 1500 }));
-        }
-      }
-    )
-  );
-};
-
 export const callAPICreateData = (input: any) => async (
   dispatch: any,
   getState: any
@@ -116,3 +70,62 @@ export const callAPICreateData = (input: any) => async (
     )
   );
 };
+
+export const callAPIUpdateData = (input: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  const { projectId, data, id } = input;
+  dispatch(setPending())
+  dispatch(
+    crudUpdate(
+      "tranform_configuration",
+      { data: data, projectId, id },
+      {
+        onSuccess: async () => {
+          dispatch(setSuccess());
+          dispatch(setConfig(null))
+          dispatch(showNotification(`${actions.KEY_TRANSLATE}.edit_success`, 'success', { i18n: true, duration: 1500 }));
+          dispatch(setIsOpenEditDialog(false))
+        },
+        onFailure: (error) => {
+          console.log(error);
+          dispatch(setError());
+          dispatch(showNotification(`${actions.KEY_TRANSLATE}.edit_error`, 'error', { i18n: true, duration: 1500 }));
+        }
+      }
+    )
+  );
+};
+
+export const callAPIDeleteData = (input: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  const { projectId, id } = input;
+  dispatch(setPending())
+  dispatch(
+    crudDelete("tranform_configuration", { id: id, projectId },
+      {
+        onSuccess: async () => {
+          dispatch(setSuccess());
+          dispatch(
+            showNotification(
+              `${actions.KEY_TRANSLATE}.delete_success`,
+              'success',
+              {
+                i18n: true,
+                duration: 1500
+              }));
+          dispatch(setIsOpenDelDialog(false))
+        },
+        onFailure: (error) => {
+          console.log(error);
+          dispatch(setError());
+          dispatch(showNotification(`${actions.KEY_TRANSLATE}.delete_error`, 'error', { i18n: true, duration: 1500 }));
+        }
+      }
+    )
+  );
+};
+

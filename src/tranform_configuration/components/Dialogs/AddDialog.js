@@ -3,16 +3,14 @@ import React, { useState } from "react";
 import { Translate } from "react-redux-i18n";
 import { KEY_TRANSLATE } from "../../../../store/actions/tranform_configuration";
 import { withStyles } from "@material-ui/core/styles";
-// import * as constants from '../../../store/actions/tranform_configuration'
 import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import { isEmpty } from 'lodash'
 import InputComponent from "../input_component";
-import Config from "../Models/Config";
 
 import "./dialog.css";
 
@@ -41,36 +39,47 @@ export interface IDefautProps {
   refreshPage?: any;
 }
 export interface IDefautState {
-  config?: any;
-  setConfig?: any;
   cronValue?: any;
   setCronValue?: any;
 }
 const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
   const {
     isOpen,
-    setIsOpen,
     classes,
     createData,
     config,
     setConfig,
-    isErrorsConfig
+    pending,
+    refreshPage,
+    setIsCloseDialog,
+    setConfigValidator,
+    configValidators
   } = props;
   const [cronValue, setCronValue] = useState(" ");
+  // console.log({ config });
 
   const onAgree = () => {
     createData(config);
   };
-  console.log({ pending });
-
   return (
     <Dialog
       open={isOpen}
-      onClose={() => setIsOpen(false)}
-      className={classes.test}
+      onClose={() => setIsCloseDialog(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
     >
       <DialogTitle className="tilte-dialog">
         {"Add Transform Config"}
+        {pending ?
+          <div className={classes.iconProgress}>
+            <CircularProgress
+              color="secondary"
+              size={40}
+            />
+          </div>
+          :
+          ""
+        }
       </DialogTitle>
       <DialogContent>
         <InputComponent
@@ -84,7 +93,7 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
 
       <DialogActions>
         <Button
-          onClick={() => setIsOpen(false)}
+          onClick={() => setIsCloseDialog(false)}
           color="primary"
         >
           <Translate value={`${KEY_TRANSLATE}.disagree`} />
@@ -93,21 +102,11 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
           onClick={onAgree}
           color="primary"
           autoFocus
-          disabled={pending || refreshPage || isErrorsConfig}
-        // 
+          disabled={pending ? pending : refreshPage}
         >
           <Translate value={`${KEY_TRANSLATE}.agree`} />
         </Button>
-        {/* {pending ?
-          <div className={classes.iconProgress}>
-            <CircularProgress
-              color="primary"
-              size={40}
-            />
-          </div>
-          :
-          ""
-        } */}
+
       </DialogActions>
     </Dialog>
   );

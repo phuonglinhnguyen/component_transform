@@ -12,7 +12,9 @@ import {
   setSelectedConfig,
   setIsOpenAddDialog,
   setIsOpenEditDialog,
-  setIsOpenDelDialog
+  setIsOpenDelDialog,
+  setIsCloseDialog,
+  setConfigValidator
 } from "../../../store/actionsCreator/tranform_configuration";
 import Reducer from "../../../store/reducers/tranform_configuration_reducer";
 import * as constant from "../../../store/actions/tranform_configuration";
@@ -44,7 +46,7 @@ class TranformConfigurationPage extends React.Component<LayoutDefautProps, any> 
   render() {
     const { match } = this.props;
     const projectId = getDataObject("params.projectid", match);
-   
+
     return (
       <React.Fragment>
         <WapperComponent
@@ -74,7 +76,9 @@ export default compose(
       setSelectedConfig,
       setIsOpenAddDialog,
       setIsOpenEditDialog,
-      setIsOpenDelDialog
+      setIsOpenDelDialog,
+      setIsCloseDialog,
+      setConfigValidator
     },
     mapState: (state: any) => ({
       data: getDataObject(`resources.${constant.NAME_REDUCER}.data`, state.core) || [],
@@ -87,7 +91,7 @@ export default compose(
       isOpenAdd: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpenAdd`, state.core),
       isOpenEdit: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpenEdit`, state.core),
       isOpenDel: getDataObject(`resources.${constant.NAME_REDUCER}.data.isOpenDel`, state.core),
-      isErrorsConfig: getDataObject(`resources.${constant.NAME_REDUCER}.data.isErrorsConfig`, state.core),
+      configValidators: getDataObject(`resources.${constant.NAME_REDUCER}.data.configValidators`, state.core),
     })
   })
 )(TranformConfigurationPage);

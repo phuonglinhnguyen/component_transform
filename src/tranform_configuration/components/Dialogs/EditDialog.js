@@ -39,48 +39,30 @@ export interface IDefautProps {
 
 const EditDialog: React.FC<IDefautProps> = props => {
   const {
+    classes,
     isOpen,
-    setIsOpen,
     config,
     setConfig,
     updateData,
+    pending,
+    refreshPage,
+    setIsCloseDialog
   } = props;
 
   const onAgree = () => {
     updateData(config)
-    setIsOpen(false);
-    setConfig(null);
   };
 
   return (
     <Dialog
       open={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={() => setIsCloseDialog(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle className="tilte-dialog">
         {"Edit Transform Config"}
-      </DialogTitle>
-      <DialogContent >
-        <InputComponent
-          config={config}
-          setConfig={setConfig}
-          editable={true}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setIsOpen(false)} color="primary">
-          <Translate value={`${KEY_TRANSLATE}.disagree`} />
-        </Button>
-        <Button
-          onClick={onAgree}
-          color="primary"
-          // disabled={pending ? pending : refreshPage}
-        >
-          <Translate value={`${KEY_TRANSLATE}.agree`} />
-        </Button>
-        {/* {pending ?
+        {pending ?
           <div className={classes.iconProgress}>
             <CircularProgress
               color="secondary"
@@ -89,7 +71,28 @@ const EditDialog: React.FC<IDefautProps> = props => {
           </div>
           :
           ""
-        } */}
+        }
+      </DialogTitle>
+      <DialogContent >
+        <InputComponent
+          config={config}
+          setConfig={setConfig}
+          editable={true}
+          {...props}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setIsCloseDialog(false)} color="primary">
+          <Translate value={`${KEY_TRANSLATE}.disagree`} />
+        </Button>
+        <Button
+          onClick={onAgree}
+          color="primary"
+          disabled={pending ? pending : refreshPage}
+        >
+          <Translate value={`${KEY_TRANSLATE}.agree`} />
+        </Button>
+        
       </DialogActions>
     </Dialog>
   );

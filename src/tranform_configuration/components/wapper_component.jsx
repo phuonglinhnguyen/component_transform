@@ -18,7 +18,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TablePagination from "@material-ui/core/TablePagination";
-import { AddDialog, EditDialog, DeleteDialog } from './Dialogs'
+import AddDialog from "./Dialogs/AddDialog";
+import EditDialog from "./Dialogs/EditDialog";
+import DeleteDialog from "./Dialogs/DeleteDialog";
 const styles: any = (theme: any) => {
   return {
     container: {
@@ -153,12 +155,12 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
     success,
     refreshPage,
     setSelectedConfig,
-    setIsOpenAddDialog,
     isOpenAdd,
     isOpenEdit,
     isOpenDel,
+    setIsOpenAddDialog,
     setIsOpenEditDialog,
-    setIsOpenDelDialog,
+    setIsOpenDelDialog
   } = props;
 
   const configs = data.data || [];
@@ -352,6 +354,7 @@ const WapperComponent: React.FC<IDefautProps, IDefautState> = props => {
         pending={pending}
         success={success}
         refreshPage={refreshPage}
+        {...props}
       />
     </div>
   );

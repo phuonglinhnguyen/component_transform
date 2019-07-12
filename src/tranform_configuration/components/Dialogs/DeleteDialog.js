@@ -33,7 +33,6 @@ const DeleteDialog: React.FC<IDefautProps> = props => {
 
   const onOK = () => {
     deleteData(config)
-    setIsOpen(false);
   };
 
   return (

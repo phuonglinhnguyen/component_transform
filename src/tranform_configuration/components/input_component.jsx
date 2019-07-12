@@ -21,8 +21,7 @@ import Grid from "@material-ui/core/Grid";
 import TransformDialog from "./Dialogs/TranformDialog";
 import Dictionary from "./Dictionary";
 import Rules from "./Rules";
-
-// import { isRequired, configValidators, setConfigValidator } from "../services";
+import { isRequired } from "../services";
 
 const styles: any = (theme: any) => {
   return {
@@ -94,7 +93,15 @@ export interface IDefautState {
   setIsOpenTransformModal?: any;
 }
 const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig, isOpen, setIsOpen, configValidators, setConfigValidator } = props;
+  const {
+    classes,
+    config,
+    setConfig,
+    isOpen,
+    setIsOpen,
+    setConfigValidator,
+    configValidators
+  } = props;
   const [isOpenTransformModal, setIsOpenTransformModal] = useState(false);
   const cronTrigger = config ? config.cron_trigger : "";
 
@@ -279,11 +286,14 @@ const InputComponent: React.FC<IDefautProps, IDefautState> = props => {
           onChange={handleChangeCron}
         />
 
-        <Dictionary 
-        config={config} 
-        setConfig={setConfig} 
-        isOpen={isOpen}
-        setIsOpen={setIsOpen} />
+        <Dictionary
+          config={config}
+          setConfig={setConfig}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          setConfigValidator={setConfigValidator}
+          configValidators={configValidators}
+        />
         <FormLabel className={classes.titleField}>Rules</FormLabel>
         <Rules config={config} setConfig={setConfig} />
       </div>
