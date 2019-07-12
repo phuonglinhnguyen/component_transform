@@ -100,7 +100,7 @@ const ContentItem: React.FC<IDefautProps> = props => {
     setContentArray,
     mode,
     setMode,
-    configValidators, 
+    configValidators,
     setConfigValidator
   } = props;
 
@@ -119,23 +119,39 @@ const ContentItem: React.FC<IDefautProps> = props => {
     let result = true;
     console.log({ contentItem });
 
-    if (contentItem && contentItem.dataKey && isEmpty(contentItem.dataKey)) {
+    if (isEmpty(contentItem)) {
       result = false
       setConfigValidator("dataKey", true)
     } else {
       setConfigValidator("dataKey", false)
     }
-
     return result
   }
-
+  
   const onChangeText = (name, value) => {
     if (mode === "add") {
+
+      if (configValidators[name] && isRequired(value)) {
+        setConfigValidator(name, true)
+        // setIsError(true)
+      } else {
+        setConfigValidator(name, false)
+        // setIsError(false)
+      }
+
       setContentItem({
         ...contentItem,
         [name]: value
       });
     } else if (mode === "edit") {
+
+      if (configValidators[name] && isRequired(value)) {
+        setConfigValidator(name, true)
+        // setIsError(true)
+      } else {
+        setConfigValidator(name, false)
+        // setIsError(false)
+      }
       setContentItem({
         contentName,
         contentItem: {
@@ -166,22 +182,22 @@ const ContentItem: React.FC<IDefautProps> = props => {
       const newContentArray = [...contentArray];
       const checkEmptyName = checkIsEmpty(contentName)
       const checkEmptyItem = checkIsEmptyItem(contentItem)
-      if (checkEmptyName || checkEmptyItem) {
+      if (checkEmptyName && checkEmptyItem) {
         newContentArray.unshift({
           contentName,
           contentItem
         });
-        // setConfig({
-        //   ...config,
-        //   rules: {
-        //     ...config.rules,
-        //     content: {
-        //       ...config.rules.content,
-        //       [contentName]: contentItem
-        //     }
-        //   }
-        // });
-        // setContentArray(newContentArray);
+        setConfig({
+          ...config,
+          rules: {
+            ...config.rules,
+            content: {
+              ...config.rules.content,
+              [contentName]: contentItem
+            }
+          }
+        });
+        setContentArray(newContentArray);
         setContentItem(null);
         setContentName(null);
       }
