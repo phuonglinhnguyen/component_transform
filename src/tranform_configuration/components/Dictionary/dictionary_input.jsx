@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { get, isEmpty } from "lodash";
 import { withStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
@@ -102,6 +102,10 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
   } = props;
   const query = get(dictItem, "query", {});
   const queryArray = Object.keys(query)
+  const [chips, setChips] = useState([])
+  useEffect(() => {
+    setChips(queryArray)
+  }, [dictItem])
 
   const valDB = [
     { label: "MongoDB", value: "MongoDB" },
@@ -143,7 +147,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     return result
   }
 
-  const setNull = () => {
+   const setNull = () => {
     setConfigValidator('fieldKey', false)
     setConfigValidator('host', false)
     setConfigValidator('port', false)
@@ -156,7 +160,7 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
 
     if (mode === "add") {
       const newDictItem = { ...dictItem };
-      const checkEmpty =checkIsEmpty(newDictItem)
+      const checkEmpty = checkIsEmpty(newDictItem)
       if (!checkEmpty) {
         setConfig({
           ...config,
@@ -191,12 +195,9 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
     setNull()
   };
 
-  const onChangeQuery = (chips) => {
-    const newQuery = { ...query }
+  const onChangeQuery = (chip) => {
+    const newQuery = { ...query, [chip]: null }
 
-    for (const chip of chips) {
-      newQuery[chip] = null
-    }
     setDictItem({
       ...dictItem,
       query: newQuery
@@ -205,7 +206,6 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
 
   const onDeleteQuery = (chip) => {
     const newQuery = { ...query }
-
     delete newQuery[chip]
     setDictItem({
       ...dictItem,
@@ -389,11 +389,12 @@ const DictionaryComponent: React.FC<IDefautProps> = props => {
         </Grid>
         <Grid container spacing={12} alignItems="flex-end">
           <ChipInput
+            defaultValue={queryArray}
             name="query"
             label="Query"
             fullWidth
-            value={queryArray || []}
-            onChange={(chips) => onChangeQuery(chips)}
+            value={chips || []}
+            onChange={(chip) => onChangeQuery(chip)}
             onDelete={(chip) => onDeleteQuery(chip)}
           />
         </Grid>

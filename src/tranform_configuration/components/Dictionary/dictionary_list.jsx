@@ -20,7 +20,6 @@ import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-
 const styles: any = (theme: any) => {
   return {
     titleField: {
@@ -113,6 +112,8 @@ const DictionaryList: React.FC<IDefautProps, IDefautState> = props => {
     setMode,
     setConfig,
     config,
+    setConfigValidator,
+    configValidators
   } = props;
 
   const [dense] = useState(false);
@@ -146,7 +147,15 @@ const DictionaryList: React.FC<IDefautProps, IDefautState> = props => {
     const strToSearch = dictItem.fieldKey.toLowerCase();
     return strToSearch.indexOf(strSearch.toLowerCase()) + 1;
   });
-
+  const setNull = () => {
+    setConfigValidator('fieldKey', false)
+    setConfigValidator('host', false)
+    setConfigValidator('port', false)
+    setConfigValidator('username', false)
+    setConfigValidator('password', false)
+    setConfigValidator('database_name', false)
+    setConfigValidator('schema_name', false)
+  }
   return (
     <React.Fragment>
       <div className={classes.customSearch}>
@@ -175,6 +184,7 @@ const DictionaryList: React.FC<IDefautProps, IDefautState> = props => {
                 className={classes.selectList}
                 onClick={() => {
                   setSelectedDictItem(dict_item);
+                  setNull()
                   setMode("edit");
                 }}
               >

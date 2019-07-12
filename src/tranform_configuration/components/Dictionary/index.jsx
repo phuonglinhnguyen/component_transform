@@ -37,7 +37,7 @@ export interface IDefautState {
   setMode?: any;
 }
 const Dictionary: React.FC<IDefautProps, IDefautState> = props => {
-  const { classes, config, setConfig, isOpen, setIsOpen,configValidators,setConfigValidator } = props;
+  const { classes, config, setConfig, isOpen, setIsOpen, configValidators, setConfigValidator } = props;
 
   const dictionary = get(config, "dictionary", []);
 
@@ -49,6 +49,7 @@ const Dictionary: React.FC<IDefautProps, IDefautState> = props => {
     <Grid className={classes.wrapForm} spacing={24}>
       <Grid item xs={12} md={6} className={classes.formControl}>
         <DictionaryInput
+          {...props}
           config={config}
           setConfig={setConfig}
           dictItem={selectedDictItem ? selectedDictItem : dictItem}
@@ -57,11 +58,12 @@ const Dictionary: React.FC<IDefautProps, IDefautState> = props => {
           mode={mode}
           setMode={setMode}
           dictionary={dictionary}
-          {...props}
+
         />
       </Grid>
       <Grid item xs={12} md={6} className={classes.formControl}>
         <DictionaryList
+          {...props}
           dictionary={dictionary}
           setSelectedDictItem={setSelectedDictItem}
           setMode={setMode}
