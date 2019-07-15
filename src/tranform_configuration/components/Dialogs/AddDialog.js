@@ -9,7 +9,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { isEmpty } from 'lodash'
 import InputComponent from "../input_component";
 
 import "./dialog.css";
@@ -32,10 +31,10 @@ export interface IDefautProps {
   classes?: any;
   styles?: any;
   theme?: any;
-  isOpen?: any;
-  setIsOpen?: any;
+  config?: any;
+  setConfig?: any;
+  setIsCloseDialog?: any;
   pending?: any;
-  success?: any;
   refreshPage?: any;
 }
 export interface IDefautState {
@@ -52,17 +51,15 @@ const AddDialog: React.FC<IDefautProps, IDefautState> = props => {
     pending,
     refreshPage,
     setIsCloseDialog,
-    setConfigValidator,
-    configValidators
   } = props;
   const [cronValue, setCronValue] = useState(" ");
-  // console.log({ config });
 
   const onAgree = () => {
     createData(config);
   };
+
   return (
-    <Dialog
+    <Dialog style={{ maxWidth: "1200px !important" }}
       open={isOpen}
       onClose={() => setIsCloseDialog(false)}
       aria-labelledby="alert-dialog-title"
