@@ -1,0 +1,12 @@
+"monitor",
+"acquisitions",
+"exports",
+"uploads",
+"test",
+"qc_sampling",
+"export_data",
+"manual_upload",
+"batch_quality",
+"project_guide",
+"training_configs",
+"verifying_configuration"

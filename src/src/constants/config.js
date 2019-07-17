@@ -1,0 +1,14 @@
+import Config from '../config.json';
+import {version} from '../../package.json';
+export const ELROND_ENV = Config.ELROND_ENV;
+export const API_ENDPOINT = Config.API_ENDPOINT;
+export const UAC_ENDPOINT = Config.UAC_ENDPOINT;
+export const OAUTH_ENDPOINT = Config.OAUTH_ENDPOINT;
+export const BPMN_ENDPOINT = Config.BPMN_ENDPOINT;
+export const API_LOOKUP = Config.API_LOOKUP;
+export const API_OMR = Config.API_OMR;
+export const API_OCR = Config.API_OCR;
+export const SOCKET = Config.SOCKET;
+export const QC_NUMBER_TASK_CLAIM = Config.QC_NUMBER_TASK_CLAIM;
+export const REGISTER_PAGE = Config.REGISTER_PAGE;
+export const APP_VERSION = version;
