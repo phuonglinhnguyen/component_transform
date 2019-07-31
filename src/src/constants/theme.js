@@ -1,1 +1,0 @@
-export const KEY_STORAGE_THEME='@dgs/key-storage-theme';

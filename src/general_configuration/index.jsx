@@ -1,1 +1,0 @@
-export  {default as GeneralConfigurationPage} from './connector/connector';
